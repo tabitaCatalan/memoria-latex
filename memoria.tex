@@ -7,10 +7,41 @@
 \guia{AXEL OSSES ALVARADO}
 \carrera{INGENIERA CIVIL MATEMÁTICA}
 \memoria{MEMORIA PARA OPTAR AL TÍTULO DE}
-\comision{JOHAN FABRY,PATRICIO INOSTROZA FAJARDIN}
+\comision{HÉCTOR RAMÍREZ CABRERA, CARLA CASTILLO LABORDE, PEDRO GAJARDO ADARO}
 
 \usepackage{lipsum}
 
+% paquete para hacer algoritmos
+% spanish solo cambia el titulo a Algoritmo
+% onelanguage cambia las keywords
+\usepackage[spanish,onelanguage,ruled,vlined,linesnumbered]{algorithm2e} 
+
+% para usar subfiguras
+% \usepackage{subcaption} % NO se puede usar porque el template usa subfig 
+
+% para hacer cuadritos destacados personalizados
+
+% IMPORTACIÓN DEL TEMPLATE
+
+\usepackage[framemethod=tikz]{mdframed}
+%\usepackage{mdframed}
+
+\mdfdefinestyle{mystyle}{%
+  rightline=true,
+  innerleftmargin=10,
+  innerrightmargin=10,
+  outerlinewidth=3pt,
+  topline=false,
+  rightline=true,
+  bottomline=false,
+  skipabove=\topsep,
+  skipbelow=\topsep
+}
+
+\newcommand\parameterstring{gamma_e_0-2083_gamma_i_0-1493_beta_2_68-0000}
+
+\usepackage{tikzit}
+\input{sample.tikzstyles}
 %\usepackage[latin1]{inputenc}
 %\usepackage[T1]{fontenc}
 
@@ -47,7 +78,7 @@ Una dedicatoria corta.
 \input{5--discusion}
 \input{6--conclusion}
 
-\nocite{*}
+%\nocite{*} % esto hace que se vean todas
 \bibliographystyle{ieeetr}
-\bibliography{bibliografia}
+\bibliography{library}
 \end{document}
