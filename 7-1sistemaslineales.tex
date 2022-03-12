@@ -1,0 +1,152 @@
+
+\chapter{Sistemas lineales y no lineales, continuos y discretos} \label{sec:lineal}
+
+Si bien la mayoría de los modelos en la vida real son no lineales --los modelos epidemiológicos en particular-- las herramientas disponibles para estimación y control están mucho más entendidas y son más accesibles en los sistemas lineales. [parafrasis del Simon]
+
+
+\section{Sistemas lineales continuos}
+
+En esta sección se incluye un recordatorio de la teoría de sistemas lineales. 
+
+Un sistema lineal determinista a tiempo continuo es de la forma 
+
+\[
+\begin{aligned}
+x'(t) &= Ax(t) + Bu(t) \\
+y(t) &= Cx(t)
+\end{aligned}
+\]
+
+donde \(x\) es el vector de estados, \(u\) un vector control e \(y\) es un vector de salida. \(A, B, C\) son matrices de dimensiones adecuadas. \(A\) es llamada matriz del sistema, \(B\) es la matriz de \textit{input} y \(C\) la matriz de \textit{output}.\\
+
+
+
+
+
+\section{Sistemas no lineales continuos}
+
+
+En la mayoría de aplicaciones, sin embargo, se trabaja con sistemas no lineales. Un sistema no lineal a tiempo continuo es de la forma 
+
+\[
+\begin{aligned}
+x' = f(x,u,w) \\
+y = h(x,v)
+\end{aligned}
+\]
+
+donde \(f(\cdot), h(\cdot)\) son funciones arbitrarias que devuelven vectores. \(w\) se usa para indicar ruido del proceso y \(v\) para el ruido en las mediciones. Si dependen explícitamente de \(t\), entonces el sistema es variable en el tiempo; si no, es tiempo invariante. 
+
+La aproximación lineal de un sistema no lineal en torno a un punto \( (\bar{x}, \bar{u}, \bar{w})\) es 
+
+\[
+\begin{aligned}
+x'  &= f(x,u,w) \\
+    & \approx f(\bar{x}, \bar{u}, \bar{w}) + \left.\frac{\partial f}{\partial x} \right|_{\bar{x}}(x-\bar{x}) +
+    \left.\frac{\partial f}{\partial u} \right|_{\bar{u}}(u-\bar{u}) + 
+    \left.\frac{\partial f}{\partial w} \right|_{\bar{w}}(w-\bar{w}) \\
+    &= \bar{x}' + A\tilde{x} + B\tilde{u} + L\tilde{w}
+\end{aligned}
+\]
+Lo que nos permite escribir un sistema lineal para \(\tilde{x} = x - \bar{x}\)
+\[
+\tilde{x}' = A\tilde{x} + B \tilde{u} + L \tilde{w}
+\]
+Como \(w\) es ruido, podemos tomar \(\bar{w}=0\), lo que nos deja 
+\[
+\tilde{x}' = A\tilde{x} + B \tilde{u} + L w
+\]
+
+Similarmente, se puede obtener una versión linealizada de la ecuación de mediciones.
+
+\[
+\begin{aligned}
+\tilde{y} &= \left. \frac{\partial f}{\partial x} \right|_{\bar{x}} \tilde{x} + \left. \frac{\partial f}{\partial v} \right|_{\bar{v}} \tilde{v}
+\end{aligned}
+\]
+
+
+\section{Sistemas discretos y esquemas de discretización}
+
+En la práctica, al trabajar en un computador solo contamos con sistemas discretos, ya sean lineales
+
+\[
+x_{n+1} = F_n x_n
+\]
+
+o no lineales 
+\[
+x_{n+1} = f(x_n, t_n)
+\]
+
+Una técnica importante, por tanto, será la de discretizar sistemas continuos. Una ecuación diferencial de la forma 
+\[
+x' = f(x,u,w) 
+\]
+can be rewritten as 
+\[
+x(t) = x(t_0) + \int_{t_0}^{t} f(x(s), s) ds
+\]
+Dividiendo el intervalo \([t_0, t]\) con una grilla de puntos \(t_0 < t_1 < \dots < t_N < t\), obtenemos la siguiente recursión 
+
+\[
+\begin{aligned}
+x(t_{n+1}) &= x(t_n) + \int_{t_n}^{t_{n+1}} f(x(s), s) ds
+\end{aligned}
+\]
+Lo que reduce el problema a encontrar una aproximación para la integral de la derecha. 
+
+La forma más sencilla de hacer esto es con la \textbf{integración rectangular}. Supone que, si el intervalo \([t_n, t_{n+1}]\) es pequeño, entonces \(f\) varía poco y puede ser aproximada por \(f(x(t_n), t_n)\). Si suponemos además que la grilla es equiespaciada, ie \( t_{n+1}-t_n = \Delta t \) para cada \(n\), entonces el método de \textbf{Euler explícito} entrega la aproximación: 
+\[
+x(t_{n+1}) = x(t_n) + \Delta t f(x(t_{n}), t_n)
+\]
+
+Un supuesto similar, que \(f\) es constante en todo el intervalo, pero aproximando por \(f(x(t_{n+1}), u(t_{n+1}), t_{n+1})\) da lugar al un método de \textbf{Euler implícito}, que requiere 
+
+\[
+x(t_{n+1}) = x(t_n) + \Delta t f(x(t_{n+1}), t_{n+1})
+\]
+
+Un método explícito ampliamente conocido es el de \textbf{Runge-Kutta de orden 4}, que hace más evaluaciones de la función en cada paso para obtener mayor precisión. 
+
+\begin{equation}\label{eq:rk4}
+\begin{aligned}
+t_{n + 1/2} &:= t_n + \Delta t / 2\\
+\Delta x_1 &= f(x(t_n), t_n) \\
+\Delta x_2 &= \Delta t f(x(t_n) + \Delta x_1, t_{n + 1/2}) \\
+\Delta x_3 &= \Delta t f(x(t_n) + \Delta x_2, t_{n + 1/2}) \\
+\Delta x_4 &= \Delta t f(x(t_n) + \Delta x_3, t_{n + 1}) \\
+\end{aligned}
+\end{equation}
+para hacer la estimación final 
+\[
+x(t_{n+1}) = x(t_n) + \frac{1}{6}\Big( \Delta x_1  +  2\Delta x_2 + 2\Delta x_3 +\Delta x_4\Big)
+\]
+
+\section{Observabilidad} 
+
+Hay un último concepto que nos será de utilidad.
+
+\begin{defn}[Observabilidad]
+Un sistema a tiempo continuo es observable si para cualquier estado inicial \(x(0)\) y cualquier tiempo final \(t > 0\) el estado inicial \(x(0)\) puede ser determinado únicamente conociendo el \textit{input} \(u(\tau)\) y el \textit{output} \(y(\tau)\) para \(\tau \in [0,t]\).
+\end{defn}
+
+\begin{teo}
+El sistema lineal a tiempo continuo invariante de \(n\) estado 
+\[
+\begin{aligned}
+x' &= Ax + Bu \\
+y' &= Cx
+\end{aligned}
+\]
+tiene la matriz de observabilidad 
+\[
+Q = \begin{pmatrix}
+C \\
+CA \\
+\vdots \\
+CA^{n-1}
+\end{pmatrix}
+\]
+El sistema es observable si y solo si \(\text{rank}(Q) = n\).\\
+\end{teo}

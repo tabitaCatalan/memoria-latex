@@ -1,0 +1,49 @@
+\chapter{Discusión}
+
+\section{Limitaciones}
+
+Hay varias cosas que mencionar aquí
+-  Supuestos y simplificaciones sobre el modelo
+  - En la matriz de viajes... que el tiempo varió de manera proporcional a la movilidad...
+  - En que las personas se mantienen constantes
+  - En que la región metropolitana está aislada 
+  - Que los enfermos no se vuelven a contagiar (las variantes sugieren lo contrario)
+  - No se consideró el rol de los contagiados no informados
+  - Misma tasa de recuperación para todas las clases, podría ser distinto por diferencias en el sistema sanitario.
+- Limitaciones de las herramientas
+  - En kalman, no se logra estimar bien con tan pocos contagios
+  
+
+\section{Acerca de los resultados}
+
+De la matriz de tiempos de residencia full
+  - Es interesante, tiene sentido con lo esperado...
+ 
+Sensibilidad a los parámetros 
+
+Tienen sentido los resultados? Se condicen con la literatura o la contradicen? 
+
+
+%%% Factor sanitario 
+Con respecto al factor sanitario, a pesar de las diferencias al usar distintos parámetros, la diferencia entre los niveles socioeconómicos fue una constante, especialemente el hecho de que la clase más acomodada mantiene un factor sanitario por debajo de los demás. No fue posible obtener resultados razonables con esta metodología para un factor sanitario común a todas clases, lo que significaría que todos enfrentan el mismo riesgo en el exterior.
+
+Estos resultados sugieren que las diferencias en movilidad, las cuales han sido previamente mencionadas como una explicación de las diferencias en la incidencia entre los distintos grupos socioeconómicos \cite{Mena2021}\cite{Gozzi2021} [Revisar], por sí solas no son suficientes para explicar las diferencias en la cantidad de contagios.
+
+Las clases socioeconómicas más vulnerables no solo no pueden guardar la cuarentenas de la misma forma que las clases acomodadas, sino que además, al salir al exterior, se encuentran en ambientes más riesgosos, ya sea por estar en ambientes más concurridos, o por no utilizar adecuadamente las medidas de seguridad como el lavado de manos y el uso correcto de mascarillas. Estos resultados son consistentes con los encontrados por \cite{}[Chang2020].
+
+Destaca la diferencia hacia el final de... lo que podría atribuirse a la fase de inicio de la vacunación en Chile. El por qué eso disminuye el riesgo en las clases más acomodadas es algo que cuya causas habría que explorar.
+
+%%% Casos hipotéticos 
+ 
+\section{Acerca de la metodología}
+
+Cómo influyeron las decisiones tomadas en los resultados? 
+- Lagrangiano vs euleriano 
+- Usar la matriz de tiempos de residencia... aquí no, pero en otro contexto podría serlo.... Se podría haber usado de otra forma, con el enfoque de \cite{Chang2021}, la EOD tiene los viajes bases y la movilidad daba cómo modificarlos.
+
+- Comparación con la literatura de la metodología 
+
+\section{Posibles extensiones}
+- Probar el modelo por comuna en lugar de por agrupación, los datos están disponibles pero requiere más tiempo de cómputo.
+- Probar el modelo con otros ambientes o clases, pero se necesitaría estimar el riesgo en el 
+- Las posibilidades de la librería CovidMTK 

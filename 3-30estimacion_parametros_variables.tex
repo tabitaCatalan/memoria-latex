@@ -1,0 +1,412 @@
+\section{Estimación de parámetros} \label{met:estimacion}
+
+% Criterios a considerar... algunos deben ser constantes y otros variables. 
+
+\subsection{Filtro de Kalman}
+
+
+%Por qué filtro?
+Para hacer estimación de parámetros \textit{online} hay varias opciones disponibles; Filtro de Mínimos Cuadrados Recursivo (\textit{Recursive Least Squares}) y su extensión el Filtro de Kalman, permiten estimar un estado a partir de su dinámica  y mediciones de alguna variable. Hay alternativas como el filtro de partículas, más costoso computacionalmente, o el filtro por ensambles. Cada uno tiene su propias deficiencias [referencias]. 
+
+% por qué kalman? No un filtro de partículas? EnkF por qué no? H_infty?
+
+
+
+%Filtro de Kalman para sistemas continuos no lineales
+%Hay muchas alternativas, por qué usar el filtro extendido existiendo también UKF o CKF? No se necesitaba tanto poder de cómputo tampoco...
+
+Filtro de Kalman fue desarrollado en primera instancia como un método para tratar sistemas lineales discretos [verificar]. No hay una única forma de trabajar con sistemas continuos no lineales; por una parte, es posible discretizar el sistema mediante métodos como Euler o Runge-Kutta, para luego tratar la no linealidad (este método es llamado \textit{discreto-discreto} en \cite{Kulikov2014}. Por otra parte, es posible linealizar el sistema primero, lo que da lugar al filtro \textit{continuo-discreto}.
+
+Tratar con la no linealidad del sistema puede hacerse de varias formas. La más directa es simplemente linealizar, lo que da lugar al Filtro de Kalman Extendido (EKF por sus siglas en inglés). Hay enfoques más sofisticados que funcionan mejor para problemas altamente no lineales como el \textit{Unscented Kalman Filter} (UKF) (Filtro de Kalman ``sin olor'') o el \textit{Cubature Kalman Filter} (CDF) que se basan estimar la media y varianza de una distribución a la que es aplicada una función no lineal, mediante la evaluación de esa función en varios puntos estratégicamente elegidos, llamados \(\sigma\)-puntos \cite{Kulikov2017}\cite{Simon2006}. Por simplicidad de la implementación y a la hora de chequear observabilidad local, se decidió utilizar EKF en su versión discreta-discreta. La misma decisión fue tomada por \cite{Hasan2020}, pero se prefirió utilizar una discretización de Runge-Kutta de orden 4 en lugar del método de Euler progresivo por estabilidad numérica.
+
+
+%Por qué usar smoother, qué pasa al usar kalman normal, etc, en qué situaciones habría que usaar kalman... (forecasting por ejemplo).
+
+Debido a que se trabajará con datos pasados y no se hará estimación \textit{online} ni predicción, se utiliza suavizado en lugar de filtraje [referencia a 2.2]. El suavizado será de intervalo fijo, como se explica en [2.2.5], y se usará su versión más conocida, el \textit{Rauch, Tung y Striebel Smoother} o \textit{RTS Smoother} \cite{}\cite{Simon2006}. Esto permite obtener mejores estimaciones, pero solo es posible debido a que disponemos de todas las observaciones para un intervalo de tiempo fijo, y que deseamos la mejor estimación posible dadas esas observaciones. Para estimación \textit{online} solo se cuenta con las mediciones hasta el intervalo donde se quiere estimar, no hay observaciones futuras, lo que lleva a usar filtraje.
+
+
+
+\subsection{Modelo}
+
+Para fijar ideas, se comienza con un modelo de una sola clase 
+\begin{equation}
+\begin{aligned}
+S'(t) &= -\alpha S(t)\big( p_E E(t) + p_{I^m}I^m(t) + p_I I(t)\big) \\
+E'(t) &= \alpha S(t)\big( p_E E(t) + p_{I^m}I^m(t) + p_I I(t)\big) - \gamma_E E(t) \\ 
+(I^m)'(t) &= (1-\phi) \gamma_E E(t) - \gamma_{I^m} I^m(t)\\
+I'(t) &= \phi \gamma_E E(t) - \gamma_{I} I(t)\\
+R'(t) &= \gamma_{I} \big( I^m(t) + I(t) \big)
+\end{aligned}
+\end{equation}
+
+donde, como de costumbre, \(S\) corresponde a los susceptibles, \(E\) a los expuestos, \(I^m\) a los infectados sintomáticos, \(I\) a los infectados sintomáticos y \(R\) a los recuperados. \(\gamma_E\) corresponde a la tasa de salida de ... medida en \([\text{día}]^{-1}\), de tal forma que \(\gamma_E^{-1}\) es el período de incubación medido en \(\text{día}\)s. \(\gamma_{I^m}\) y \(\gamma_I\) corresponden a las tasas de recuperación de los infectados asintomáticos y sintomáticos respectivamente. \(\phi\) es la fracción de infectados que son sintomáticos. Consideraremos \(\alpha\) como proporcional a la tasa de contagios.
+
+\subsection{Estimación de la tasa de contagios}
+
+Siguiendo la misma línea que \cite{Hasan2020}, \cite{Hasan2021}, \cite{Hasan2021a}, supondremos que \(\gamma_E\) y \(\gamma_I\) son constantes y que \(\alpha(t)\) es variable y depende de las distintas medidas sanitarias implementadas.
+
+
+Se cuenta con datos de los casos sintomáticos acumulados, que se calculan como 
+
+\[
+C_i(t) = \int_{t_0}^t \gamma_E E_i(s) ds
+\]
+
+\noindent \textbf{Modelo con una clase}
+
+Para fijar ideas, se trabaja con el modelo SEIR clásico de una sola clase, incorporando ruido:
+
+\begin{equation}
+\begin{aligned}
+S'(t) &= -\alpha(t) S(t)I(t) + g_1 w_1(t)\\
+E'(t) &= \alpha(t) S(t)I(t) - \gamma_E E(t) + g_2 w_2(t)\\
+I'(t) &= \gamma_E E(t) - \gamma_{I} I(t) + g_3 w_3(t)\\
+R'(t) &= \gamma_{I} I(t) + g_4 w_4(t)\\
+\end{aligned}
+\end{equation}
+
+\(w_1, \dots, w_4\) son procesos brownianos independientes entre sí, ponderados por constantes \(g_1, \dots, g_4\).
+Se supondrá que \(\gamma_E, \gamma_{I^m}\) y \(\gamma_I\) son conocidos, y se busca estimar \(\alpha(t)\) a partir de observaciones ruidosas de los casos infectados acumulados. Se trabajará con un modelo aumentado, agregando las ecuaciones \ref{eq:simple-augmented-eqs} a la dinámica. \ref{eq:simple-c} permite guardar los casos acumulados en un estado, lo que facilita plantear la ecuación de observación. \ref{eq:simple-alpha} agrega \(\alpha\) a la dinámica sin ser modificada por ella, de forma que solo es actualizada por el paso de análisis del filtro de Kalman.
+
+\begin{subequations}\label{eq:simple-augmented-eqs}
+\begin{align}
+C'(t)       &= \gamma_E E(t) \label{eq:simple-c} \\ 
+\alpha'(t)  &= 0    \label{eq:simple-alpha}
+\end{align}
+\end{subequations}
+
+Llamando \(\mathbf{x} = (S, E, I, R, C, \alpha)^{\top}\), se obtiene la ecuación de estado \ref{eq:simple-estado}, con parámetros conocidos \(p = (\gamma_E, \gamma_I)\). \(\mathbf{G}\) es una matriz diagonal que pondera el ruido, y \(\mathbf{w}\) un vector de brownianos independientes. Si bien \(f_p\) no depende del tiempo de manera explícita, al trabajar con el modelo completo si habrá dependencia, por lo que se decidió escribir \(f_p(\mathbf{x}, t)\) en lugar de simplemente \(f_p(\mathbf{x})\).
+
+\begin{equation} \label{eq:simple-estado}
+\mathbf{x}'(t) =
+\begin{pmatrix}
+S \\
+E\\
+I\\
+R\\
+C\\
+\alpha 
+\end{pmatrix}' = 
+\begin{pmatrix} 
+-\alpha(t) S(t)I(t) \\
+\alpha(t) S(t)I(t) - \gamma_E E(t) \\ 
+\gamma_E E(t) - \gamma_{I} I(t)\\
+\gamma_{I} I(t) \\
+\gamma_E E(t) \\
+0
+\end{pmatrix} + \mathbf{G} w(t)= f_p(\mathbf{x}, t) + \mathbf{G} \mathbf{w}(t)
+\end{equation}
+
+Para utilizar el filtro discreto-discreto, se requiere discretizar la dinámica \(f_p\), para lo que se usa un esquema de Runge Kutta de orden 4. Para un instante de tiempo \(t_k\), un intervalo de tiempo \(\Delta t\) y un estado \(\mathbf{x}_k\), y definiendo \(\mathbf{x}_1, \dots, \mathbf{x}_4\) como en \ref{}, \ref{eq:simple-rk4} permite obtener una estimación \ref{eq:simple-estado-discreto} para \(\mathbf{x}_{k+1}\). Esto corresponde a la ecuación de estado discretizada, la cual es no lineal.
+
+\begin{equation} \label{eq:simple-rk4}
+\mathbf{x}_{k} + \frac{1}{6}\Big( \Delta \mathbf{x}_1  +  2\Delta \mathbf{x}_2 + 2\Delta \mathbf{x}_3 +\Delta \mathbf{x}_4\Big) =: \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k)
+\end{equation}
+
+
+\begin{equation} \label{eq:simple-estado-discreto}
+\mathbf{x}_{k+1} = \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k) +  \mathbf{G}\mathbf{w}_{k} 
+\end{equation}
+
+Notamos que \(\mathbf{w}_{k} \sim \mathcal{N}(\mathbf{0}, \mathbf{Q}_k)\) y \(\mathbf{Q}_k = \Delta t \text{\textbf{Id}}\) [explicación].
+
+Ahora es necesario trabajar con la no linealidad, lo que se hará mediante el Filtro de Kalman Extendido, expuesto en la sección \ref{filtro-extendido}. Para eso, es necesario calcular el jacobiano de la función \(\mathcal{F}_{p, \Delta t}\). Múltiples usos de la regla de la cadena más la definición del esquema de RK4 dada por \ref{eq:rk4} permiten obtener las ecuaciones \ref{eq:simple-jacobian}.
+
+\begin{equation}\label{eq:simple-jacobian}
+\begin{aligned}
+D_x(\mathcal{F}_{p, \Delta t})(x_k, t_k) &= I + \frac{1}{6}\Big( D_x h_1  +  2 D_x h_2 + 2D_x h_3 +D_x h_4\Big) \\
+t_{k + 1/2} &:= t_k + \Delta t / 2\\
+h_1 &= f(x_k, t_k) \\
+D_x h_1 &= D_x f(x_k, t_k)\\
+h_2 &= \Delta t f(x_k + h_1, t_{k + 1/2}) \\
+D_x h_2 &= \Delta t D_x f(x_k + h_1, t_k) (I + D_x h_1)  \\
+h_3 &= \Delta t f(x_k + h_2, t_{k + 1/2}) \\
+D_x h_3 &= \Delta t D_x f(x_k + h_2, t)(I + D_x h_2) \\
+h_4 &= \Delta t f(x_k + h_3, t_{k + 1}) \\
+D_x h_4 &= \Delta t D_x f(x_k + h_3, t)(I + D_x h_3) \\
+\end{aligned}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Observación 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La ecuación de observación \ref{eq:simple-obs} consiste, en primera instancia, simplemente en una matriz que obtiene la coordenada de los casos acumulados \(C\) dentro del vector \(\mathbf{x}\). La observación se obtiene con ruido, dado por \(\mathbf{v}_{k} \sim \mathcal{N}(\mathbf{0}, \mathbf{R}_k)\). 
+
+
+\begin{equation} \label{eq:simple-obs}
+\mathbf{y}_{k} = 
+\begin{bmatrix}0 & 0 & 0 & 0 & 1 & 0\end{bmatrix} \mathbf{x}_{k} + \mathbf{v}_k
+\end{equation}
+
+Debe mencionarse que el sistema no lineal tiene restricciones; por una parte, al elegir \(b_i = d_i = 0\) se impone que el total de la población debe mantenerse constante. Por otra parte, las variables de estado deben ser positivas para que tengan sentido. El survey \cite{Simon2010} presenta varias alternativas para tratar con restricciones, y se decide usar la técnica de \textbf{Observaciones (casi) perfectas} para mantener constante el total de la población. Para la positividad de las variables, se decide simplemente aplicar la función \(\max(0, x)\) al estado después de los pasos de \textit{forecasting} y análisis.
+
+La idea de Observaciones (casi) perfectas es la siguiente: en un sistema de la forma \(x_{k+1} = f_k(x_k) + w_k\), observado mediante una ecuación \(y_k = Hx_k + v_k \), se busca imponer una restricción \(|Dx - d| \leq \epsilon\). Esto se consigue ampliando la matriz de observaciones como muestra la ecuación \ref{eq:perfect-obs}. Si se busca una restricción fuerte con \(\epsilon = 0\), la técnica es llamada Observaciones perfectas, y si se busca una restricción suave con \(\epsilon > 0\), recibe el nombre de observaciones casi perfectas.
+
+
+\begin{equation}\label{eq:perfect-obs}
+\begin{bmatrix}
+y_k \\
+d 
+\end{bmatrix} = 
+\begin{bmatrix}
+H \\
+D
+\end{bmatrix} x_k
++
+\begin{bmatrix}
+v_k \\
+\epsilon  
+\end{bmatrix}
+\end{equation}
+
+Se elige usar una restricción suave para imponer \(S(t) + E(t) + I(t) + R(t) \approx N\), con lo que se obtiene la ecuación de observación \ref{eq:simple-obs-perfect} definitiva.
+
+\begin{equation} \label{eq:simple-obs-perfect}
+\begin{bmatrix}
+\mathbf{y}_{k} \\
+N
+\end{bmatrix} = 
+\begin{bmatrix}
+0 & 0 & 0 & 0 & 1 & 0 \\
+1 & 1 & 1 & 1 & 0 & 0 \\
+\end{bmatrix}
+\mathbf{x}_{k} + 
+\begin{bmatrix}
+\mathbf{v}_k \\
+\epsilon
+\end{bmatrix} =
+\begin{bmatrix}
+C_k \\
+S_k + E_k + I_k + R_k
+\end{bmatrix}
+ + 
+\begin{bmatrix}
+\mathbf{v}_k \\
+\epsilon
+\end{bmatrix}
+\end{equation}
+Finalmente, a modo de resumen; se utiliza el Filtro de Kalman Extendido sobre el sistema dado por \ref{eq:simple-estado-discreto}. Este sistema fue obtenido extendiendo un modelo SEIR con la variable \(C\) de casos acumulados, y con un factor \(\alpha\) de la tasa de contagio, y discretizado mediante el esquema RK4. El sistema es no lineal en el estado, y lineal en el ruido. La linearización se obtiene a partir del jacobiano calculado en \ref{eq:simple-jacobian}. Para asegurar la positividad de las variables se aplica la función \(\max(x, 0)\) después de cada paso de \textit{forecast} y análisis. Para imponer que la población se mantenga constante, se usa la técnica de observaciones casi perfectas de \cite{Simon2010}. La ecuación de observación final es \ref{eq:simple-obs-perfect}, la cual es lineal.
+
+Una vez calculadas las iteraciones de filtro de kalman, es posible obtener los resultados suavizados con el \textit{RTS smoother} mencionado en la sección \ref{smoother}. Los detalles de la implementación se encuentran en \ref{}.\\
+
+
+
+\noindent \textbf{Modelo multiclase}
+
+Al trabajar con el modelo con una clase ya se ha tratado la mayor parte del problema. Ahora se extiende esa metodología al modelo con \(n\) clases y \(m\) ambientes presentado en \ref{met:decisiones}. Se define el vector de variables de estado \(\mathbf{x} = (S_1, \dots, S_n, E_1, \dots, E_n, I_1, \dots, I_n, R_1, \dots, R_n)\). Se supone que \(\gamma_E, \gamma_I, \beta_1, \dots, \beta_m\) son conocidos y fijos, y que son los mismos para cada clase. Las ecuaciones para \(i \in 1\dots n\) están en \ref{eq:full-model}.
+
+
+\begin{subequations}\label{eq:full-model}
+\begin{align}
+S_i'(t) &= -\lambda_i(\mathbf{x}, t) S_i(t) + g^S_i w^S_i(t)\\
+E_i'(t) &= \lambda_i(\mathbf{x}, t) S_i(t) - \gamma_E E_i(t) + g^E_i w^S_i(t) \nonumber\\
+I_i'(t) &= \gamma_E E_i(t) - \gamma_{I} I_i(t) + g^I_i w^S_i(t)\nonumber \\
+R_i'(t) &= \gamma_{I} I_i(t) + g^R_i w^S_i(t) \nonumber \\
+\lambda_i(\mathbf{x}, t) &= \alpha_i(t)\sum_{j=1}^m \beta_{j}r_{ij}(t)\left(\frac{\sum_{k=1}^{n}r_{kj}(t) I_k}{\sum_{k=1}^{n}r_{kj}(t)N_k}\right) \label{eq:full-lambda}
+\end{align}
+\end{subequations}
+
+
+
+Al igual que en el caso con una clase, se agregan las dinámicas de los casos acumulados, y de los factores sanitarios \(\alpha_i(t)\) que se desean estimar.
+\begin{subequation}
+\begin{align}
+C'_i(t) &= \gamma_E E_i(t) \\
+\alpha_i'(t) &= 0
+\end{align}
+\end{subequation}
+
+
+
+
+Como antes, discretizando con un esquema de Runge Kutta podemos obtener un sistema de la forma \ref{eq:full-estado-discreto}. Para tratar con la no linealidad basta con usar las mismas ecuaciones calculadas previamente para el jacobiano en \ref{eq:simple-jacobian}. 
+\begin{equation} \label{eq:full-estado-discreto}
+\mathbf{x}_{k+1} = \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k) +  \mathbf{G}\mathbf{w}_{k} 
+\end{equation}
+
+La ecuación de observaciones en este caso es similar a \ref{eq:simple-obs}. Definiendo \(\mathbf{0}_n\) y \(\text{\textbf{Id}}_n\) como la matriz de 0's y la matriz identidad de tamaño \(n \times n\), entonces 
+
+\begin{equation} \label{eq:full-obs}
+\mathbf{y}_{k} = 
+\begin{bmatrix}\mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \text{\textbf{Id}}_n & \mathbf{0}_n \end{bmatrix} \mathbf{x}_{k} + \mathbf{v}_k
+\end{equation}
+
+Denotando \(\mathbf{N} := (N_1, \dots, N_n)^{\top}\) y \(\pmb{\epsilon} := (\epsilon, \dots, \epsilon)^{\top}\), las ecuaciones de observación que imponen además que \(S_i(t) + E_i(t) + I_i(t) + R_i(t) \approx N_i\) están en \ref{eq:full-obs-perfect}. \(S_i, k\) denota la aproximación de susceptibles del sistema discreto, para la clase \(i\)-ésima, a tiempo \(t_k\).
+
+\begin{equation} \label{eq:full-obs-perfect}
+\begin{bmatrix}
+\mathbf{y}_{k} \\
+\mathbf{N}
+\end{bmatrix} = 
+\begin{bmatrix}
+\mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \text{\textbf{Id}}_n & \mathbf{0}_n \\
+\text{\textbf{Id}}_n & \text{\textbf{Id}}_n & \text{\textbf{Id}}_n & \text{\textbf{Id}}_n & \mathbf{0}_n & \mathbf{0}_n \\
+\end{bmatrix}
+\mathbf{x}_{k} + 
+\begin{bmatrix}
+\mathbf{v}_k \\
+\pmb{\epsilon}
+\end{bmatrix} =
+\begin{bmatrix}
+C_{1,k} \\
+\vdots \\
+C_{n,k} \\
+S_{1,k} + E_{1,k} + I_{1,k} + R_{1,k} \\
+\vdots \\
+S_{n,k} + E_{n,k} + I_{n,k} + R_{n,k}
+\end{bmatrix}
+ + 
+\begin{bmatrix}
+\mathbf{v}_k \\
+\pmb{\epsilon}
+\end{bmatrix}
+\end{equation}
+
+
+\subsection{Estimación de parámetros fijos}
+Hasta ahora se ha supuesto que \(\gamma_E, \gamma_I\) y \(\beta_1, \dots, \beta_m\) son valores fijos y conocidos. Esto, en la práctica, no es así. Puesto que se trabajará solamente con \(m= 2\) (\texttt{hogar} y \texttt{exterior}), y ya se mencionó en la sección \ref{met:decisiones} que se fijaría el valor de \(\beta_{\text{hogar}} = 1\), basta con dar un valor a \(\beta_{\text{exterior}}\). Lo esperado es que estar en el exterior sea más riesgoso que en el hogar, así que tiene sentido considerar \(\beta_{\text{exterior}} >> \beta_{\text{hogar}}\). Resultados exploratorios mostraron una baja sensibilidad a cambios pequeños del parámetro \(\beta_{\text{exterior}}\), por lo que se decide obtener resultados para varios valores fijos, para luego estudiar qué tan sensibles son a estas variaciones.
+
+% Aquí también me falta investigación. Necesito las estimaciones que dan los estudios para esos valores,
+
+\subsection{Matrices de covarianza: ajuste por caso sintético}
+
+Ni \cite{Hasan2020} ni \cite{Sameni2020}, quienes usan métodos similares, explican cómo elegir las matrices de ruido, y las dejan como parámetros a ajustar. Al hacer pruebas con la metodología propuesta, se verificó que los resultados pueden depender considerablemente de esta decisión, por lo que se decidió hacer un ajuste por medio de un caso sintético.
+
+% Hassan en A new method dice que son tunning parameters, y que se tomaron como valores fijos.
+
+Se eligen valores fijos \(\gamma_I, \gamma_E\) y \(\beta_{\text{exterior}}\). Se resolverán las ecuaciones diferenciales del sistema epidemiológico SEIR dado por \ref{eq:modelo-final}, utilizando la matriz de tiempos de residencia calculada en la sección \ref{met:matriz}. Para eso se fabrican funciones \(\alpha_i(t)\), de manera que se obtenga algúna solución interesante (un doble \textit{peak} en los infectados por ejemplo) y que los órdenes de magnitud de los casos acumulados obtenidos \(C_i(t)\) sean similares a los que se usarán con datos reales.
+
+Posteriormente, se hacen varias pruebas de la metodología propuesta, suponiendo condición inicial y parámetros desconocidos, para intentar estimar los estados y los parámetros desconocidos.Las matrices de covarianza se ajustan de tal forma que las estimaciones obtenidas de los estados se encuentren a una desviación estándar de los estados de la solución real. Estas matrices de covarianza son las que se utilizarán en el caso real.
+
+
+
+% Aquí necesito un poco de investigación... debería revisar qué se hace en Covid - kalman primero, y luego en cada tópico por separado. Luego mostrar nuestro approach: ajustarlos con un caso sintético.
+
+
+\subsection{Observabilidad}
+
+Como ya vimos, en el caso lineal con dinámica constante, se requiere observabilidad para tener convergencia al estado real del sistema, pero el caso no lineal es más difícil. En este trabajo solamente se verifica la observabilidad localmente para el sistema linealizado, de manera numérica. 
+
+\subsection{Número reproductivo efectivo}
+
+% El cálculo fue hecho por Bichara. Al final mencionar que se hace computacionalmente.
+
+
+Se calcula la matriz de próxima generación para nuestro sistema, en base al método presentado en \ref{sec:R0}. Los compartimientos de tipo \textit{disease} son \(X = (E, I)^{\top}\), y los \textit{disease-free} son \( Y = (S, R)^{\top}\). Basado en la dinámica, la tasa de infecciones secundarias es 
+\[
+\mathcal{F}(X,Y) = 
+\begin{pmatrix}
+\alpha S \big( p_E E + p_{I^m} I^m + p_I I \big) \\
+(1-\phi) \gamma_E  E \\
+\phi \gamma_E  E 
+\end{pmatrix}
+\]
+La tasa de progresión de la enfermedad es 
+\[
+\mathcal{V}(X,Y) = 
+\begin{pmatrix}
+\gamma_E E \\
+\gamma_{I^m} I^m \\
+\gamma_{I} I
+\end{pmatrix}
+\]
+de tal forma que \(X' = \mathcal{F}(X,Y) - \mathcal{V}(X,Y)\). Notamos que efectivamente \(\mathcal{F}(\mathbf{0},Y) = \mathbf{0}\) y \(\mathcal{V}(\mathbf{0},Y) = \mathbf{0}\). 
+Calculamos 
+\[
+F = \frac{\partial \mathcal{F}}{\partial X}(\mathbf{0},Y) = 
+\begin{pmatrix}
+\alpha p_E S & \alpha p_{I^m} S & \alpha p_I S \\
+(1-\phi)\gamma_E & 0 & 0 \\
+\phi\gamma_E & 0 & 0>
+ \end{pmatrix}
+\]
+\[
+V = \frac{\partial \mathcal{V}}{\partial X}(\mathbf{0},Y) = 
+\begin{pmatrix}
+\gamma_E & 0 & 0 \\
+0 & \gamma_{I^m} & 0 \\
+0 & 0 & \gamma_I
+ \end{pmatrix}
+\]
+
+Con lo que el número reproductivo básico (obtenido con Symbolics.jl)
+\[
+\mathcal{R}_{0} = \rho(FV^{-1}) = \rho \left(
+\begin{pmatrix}
+\alpha p_E S/\gamma_E & \alpha p_{I^m} S/ \gamma_{I^m}& \alpha p_I S/\gamma_I \\
+(1-\phi) & 0 & 0 \\
+\phi & 0 & 0
+\end{pmatrix}
+\right)
+\]
+El número reproductivo será \(\mathcal{R}_t = S\mathcal{R}_0 /N\).
+
+
+% Sus valores propios serán [Obtenidos con wolfram]
+
+% lambda 1 
+% 0
+
+% lambda 2 
+% \[
+% \lambda_2 = \frac{\alpha \gamma_{I^m} \gamma_{I} p_{E} S - \sqrt{\alpha \gamma_{I^m} \gamma_{I} S} \sqrt{\alpha \gamma_{I^m} \gamma_{I} p_{E}^2 S - 4 \gamma_{I} \gamma_E^2 \phi p_{I^m} + 4 \gamma_{I^m} \gamma_E^2 \phi p_{I} + 4 \gamma_{I} \gamma_E^2 p_{I^m}}}{2 \gamma_E \gamma_{I^m} \gamma_{I}}
+% \]
+
+% lambda 3
+% \[
+% \lambda_3 =
+% \frac{
+%     \alpha \gamma_{I^m} \gamma_{I} p_{E} S
+%     + \sqrt{\alpha \gamma_{I^m} \gamma_{I} S}
+%     \sqrt{
+%         \alpha \gamma_{I^m} \gamma_{I} p_{E}^2 S
+%         - 4 \gamma_{I} \gamma_E^2 \phi p_{I^m}
+%         + 4 \gamma_{I^m} \gamma_E^2 \phi p_{I}
+%         + 4 \gamma_{I} \gamma_E^2 p_{I^m}
+%         }
+%     }
+%     {2 \gamma_E \gamma_{I^m} \gamma_{I}
+% }
+% \]
+
+% Por lo que todo depende del signo del término \(\alpha \gamma_{I^m} \gamma_{I} p_{E}^2 S
+%         - 4 \gamma_{I} \gamma_E^2 \phi p_{I^m}
+%         + 4 \gamma_{I^m} \gamma_E^2 \phi p_{I}
+%         + 4 \gamma_{I} \gamma_E^2 p_{I^m}\)
+
+
+% El término \( \Delta = \alpha \gamma_{I^m} \gamma_{I} p_{E}^2 S - 4 \gamma_E^2 \big( (1-\phi)\gamma_I p_{I^m} + \phi \gamma_{I^m} p_I \big)\) 
+
+
+% Si \(\Delta > 0\), entonces los valores propios son reales y \(\mathcal{R}_0 = \lambda_3\).
+% En este caso, 
+% \[
+% \partial_S \mathcal{R}_t = \frac{1}{N}
+% \frac{\frac{1}{2} \left( S p_E \alpha \gamma_I \gamma_{I^m} + \sqrt{S \alpha \gamma_I \gamma_{I^m} \left(  - 4 \gamma_E^{2} \left( p_I \gamma_{I^m} \phi + p_{I^m} \gamma_I \left( 1 - \phi \right) \right) + p_E^{2} S \alpha \gamma_I \gamma_{I^m} \right)} \right)}{\gamma_E \gamma_{I^m} \gamma_I}
+% + \frac{\frac{1}{2} S \left( \frac{\frac{1}{2} \left( \alpha \gamma_I \gamma_{I^m} \left(  - 4 \gamma_E^{2} \left( p_I \gamma_{I^m} \phi + p_{I^m} \gamma_I \left( 1 - \phi \right) \right) + p_E^{2} S \alpha \gamma_I \gamma_{I^m} \right) + \gamma_{I^m}^{2} \gamma_I^{2} \alpha^{2} p_E^{2} S \right)}{\sqrt{S \alpha \gamma_I \gamma_{I^m} \left(  - 4 \gamma_E^{2} \left( p_I \gamma_{I^m} \phi + p_{I^m} \gamma_I \left( 1 - \phi \right) \right) + p_E^{2} S \alpha \gamma_I \gamma_{I^m} 
+% \right)}} + p_E \alpha \gamma_I \gamma_{I^m} \right)}{\gamma_E \gamma_{I^m} \gamma_I}
+% \]
+
+
+
+
+% Si \(\Delta \leq 0\), entonces ambos tienen el mismo módulo  
+
+
+
+
+\subsection{Implementación}
+
+Algunos artículos que siguen metodologías similares y cuyos códigos están disponibles son \cite{Hasan2020} y \cite{Sameni2020}. Ambos están escritos en Matlab y no utilizan ninguna librería de Filtro de Kalman, sino que este es programado desde cero para cada caso.
+
+% Comparación del lenguaje 
+A pesar de que Matlab es un lenguaje dominante en computación científica, se decidió utilizar Julia. Entre la serie de ventajas que proporciona utilizar este lenguaje se encuentra; en primer lugar es compilado, al igual que lenguajes como C, C++ y Java, por lo que si el código está adecuadamente escrito es considerablemente más rápido que lenguajes interpretados como Matlab o Python. En general, cuando es posible vectorizar el código esta diferencia no es significativa, pero eso no es posible completamente en un método iterativo como Filtro de Kalman.
+
+En segundo lugar, la sintaxis en Julia es similar a la de lenguajes de alto nivel como Matlab y Python, por lo que es simple de escribir, a diferencia de lenguajes más verbosos donde se deben declarar explícitamente los tipos como C o Java.
+
+En tercer lugar, Julia cuenta con dos librerías muy que ofrecen características de interés para este trabajo. La primera, DiffentialEquations.jl \cite{Rackauckas2017}, permite acceder a una amplia variedad de \textit{solvers} para distintos tipos de ecuaciones diferenciales, a través de una única interfaz. La segunda, ModelingToolkit.jl \cite{Ma2021}, que aún no ha alcanzado su versión \texttt{v1.0}, provee de un sistema simbólico de modelado basado en ecuaciones, que está integrado con DifferentialEquations.jl y que optimiza el código para obtener mayor rendimiento. Esto facilita el cálculo de jacobianos y la resolución de ecuaciones diferenciales a partir de una conjunto de ecuaciones simbólicas.
+
+A diferencia de \cite{Hasan2020} y \cite{Sameni2020}, se decidió escribir código que pudiera ser reutilizado y extendido con mayor facilidad, y que contara con interfaces comunes que permitieran utilizar diferentes tipos de filtros de Kalman con cambios mínimos para el usuario final. Estas directrices guiaron la construcción de KalmanFilter.jl, disponible en GitHub \url{https://github.com/tabitaCatalan/kalman}. El código específico para la estimación de parámetros se encuentra también disponible en GitHub \url{https://github.com/tabitaCatalan/CovidMTK}.
+
+% Extensiones y trabajo futuro. El uso de Julia, y Modelling Toolkit es una herramienta muy muy interesante. Se vieron algunos desafíos en el diseño de una herramienta para filtro de kalman, tiene muchísimas variables, y se extiende de formas raras. Una librería sería muy util, sobre todo si usara MTK.

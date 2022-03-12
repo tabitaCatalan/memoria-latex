@@ -1,0 +1,414 @@
+\section{Filtro de Kalman}\label{sec:kalman}
+
+% Una vez que se tiene el modelo, si se quiere aplicar a un contexto específico, es necesario incorporar los datos para ajustar los parámetros. Dos técnicas conocidas y ampliamente utilizadas para esto son, por una parte, resolver el problema de minimización de una función de costo dada por la diferencia entre los valores dados por el modelo y las observaciones, sobre los posibles parámetros. Por otra parte, es posible seguir un enfoque bayesiano, asignando densidades a priori a cada parámetro y luego usando los datos para actualizar esas densidades mediante el método de Monte Carlo. Una posibilidad menos explorada es la asimilación de datos usando el Filtro de Kalman.
+
+Filtro de Kalman es un método poderoso para estimar un estado a partir de observaciones ruidosas de este. Hay tres formas importantes de estimación de un estado \(x_k\), y pueden trabajarse de manera muy similar. El suavizado (o \emph{smoothing}) intenta obtener la mejor estimación posible de \(x_k\) usando la información (observaciones, controles) disponible hasta un instante posterior \(k+m\). El filtraje solo dispone de información hasta la iteración \(k\)-ésima, y la predicción tiene información hasta una iteración anterior \(k-m\). Debido a la cantidad de información que se supone conocida, el suavizado debería dar el mejor resultado de los tres, seguido por el filtraje y finalmente la predicción. 
+
+El Filtro de Kalman tiene diversas aplicaciones en navegación, control de vehículos, análisis de series de tiempo, entre muchas otras áreas. Si bien el filtro original estaba enfocado en un problema lineal gaussiano [kalman], han surgido varias variantes como el Filtro de Kalman Extendido (EKF), Filtro \textit{Unscented} (UKF), Filtro de Kalman por Ensambles (EnKF) que permiten trabajar con problemas no lineales, o el Filtro H\(^\infty\) que es más robusto ante incertezas en el modelo. Más adelante hablaremos más en detalles de EKF \textit{(y tal vez de UKF o EnKF, si es que llego a usarlos)}.
+
+
+Esta sección está fuertemente basada en [Anderson] y \cite{Simon2006}. La estructura de esta sección es como sigue; comenzaremos estudiando en detalle el filtro de kalman para el caso en que el sistema es lineal y gaussiano. Luego mostraremos varias variantes que nos permitirán agregar complejidad, trabajando con sistemas no lineales, ecuaciones diferenciales\textit{ y tal vez suavizar los resultados y estimación de parámetros desconocidos}.
+
+\subsection{Filtro de Kalman lineal discreto}\label{filtro-lineal}
+
+Para comenzar a explicar el filtro de Kalman, se decide utilizar un caso sencillo. Consideramos un sistema de la forma \ref{eq:kalman-lineal-discreto}, donde \(x_k \in \mathbb{R}^{n}\) y \(F_k, G_k \in \mathbb{R}^{n \times n}\) y \(w_k \sim \mathcal{N}(0,Q_k)\) es un vector aleatorio que representa un ruido gaussiano en la dinámica del sistema. 
+
+\begin{equation}\label{eq:kalman-lineal-discreto}
+x_{k+1} = F_k x_k + G_k w_k
+\end{equation}
+
+Los estados \(x_k\) del sistema son desconocidos, y solo es posible conocer observaciones \(y_k\) de ellos, dadas por \ref{eq:kalman-lineal-discreto-obs}, donde \(y_k \in \mathbb{R}^{m}, H_k \in \mathbb{R}^{m \times n}\) y \( v_k \sim \mathcal{N}(0, R_k)\) representa un ruido gaussiano en las observaciones.
+
+\begin{equation}\label{eq:kalman-lineal-discreto-obs}
+y_k = H_k x_k  + v_k
+\end{equation}
+
+
+Para una condición inicial gaussiana \(x_0 \sim \mathcal{N}(\hat{x}_0, P_0)\), la linealidad del sistema y el hecho de que el ruido es gaussiano, implica que cada uno de los \(x_k\) serán también gaussianos. Se busca estimar \(x_k\) a partir de las observaciones \(y_k\). Más específicamente, en términos bayesianos, se busca la distribución \textit{a posteriori} de \(x_k\) dado un conjunto de observaciones \(y_{1:l} := \{y_1, \dots, y_l\}\). Denotaremos a esta distribución \(x_{k,l}:= x_k | y_{1:l}\).
+
+Existen tres formas de estimación, que dependen del valor de \(l\); en primer lugar, si \(l < k\), se está intentando estimar \(x_k\) con información hasta un instante \(l\) anterior a \(k\). A esta forma se le llama \textbf{predicción} o \textit{forecasting}. En segundo lugar, si \(l>k\), entonces se está estimando \(x_k\) con información hasta un instante \(l\) posterior a \(k\). Se llamará a esto \textbf{suavizado} o \textit{smoothing}. Finalmente, si \(l = k\) se llamará \textbf{filtraje} o \textit{filtering}. Es esta última forma la que nos presenta mayor interés y que facilita la explicación, por lo que es la forma que será utilizada.
+
+Se sigue el siguiente procedimiento. Se comienza suponiendo que la distribución a posteriori \(x_{k-1, k-1}\) de \(x_{k-1}\) con observaciones hasta el instante \(k-1\) es conocida, \(x_{k-1, k-1} \sim \mathcal{N}(\hat{x}_{k-1, k-1}, P_{k-1, k-1})\). Se busca la distribución \(x_{k, k}\). Esto se logra mediante una iteración del filtro de Kalman, la cual se divide en dos etapas; una de predicción, para obtener \(x_{k+1, k}\), y una de análisis que incorpora \(y_k\), para obtener \(x_{k, k}\).
+
+La propiedad \ref{prop:conj-gauss-cond}, cuya demostración puede leerse en [Anderson] y que ocupa el Teorema de Bayes, será útil a la hora de hacer los cálculos.
+
+
+\begin{prop}
+\label{prop:conj-gauss-cond}
+Sean \(X, Y\) vectores aleatorios conjuntamente
+gaussianos, ie. tal que
+
+\[
+Z := \begin{pmatrix}
+X\\
+Y
+\end{pmatrix} \sim \mathcal{N}\left(
+\begin{pmatrix}
+\bar{x} \\
+\bar{y}
+\end{pmatrix}, 
+\begin{pmatrix}
+\Sigma_{xx} & \Sigma_{xy} \\
+\Sigma_{yx} & \Sigma_{yy}
+\end{pmatrix}
+\right)
+\] Entonces \[
+(X|Y=y) \sim \mathcal{N} \left( \bar{x} + \Sigma_{xy}\Sigma_{yy}^{-1}(y-\bar{y}),
+\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}
+ \right)
+\]
+\end{prop}
+
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  En el paso de \textbf{predicción} se hace una suposición \emph{a priori} de dónde estará el estado real en la próxima iteración a partir de la dinámica y de la estimación actual, sin utilizar la observación \(y_k\). Usando que \(x_{k-1,k-1} \sim \mathcal{N}(\hat{x}_{k-1,k-1}, P_{k-1,k-1})\), y la ecuación \ref{eq:kalman-lineal-discreto}, no es difícil ver que \(x_{k,k-1} \sim \mathcal{N}(\hat{x}_{k,k-1}, P_{k,k-1})\), con 
+    \begin{equation}
+    \begin{aligned}
+    \hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
+    %\hat{P}_{k,n-1} &= M_k \hat{P}_{k-1,n-1} M_k' + F_k Q_k F_k'
+    P_{k,k-1} &= F_{k-1} \hat{P}_{k-1,k-1} F_{k-1}^{T} + G_k Q_k G_k^T
+    \end{aligned}
+    \end{equation}
+\item
+  En el paso de análisis, se incorpora la observación \(y_k\) para obtener una estimación \emph{a posteriori}. Para esto basta con usar la proposición \ref{prop:conj-gauss-cond}, calculando la distribución conjunta 
+  
+    \begin{equation}
+    \begin{pmatrix}
+    x_k \\
+    y_k
+    \end{pmatrix} \Big| y_{1:k} \sim \mathcal{N}\left(
+    \begin{pmatrix}
+    \hat{x}_{k, k-1} \\
+    H_k \hat{x}_{k,k-1}
+    \end{pmatrix},
+    \begin{pmatrix}
+    P_{k,k-1} & P_{k,k-1} H^T_{k}\\
+    H_{k}P_{k,k-1}  & H_{k}P_{k,k-1}H_{k}^T + R_k
+    \end{pmatrix}  
+    \right)
+    \end{equation}
+
+    La propiedad \ref{prop:conj-gauss-cond} nos permite decir que \(
+    x_{k,k} \sim
+     \mathcal{N} \left( \hat{x}_{k,k}, \hat{P}_{k,k} \right)
+    \)
+
+    con 
+
+    \begin{equation}
+    \begin{aligned}
+    K_k &= \hat{P}_{k,k-1} H'_{k}(H_{k}\hat{P}_{k,k-1}H_{k}' + R_k)^{-1}\\
+    \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
+    \hat{P}_{k,k} &= \hat{P}_{k,k-1}- K_k H_{k}\hat{P}_{k,k-1} \\
+    \end{aligned}
+    \end{equation}
+\end{enumerate}
+Lo anterior entrega una regla que permite iterar. Basta con definir la condición inicial como \(\hat{x}_{0,-1} := x_0\), \(\hat{P}_{0,-1} := P_0\).
+
+El Teorema \ref{teo:min-var}, cuya demostración está en \cite{}, asegura que los valores \(\hat{x}_{n,n}\) son estimadores de mínima varianza para \(x_{n,n}\).
+
+\begin{teo}
+\label{teo:min-var}
+Sean \(X, Y\) vectores aleatorios conjuntamente gaussianos. Sea también \(\hat{x} := \mathbb{E}(X|Y=y)\). Entonces \(\hat{x}\) es un
+\emph{estimador de mínima varianza}, es decir, satisface
+
+\[
+\mathbb{E}(\| X - \hat{x}\|^2 | Y = y) \leq \mathbb{E}(\| X - z\|^2 | Y = y) \quad \forall z
+\]
+\end{teo}
+
+Finalmente, se entregan las ecuaciones del filtro de Kalman en el caso lineal discreto.
+
+\[
+\begin{aligned}
+x_{k+1} &= M_k x_k + F_k w_k \\ 
+y_k &= H_k x_k + v_k
+\end{aligned}
+\]
+
+Las ecuaciones del filtro de Kalman son las siguientes 
+
+
+\begin{mdframed}[style=mystyle,frametitle=Filtro de Kalman Lineal Discreto]
+Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(\hat{P}_{0,-1}:= P_0\), y definiendo 
+\[
+\begin{aligned}
+\hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
+\hat{P}_{k,k-1} &= F_{k-1} \hat{P}_{k-1,k-1} F_{k-1}' + G_{k-1} Q_{k-1} G_{k-1}'\\
+K_k &= \hat{P}_{k,k-1} H'_{k}(H_{k}\hat{P}_{k,k-1}H_{k}' + R_k)^{-1}\\
+\hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
+\hat{P}_{k,k} &= \hat{P}_{k,k-1}- K_k H_{k}\hat{P}_{k,k-1} \\
+\end{aligned}
+\]
+Los valores \(\hat{x}_{k,k}\) son estimadores de mínima varianza de \(x_{n,n}\). 
+\end{mdframed}
+
+
+% {[}Agregar recuadro con la variante que incorpora un control conocido{]}
+
+% Similarmente, para el modelo 
+% \[
+% \begin{aligned}
+% x_{k+1} &= M_k x_k + B_k u_k + F_k N_k \\ 
+% y_k &= H_k x_k + v_k
+% \end{aligned}
+% \]
+
+% Las ecuaciones correspondientes son 
+
+% {[}Agregar un ejemplo y algún gráfico, para hacerse una idea de cómo funciona{]}
+
+\subsection{Filtro de Kalman Extendido (EKF)}\label{filtro-extendido}
+
+% agregar más intro
+
+La idea de esta sección es extender los métodos a sistemas no lineales. Trabajaremos ahora con un modelo de la forma 
+
+\begin{equation}
+\begin{aligned}
+x_{k+1} &= f_k(x_k) + g_k(x_k) w_k \\
+y_{k} &= h(x_k) + v_k
+\end{aligned}
+\end{equation}
+
+donde las funciones \(f_k, g_k, h_k\) son posiblemente no lineales. 
+
+Denotaremos 
+\begin{equation}
+\begin{aligned}
+F_k := \left. \frac{\partial f_k(x)}{\partial x} \right|_{x = \hat{x}_{k,n}} & H_k := \left. \frac{\partial h_k(x)}{\partial x} \right|_{x = \hat{x}_{k,n}} & G_k := g_k(\hat{x}_{k,n})
+\end{aligned}
+\end{equation}
+Usando series de Taylor, podemos expandir 
+
+\[
+\begin{aligned}
+f_k(x_k) &= f_k(\hat{x}_{k,n}) + F_k(x_k - \hat{x}_{k,n}) + \dots \\
+g_k(x_k) &= g_k(\hat{x}_{k,n}) + \dots = G_k + \dots \\
+h_k(x_k) &= f_k(\hat{x}_{k,n}) + H_k(x_k - \hat{x}_{k,n}) + \dots \\
+\end{aligned}
+\]
+
+Despreciando los términos de mayor orden, y suponiendo conocidos \(\hat{x}_{k,n}\) y \(\hat{x}_{k,n-1}\) podemos aproximar el sistema como 
+
+\begin{equation}
+\begin{aligned}
+x_{k+1} &= F_k x_k + G_k w_k + \overbrace{f_k(\hat{x}_{k,n}) - F_k \hat{x}_{k,n}}^{u_k} \\
+y_{k} &= H_k x_k + v_k + \underbrace{h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1}}_{z_k}
+\end{aligned}
+\end{equation}
+
+
+Ahora podemos usar simplemente las ecuaciones del filtro de kalman lineal, salvo en el paso de \textit{forecast}, donde conservaremos la dinámica no lineal. Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(\hat{P}_{0,-1}:= P_0\), las ecuaciones del EKF son:
+
+\begin{equation}\label{eq:kalman-extended}
+\begin{aligned}
+\hat{x}_{k,n-1} &= f_{k-1}( \hat{x}_{k-1,n-1}) \\
+\hat{P}_{k,n-1} &= F_{k-1} \hat{P}_{k-1,n-1} F_{k-1}' + G_k Q_k G_k'\\
+K_k &= \hat{P}_{k,n-1} H'_{k}(H_{k}\hat{P}_{k,n-1}H_{k}' + R_k)^{-1}\\
+%z_k &= h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1} \\
+\hat{x}_{k,n} &= \hat{x}_{k, n-1} + K_k(y_k-h_k(\hat{x}_{k,n-1})) \\
+\hat{P}_{k,n} &= \hat{P}_{k,n-1}- K_k H_{k}\hat{P}_{k,n-1} \\
+\end{aligned}
+\end{equation}
+
+
+
+
+
+% \subsection{Filtro continuo-discreto}\label{filtro-continuo-discreto}
+
+% \cite{Kulikov2017} Queremos seguir extendiendo la idea anterior. Supondremos ahora que nuestro sistema es continuo y está definida por una ecuación diferencial estocástica de la forma 
+
+% \[
+% dx(t) = f(t, x(t))dt + g(t)dw(t)
+% \]
+
+% donde \(w(t)\) es un proceso browniano con matriz de difusión \(Q(t)\). Las observaciones son discretas y llegan cada intervalos de largo \(\delta := t_k - t_{k-1}\). Llamaremos a \(\delta\) \textit{tiempo de muestreo}. 
+
+% Para poder usar las variantes anteriores es necesario discretizar la ecuación. Hay dos opciones; es posible linealizar primero y luego discretizar, dando lugar al filtro extendido \textit{continuo-discreto} (CD-EKF), o discretizar y luego linealizar, a lo que se llama filtro \textit{discreto-discreto}. Nos interesa el primer caso. 
+
+% Obtendremos la siguiente Ecuación Diferencial Ordinaria (EDO) 
+% \[
+% \begin{aligned}
+% \frac{d\hat{x}}{dt} &= f(t, \hat{x}) \\ 
+% \frac{d\hat{P}}{dt} &= \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \hat{P} + \hat{P} \left( \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \right)^{T} + g(t)Q(t)g(t)^{T} \\ 
+% \end{aligned}
+% \]
+% la que tendremos que resolver en el intervalo \([t_{k-1}, t_{k}]\) con las condiciones iniciales \(\hat{x}(t_{k-1}) = \hat{x}_{k-1, n-1}, \hat{P}(t_{k-1}) = \hat{P}_{k-1, n-1}\), para luego definir \(\hat{x}_{k,n-1} := \hat{x}(t_k), \hat{P}_{k,n-1} := \hat{P}(t_k)\). El paso de análisis permanece sin cambios. 
+
+% Notamos que este enfoque tiene dos problemas importantes; la ecuación debe ser tratada numéricamente, lo que introduce un error de discretización adicional. La segunda se relaciona con la semipositividad de la matriz \(\hat{P}(t_k)\), la cual no está garantizada.
+
+% \subsection{Filtro por ensambles}\label{filtro-por-ensambles}
+
+% Esta sección está basada en \cite{Katzfuss2016}.
+
+% El filtro de Kalman por ensambles (\textbf{EnKF} por su nombre en inglés \emph{Ensemble Kalman Filter}), es una versión aproximada del filtro de Kalman, donde la distrubución del estado se representa con una muestra o
+% ``ensamble'' de esa distribución .
+
+% Más específicamente, suponemos que \(\hat{x}^{(1)}_{k,n}, \dots, \hat{x}^{(N)}_{k,n}\) es una muestra de la distribución filtrada en tiempo \(k\), es decir, que \(\hat{x}^{(i)}_{k,n} \sim \mathcal{N}(\hat{x}_{k,n}, \hat{P}_{k,n})\).
+
+% Al igual que con el filtro de Kalman, una iteración de EnKF también se hará en un paso de \emph{forecast} y un paso de análisis.
+
+% Durante el \emph{forecast}, nuestra distribución a priori será
+
+% \[
+% \hat{x}^{(i)}_{k+1,n} = f_k(\hat{x}^{(i)}_{k,n}, u_k, w^{(i)}_k)
+% \]
+
+% con \(w^{(i)}_k \sim \mathcal{N}(0,Q_k)\). Para el caso lineal en que \(f_k(x, u, w) = M_k x + B_k u + w\) se puede verificar que
+% \(\hat{x}^{(i)}_{k+1,n} \sim \mathcal{N}(\mu, \Sigma)\) (COMPLETAR).
+
+\subsection{Estimación de
+parámetros}\label{estimacion-de-parametros}
+
+Hasta ahora hemos trabajado con el supuesto de que las únicas cantidades desconocidas eran los vectores \(x_k\). Sin embargo, la mayoría de las veces tendremos además parámetros desconocidos \(p\), los cuales también necesitan ser estimados. \\
+
+\noindent\textbf{Estado aumentado}
+
+Este apartado está basado en la sección 13.4 de \cite{Simon2006}. Supongamos que tenemos un sistema donde las matrices dependen de forma no lineal de cierto parámetro desconocido \(p\). 
+
+\[
+\begin{aligned}
+x_{k+1} &= F_k(p)(x_k) + G_k(p)u_k + L_k(p)w_k \\
+y_{k} &= H_k x_k + v_k \\ 
+\end{aligned}
+\]
+
+Por simplicidad agregó dependencia de \(p\) a las mediciones, pero es un caso que puede extenderse de manera sencilla a partir de este. Para estimar \(p\) se define un estado aumentado \(x'\):
+
+\[
+x'_k = \begin{bmatrix}x_k \\ p_k \end{bmatrix}
+\]
+Supondremos que \(p\) es constante y usaremos la dinámica \(p_{k+1} = p_k + w_{pn}\). El ruido \(w_{pn}\) artificial permitirá al filtro cambiar su estimación de \(p_k\). 
+
+Finalmente, nuestro sistema aumentado es 
+
+\[
+\begin{aligned}
+x'_{k+1} &= \begin{bmatrix} F_k(p_k)(x_k) + G_k(p_k)u_k + L_k(p_k)w_k \\ p_k + w_{pn} \end{bmatrix} \\
+&= f(x'_{k}, u_k, w_k, w_{kp}) \\
+y_{k} &= \begin{bmatrix} H_k & 0 \end{bmatrix} \begin{bmatrix}x_k \\ p_k \end{bmatrix} + v_k \\ 
+\end{aligned}
+\]
+
+Notamos que \(f(x'_{k}, u_k, w_k, w_{kp}) \) es una función no lineal en el estado aumentado \(x'_k\), por lo que podemos usar cualquier filtro no lineal para estimar \(x'_k\).\\
+
+% Mostrar que es posible que el filtro converja a valores erróneos, ver cómo eso depende de los errores que se le dan al filtro.
+
+
+\noindent\textbf{Funciones de verosimilitud}
+
+Los parámetros se estiman, ya sea por máxima verosimilitud o por métodos bayesianos... 
+
+\subsection{Suavizado o \textit{smoothing} } \label{smoother}
+
+% Hay tres variantes de smoothing, pero a mí solo me interesa una. Las otras creo que solo las mencionaré 
+
+% Un recordatorio de la notación 
+Recordamos que \(\hat{x}_{k,m}\) corresponde a la estimación de \(x_k\) utilizando las observaciones hasta tiempo \(m\); \(\left. y \right|_{1:m}\). Hasta ahora sólo no hemos concentrado en el proceso de filtraje y solo hemos calculamos \(\hat{x}_{k,n}\) o \(\hat{x}_{k, n-1}\), es decir, nuestra estimación del estado \(x_k\) usa las observaciones solo hasta el estado \(n\), \(\left. y \right|_{1:k}\), o hasta el estado \(n-1\),   \(\left. y \right|_{1:k-1}\). En ciertas situaciones, sin embargo, es interesante mejorar una estimación usando observaciones obtenidas posteriormente, o de manera más técnica, calcular \(\hat{x}_{k, n+1}, \hat{x}_{k, n+2}, \hat{x}_{k, n+3}, \dots\).El proceso de obtener estas estimaciones usando datos de tiempos posteriores es llamado \textit{smoothing} o suavizado. El nombre se debe a que, al tener más información disponible, es posible generar estimaciones con menos ruido, más ``suaves''.
+
+Hay tres escenarios comunes donde surge esta necesidad. El primero de ellos es el \textbf{suavizado de punto fijo}, donde nos interesa la estimación de un estado en un tiempo fijo, digamos \(j\), y el número de observaciones disponibles aumenta continuamente. Un ejemplo de esto podría ser ... [insertar ejemplo o paper donde se use]. En este caso estamos intentando estimar \(\hat{x}_{j, j+1}, \hat{x}_{j, j+2}, \hat{x}_{j, j+3}, \dots\). 
+
+Un segundo escenario es el \textbf{suavizado con retardo fijo}. En este caso, para cada estado \(k\) se tienen \(N\) observaciones posteriores, donde \(N\) es un número fijo. Se intenta estimar \(\hat{x}_{k, k+N}\) para \(k = 1, 2, \dots, \). Un ejemplo de esto podría ser... [insertar ejemplo o paper donde se use]. 
+
+El último escenario es \textbf{suavizado con intervalo fijo}. En este caso, tenemos un intervalo de \(M\) mediciones \(\left. y \right|_{1:M}\)y queremos obtener la mejor estimación posible de todos los estados hasta tiempo \(M\). Es decir, buscamos \(\hat{x}_{0,M}, \hat{x}_{1,M}, \hat{x}_{2,M}, \dots, \hat{x}_{M,M}\). Insertar ejemplo.
+
+De estos tres escenarios, el suavizado con intervalo fijo será el de mayor interés para este trabajo. Debido a la extensión de las demostraciones, y a la amplia variedad de versiones disponibles, solo se dejaremos las fórmulas correspondientes a la versión que usaremos. El RTS  para más detalles acerca de cómo deducirlas, o para los otros tipos de suavizado, ver \cite{Simon2006}.  \\ 
+
+\noindent \textbf{Suavizado con intervalo fijo: el RTS \textit{smoother}} 
+
+
+% Presentar tal vez un poco la idea de forward backward. Al menos creo que tendré que mostrar la notación. 
+
+El suavizado de intervalo fijo suele realizarse en dos pasadas; una ``hacia adelante'' en tiempo, (a esta parte se le llama \textit{forward}) usando el Filtro de Kalman estándar, con el que se obtienen las estimaciones usando los datos pasados. Luego, se suaviza usando ``hacia atrás'' en el tiempo (\textit{backward}).
+
+Se han desarrollado varias formas de suavizado de intervalo fijo. Una de las más comunas es la de Rauch, Tung y Striebel [insertar cita], conocida como \textit{RTS smoother}. Es una forma eficiente ya que 
+
+\textit{The RTS smoother is more computationally efficient than the smoother presented in the previous section because we do not need to directly compute the backward estimate or covariance in order to get the smoothed estimate and covariance. }
+% Insertar un cuadrito
+El sistema está dado por 
+
+\[
+\begin{aligned}
+x_k &= F_{k-1}x_{k-1} + G_{k-1}u_{k-1} + w_{k-1} \\ 
+y_k &= H_k x_k + v_k \\ 
+w_k &\sim  \mathcal{N}(0, Q_k)\\
+v_k &\sim  \mathcal{N}(0, R_k)
+\end{aligned}
+\] 
+
+\begin{enumerate}
+    \item Inicializar el filtro \textit{forward}.
+    
+    \[
+    \begin{aligned}
+    \hat{x}_{f0} &= \mathbb{E}(x_0) \\
+    \hat{P}^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{T}\right] 
+    \end{aligned}
+    \]
+    
+    \item Para \(k = 1, \dots, N\) (donde \(N\) es el tiempo final), ejecutar el filtro \textit{forward}, que es simplemente el filtro de Kalman estándar. 
+    
+    \[
+    \begin{aligned}
+    \hat{P}^{-}_{fk} &= F_{k-1}\hat{P}^{+}_{f,k-1}F_{k-1}^{T} + Q_{k-1} \\ 
+    K_{fk} &= \hat{P}^{-}_{fk} H_k^{T} (H_k \hat{P}^{-}_{fk}H_k^{T} + R_k)^{-1}  \\
+    \hat{x}^{-}_{fk} &= F_{k-1}\hat{x}^{+}_{f,k-1} + G_{k-1}u_{k-1} \\
+    \hat{x}^{+}_{fk} &= \hat{x}^{-}_{fk} + K_{fk} \left(y_k - H_k \hat{x}^{-}_{fk} \right)\\ 
+    \hat{P}^{+}_{fk} &= (I - K_{fk}H_k) P^{-}_{fk} (I-K_{fk}H_k)^{T} + K_{fk}R_{k}K_{fk}^{T} \\
+    &= \left[ (P^{-}_{fk})^{-1} + H_k^{T} R_{k}^{-1}H_k\right]^{-1} \\ 
+    &= (I - K_{fk}H_k)P^{-}_{fk}
+    \end{aligned}
+    \]
+    
+    \item Inicializar el \textit{RTS smooter} 
+    \[
+    \begin{aligned}
+    \hat{x}_{k} &= \hat{x}^{+}_{fN} \\
+    \hat{P}_k &= \hat{P}^{+}_{fN}
+    \end{aligned}
+    \]
+    \item Para \(k = N-1, \dots, 1, 0\) ejecutar las ecuaciones del \textit{RTS smoother} 
+    \[
+    \begin{aligned}
+    \mathcal{I}^{-}_{f, k+1} &= \left( \hat{P}^{-}_{f, k+1}\right)^{-1} \\
+    K_k &= \hat{P}^{+}_{fk} F_{k}^{T} \mathcal{I}^{-}_{f, k+1} \\
+    \hat{P}_k &= \hat{P}^{+}_{fN} - K_k (\hat{P}^{-}_{f, k+1} - \hat{P}_{k+1})K_k^{T} \\ 
+    \hat{x}_k &= \hat{x}^{+}_{fk} + K_k(\hat{x}_{k+1} - \hat{x}^{-}_{f,k+1})
+    \end{aligned}
+    \]
+\end{enumerate}
+
+
+
+
+
+
+
+
+% Mostrar que es posible que el filtro converja a valores erróneos, ver cómo eso depende de los errores que se le dan al filtro.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \subsection{Recursos adicionales}\label{recursos-adicionales}
+
+% \begin{itemize}
+% \itemsep1pt\parskip0pt\parsep0pt
+% \item
+%   \href{https://www.kalmanfilter.net/default.aspx}{KalmanFilter.NET}
+%   contiene explicaciones y tutoriales.
+% \end{itemize}
+
+% Un libro más matemático es
+
+% \emph{Optimal Filtering} de Brian Anderson y John Moore.
+
+% \begin{itemize}
+% \itemsep1pt\parskip0pt\parsep0pt
+% \item
+%   Katzfussa, Stroudb, Wiklec, ``Understanding the Ensemble Kalman
+%   Filter''
+% \end{itemize}

@@ -1,0 +1,47 @@
+\chapter{Marco teórico}
+
+% Para pasar a la parte más matemática, debería comenzar con sistemas lineales y no lineales, que es lo más general. Esto me permite enmarcar filtro de kalman y sistema epidemiológicos dentro de una misma cosa.
+% Luego puedo pasar a modelos epidemiológicos, para describir el Rt 
+% O bien puedo pasar al filtro de Kalman. 
+
+% Discutir idea de estado, modelo, etc. 
+% El objetivo de este apartado es dar las bases teóricas que serán necesarias para comprender la metodología seguida. 
+% También aquí debería incluirse una revisión bibliográfica. 
+
+En este apartado se presentarán las bases teóricas que sustentan el trabajo realizado. A lo largo de este trabajo se dan por sentadas varias nociones de sistemas lineales y no lineales, ya sea continuos o discretos. Estas se encuentran en el Anexo \ref{sec:lineal}.
+
+Este capítulo se organiza como sigue; en primer lugar, en la sección \ref{sec:epi-model}, se presentan los modelos epidemiológicos compartimentales deterministas, y se explican dos enfoques que permiten tratar con poblaciones heterogeneas: lagrangiano y euleriano. 
+
+En segundo lugar, la sección \ref{modelo-clases-vs-ambientes} presenta el modelo lagrangiano propuesto en \cite{Bichara2015}, que se usará en este trabajo. En tercer lugar, la sección \ref{sec:R0} presenta la técnica de la matriz de próxima generación, esencial en la estimación del número reproductivo básico \(\mathcal{R}_0\).
+% Estructura del apartado 
+
+La sección \ref{sec:kalman} está dedicada a la teoría del Filtro de Kalman, una técnica que permite la estimación de estados en sistemas lineales y que ha sido ampliamente extendida y utilizada, contando con aplicaciones en diversos ámbitos de ingeniería y ciencias como climatología, control de vehículos autónomos, etc. Se presentará la teoría básica del filtro y las principales extensiones que se utilizan durante el trabajo.
+
+Contando ya con las bases teóricas, la sección \ref{sec:antecedentes} presenta los antecedentes relevantes al caso de estudio a tratar; el brote de Covid-19 en la ciudad de Santiago de Chile. Se describen características particulares de esta enfermedad y cómo influyen en el modelamiento. Se presentan características de la ciudad de Santiago que han influido el desarrollo de la pandemia y las medidas tomadas para ralentizar su avance.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Índice 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Explicación de la idea de estados, debería ser lo primero porque se va a usar mucho. 
+
+% Sistemas lineales y no lineales, discretización, conceptos que se necesitan como base para entender todo el resto 
+% \include{2-1sistemaslineales} % ahora en el anexo
+
+% 
+\include{2-1-modelosepi}
+
+\include{2-2-virtualdispersal}
+
+% Modelos epidemiológicos como un caso particular de sistemas no lineales. 
+\include{2-10Reff}
+
+% Filtro de Kalman, una teoría específica de sistemas lineales que vamos a utilizar 
+\include{2-2kalman}
+
+% Antecedentes específicos de la ciudad de santiago y del covid que necesitan tenerse en consideración
+\include{2-0-Antecedentes}
+
+
+% Literatura relevante: se va a pasar todo a antecedentes
+\include{2-5literatura}

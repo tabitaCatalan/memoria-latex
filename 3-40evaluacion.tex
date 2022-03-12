@@ -1,0 +1,30 @@
+\section{Evaluación del modelo} \label{met:evaluacion}
+
+Para evaluar los resultados obtenidos con la metodología propuesta, se usan dos métodos. En primer lugar se calculará el número reproductivo efectivo \(\mathcal{R}_t\) y se compará con el estimado usando el método de Cori et al. \cite{Cori2013}. En segundo lugar, se usarán los resultados obtenidos para generar varias situaciones hipotéticas.
+
+\subsection{Comparación del número reproductivo efectivo}
+
+El Centro de Modelamiento Matemático (CMM) de la Universidad de Chile, en conjunto con varias instituciones, desarrolló un visualizador (\url{https://covid-19vis.cmm.uchile.cl/geo}) para los datos producidos por el Ministerio de Salud y reportados por el Ministerio de Ciencia en \url{https://github.com/MinCiencia/Datos-COVID19}, y para varios indicadores calculados a partir de estos datos.
+
+Entre los indicadores expuestos se encuentra el número reproductivo efectivo \(\mathcal{R}_t\), el cual ha sido calculado siguiendo la metodología de Cori et al. \cite{Cori2013}. Se compara el \(\mathcal{R}_t\) calculado para el modelo con el publicado por el CMM para la región Metropolitana. 
+
+\subsection{Casos hipotéticos}\label{met:evaluacion-hipot}
+
+En la sección \ref{met:matriz} se calculó una matriz de tiempos de residencia variable en el tiempo \((r_{i,j})_{i \in 1\dots 5, j \in \{ \text{hogar}, \text{exterior}\}}\).  Una vez aplicada la metodología de la sección anterior \ref{met:estimacion} se obtiene una estimación de los factores sanitarios \((\alpha_i(t))_{i \in 1 \dots 5}\) para cada grupo. En este apartado se busca evaluar, utilizando variantes de esas estimaciones, una serie de casos hipotéticos. Se considerarán tres niveles de cuarentena y tres niveles de cuidado, definidos a continuación. Se recuerda que para \(m\) ambientes, basta con definir los valores de la matriz de residencia en \(m-1\) columnas, debido a la restricción \(\sum_{j = 1}^m r_{ij} = 1\). 
+
+\begin{itemize}
+\item \textbf{Cuarentena normal:} todos se comportan de la misma forma. Se utiliza la matriz de tiempos de residencia variable en el tiempo que se usó antes.
+\[(r_{\text{normal}})_{i, \text{hogar}}(t) =  (r_{i, \text{hogar}}(t)\]
+\item \textbf{Cuarentena fuerte:} cada grupo en el hogar tanto tiempo como es posible. Se utiliza en cada \(t\) el valor máximo de entre todos los grupos.
+\[(r_{\text{cuarentena fuerte}})_{i, \text{hogar}}(t) = \max_{i \in 1\dots n} \big\{ (r_{\text{normal}})_{i, \text{hogar}}(t) \big\}\]
+\item \textbf{Sin cuarentena:} durante pandemia no se realiza ningún tipo de cuarentena ni reducción de movilidad. Todos conservan los tiempos de residencia en condiciones normales.\[(r_{\text{sin cuarentena}})_{i, \text{hogar}}(t) =  (r_{\text{normal}})_{i, \text{hogar}}(0) \]
+\end{itemize}
+
+\begin{itemize}
+    \item \textbf{Cuidado normal:} todos se comportan de la misma forma. Se utilizan los factores sanitarios estimados en la sección anterior
+    \[ (\alpha_{\text{normal}})_{i}(t) = \alpha_i(t)\]
+    \item \textbf{Descuido:} todos se comportan como la clase que en general fue más descuidada. En este caso, esa clase corresponde a \(i = 5\), la clase más vulnerable. 
+    \[ (\alpha_{\text{descuido}})_{i}(t) = \alpha_5(t)\]
+    \item \textbf{Cuidado extra:} todos se comportan como la clase que en general fue más cuidadosa. En este caso, esa clase corresponde a \(i = 1\), la clase más acomodada. 
+    \[ (\alpha_{\text{cuidado extra}})_{i}(t) = \alpha_1(t)\]
+\end{itemize}

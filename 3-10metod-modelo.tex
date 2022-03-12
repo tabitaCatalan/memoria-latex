@@ -1,0 +1,150 @@
+\section{Decisiones específicas acerca del modelo} \label{met:decisiones}
+
+% Compartimientos a usar 
+% parámetros fijos y variables 
+
+% Todas las decisiones tomadas con respecto a los compartimientos y los parámetros usados van aquí (si se usó uno común para todos, o se ajustaron por separado, etc). 
+
+
+% describir el modelo que usan en el artículo, como un ejemplo % mencionar las cosas propias del modelo: multiclase, ambientes, tasa de contagio que usa matriz de tiempos de residencia. describir en detalle la tasa de contagio.
+
+% elegir los compartimientos específicos a usar, susceptibles, expuestos, etc. literatura covid
+
+% parametros fijos y variables, literatura covid (ver la parte de kalman, habia algo interesante ahi
+
+% comentar que este modelo permite modelar mascarillas y esas cosas... un avance según pedro 
+
+Ya en \ref{modelo-clases-vs-ambientes} se habló del modelo de \cite{Bichara2015}. En esta sección se decide el modelo específico a utilizar: los compartimientos y parámetros específicos a usar. Después se exploran algunos modelos usados específicamente para Covid19, para finalmente plantear el modelo final a utilizar.
+
+% Modelos de covid usualmente utilizados (compartimientos, etc)
+% Describir este modelo en particular, usando el numero 1. 
+
+% enfoque tasa de contacto vs tiempo de residencia  
+
+% Esto ya lo discutí al inicio 
+
+\cite{Bichara2015} comenta acerca de la noción de ``contacto'' o ``contacto efectivo'' dentro del modelamiento epidemiológico de poblaciones que se mezclan de forma heterogénea. Menciona un problema de este enfoque; si bien este concepto es claro en el contexto de enfermedades de transmisión sexual, es mucho más vago y difícil de medir para enfermedades tales como la influenza.
+
+Propone como solución un modelo lagrangiano, donde cada grupo pertenece a una "parcela", cada parcela tiene un riesgo asociado, y la tasa de contagio depende del tiempo pasado en cada parcela y el riesgo de esta.
+
+El artículo \cite{Bichara2015} ofrece además una variante de este modelo, donde las interacciones ocurren en un conjunto de ambientes (hogar, trabajo, etc). Cada ambiente tiene un riesgo asociado, y los tiempos de residencia de los grupos en cada ambiente sirven como proxy del número de contactos. 
+
+Se ha expuesto previamente en \ref{modelo-clases-vs-ambientes} el modelo de dispersión virtual presentado por \cite{Bichara2015}. Ahora se discute las particularidades del modelo a usar en este caso específico. Como antes, separamos a la población en \(n\) clases, las cuales interactúan en \(m\) ambientes (o áreas de riesgo). Las clases y ambientes específicos se tratarán en  la siguiente sección. Se denota \(N_i(t), i = 1, \dots, n\) a la población de la clase \(i\).
+
+%A continuación se expone el modelo de dispersión virtual con ambientes de \cite{Bichara2015}. Está basado en un modelo de tipo SIS (\textbf{S}usceptibles, \textbf{I}nfectados). 
+
+% acerca de los compartimientos a usar 
+
+Dependiendo del aspecto de interés, distintos compartimentos han sido usados para modelar el Covid19. Los modelos revisados por \cite{Xiang2021} utilizan los clásicos \textbf{S}usceptibles, \textbf{I}nfectados, \textbf{R}ecuperados, en combinación con \textbf{E}xpuestos, \textbf{H}ospitalizados, Fallecidos (\textit{\textbf{D}ead}). La existencia de casos asintomáticos que portan el virus y pueden contagiarlo pero no presentan síntomas (o presentan síntomas muy leves), que contribuye a la existencia de casos no reportados, es considerado en algunos modelos. Algunos consideran compartimientos En Cuarentena (\textit{\textbf{Q}uarantined}), y el desarrollo de vacunas da lugar a modelos con \textbf{V}acunados.
+
+Se decide trabajar con el ampliamente utilizado \cite{} modelo \textbf{SEIR}. Ya ha sido utilizado para estudiar el impacto de las cuarentenas, los cambios de comportamiento y el uso de mascarillas \cite{}, por lo que parece una elección razonable. 
+
+Ahora bien, \cite{Mena2021} menciona que al trabajar con niveles socioeconómicos, la cantidad de fallecidos es muchos más confiable que la de casos detectados (debido a problemas de trazabilidad en las comunas de menores recursos), especialmente al inicio de la pandemia. El problema es que la tasa de fallecimiento (o la fracción de fallecidos) es probablemente variable en tiempo, dependiente de las distintas políticas usadas para enfrentar la pandemia. No solo eso, bien podría ser también dependiente del nivel socioeconómico \cite{} (surgiendo la necesidad de estimar \(n\) valores en lugar de \(1\). 
+
+% Hay un estudio que calcula Impact of universal masking. 
+
+
+Se decidió despreciar los efectos demográficos de los nacimientos y fallecimientos naturales de la población. Eso se traduce en tasas de natalidad y mortalidad \(b_i, d_i\) igualeds a 0. [Justificación]. 
+
+Suponemos que la población de la clase \(i\) pasa una proporción \(r_{ij} \in [0,1]\) de su tiempo en el ambiente \(j\), con \(\sum_{j = 1}^{n} r_{ij} = 1\) para cada \(i\). Para casos extremos, por ejemplo, podría darse que \(r_{ij} = 0\), es decir, la clase \(i\) no gasta nada de su tiempo en el ambiente \(j\), mientras que \(r_{ij} = 1\) significa que la clase \(i\) pasa todo su tiempo en el ambiente \(j\). La matriz \(\mathbf{R} = \{r_{ij}\}_{i = 1\dots n,j \dots m}\) es llamada \textbf{matriz de tiempos de residencia}.
+
+Esta matriz será estimada previamente a partir de los datos disponibles. Más aún, se busca una matriz que sea variable en tiempo, de tal forma que refleje los cambios en el comportamiento de la población a lo largo de la pandemia.
+
+Cada ambiente \(j\) tendrá asociado un riesgo \(\beta_j\). Se impone que el riesgo en el ambiente \texttt{hogar} es \(\beta_{\text{hogar}} = 1\). Todos los demás riesgos deben fijarse relativos a ese valor. Se decide incorporar un factor sanitario \(\alpha_i\), dependiente de la clase, el que se interpreta como un indicador del nivel de respeto por las medidas sanitarias (lavado de manos, uso de mascarillas, guardar la distancia, etc) de la clase \(i\)-ésima. Se supone que los efectos de la movilidad están completamente incluídos en la matriz de tiempos de residencia, por lo que este factor solo considera medidas de cuidado. Se supone además que es variable en el tiempo. 
+
+Las ecuaciones del modelo elegido son \ref{eq:modelo-final}. La forma de estimar la matriz de tiempos de residencia se expondrá en la sección \ref{met:matriz}, y la estimación de los parámetros y el factor sanitario en \ref{met:estimacion}.
+
+\begin{equation}\label{eq:modelo-final}
+\begin{aligned}
+%S_i(t)' &= -S_i(t) {\color{Red} \lambda_i(\vec{x}, t) } \\
+S_i'(t) &= - \lambda_i(\vec{x}, t) S_i(t) \\
+E_i'(t) &= \lambda_i(\vec{x}, t) S_i(t)  - \gamma_E E_i(t) \\ 
+I_i'(t) &= \gamma_E E_i(t)  - \gamma_I I_i(t) \\ 
+R_i'(t) &= \gamma_I I_i(t) \\
+\lambda_i(\vec{x}, t) &= \alpha_i(t)\sum_{j=1}^m \beta_{j}r_{ij}(t)\left(\frac{\sum_{k=1}^{n}r_{kj}(t) I_k}{\sum_{k=1}^{n}r_{kj}(t)N_k}\right)
+\end{aligned}
+\end{equation}
+
+% \[
+% \lambda_i(\vec{x}, P) = \alpha \sum_{j=1}^m \beta_{j}p^S_{ij}
+% \left(
+% p_E \frac{\sum_{k=1}^{n} r^E_{kj}E_k}{\sum_{k=1}^{n}r^E_{kj}N_k} +
+% p_{I} \frac{\sum_{k=1}^{n} r^I_{ kj}I_k }{\sum_{k=1}^{n}r^I_{kj}N_k} +
+% p_{I^m} \frac{\sum_{k=1}^{n}r^{I^m}_{kj}I^m_k}{\sum_{k=1}^{n}r^{I^m}_{kj}N_k}
+% \right)
+% \]
+
+
+
+% Otras decisiones ... tal vez en otro lugar 
+% UNa vez que se deciden las clases y ambientes. 
+
+
+% Veamos a qué corresponde cada una de las variables. Considero
+% $V \in \{S,E,I,I^m\}$.
+
+% \begin{itemize}
+% \itemsep1pt\parskip0pt\parsep0pt
+% \item
+%   $\beta_j$ es una medida de riesgo por unidad de tiempo del ambiente
+%   $j$. Yo diría que corresponde a cantidad de contagiados por día en el
+%   ambiente $j$, pero no estoy segura. De ser así, se mediría en
+%   personas/día.
+% \item
+%   $p_{ij}^V \in [0,1]$ corresponde a la fracción de tiempo que gastan
+%   las personas en el estado $V$ la clase $i$ en el ambiente $j$. Se mide
+%   en días.
+% \item
+%   $p_{kj}^VV_k$ se mide en días $\cdot$ persona. Su valor máximo es
+%   cuando $p_{kj}^V = 1$, ahí vale $V_k$ días $\cdot$ persona (son como
+%   las horas $\cdot$ hombre, que en economía es una medida de
+%   ``esfuerzo'' necesario para llevar a cabo una actividad). Corresponde
+%   al tiempo total invertido por todas las personas de la clase $k$ que
+%   están en el estado $V$de la enfermedad en el ambiente $j$. Es el
+%   ``trabajo de contagio'' del grupo $V_k$.
+% \item
+%   Es interesante además considerar $p_{kj}^V N_k$, porque no coincide el
+%   estado de la matriz $P$ con el que estamos multiplicando. El el
+%   ``trabajo de contagio'' que se realizaría si todas las personas de la
+%   clase $k$ se movieran como si estuvieran en el estado $V$. El
+%   ``trabajo de contagio'' hipotético que realizaría la clase $k$ si
+%   estuvieran todos en estado $V$.
+% \item
+%   Cuando sumamos en todas las clases $k = 1, \dots, n$ obtenemos
+%   $\sum_{k=1}^{n}p^{V}_{kj}V_k$, el ``trabajo de contagio'' del estado
+%   $V$ realizado en el ambiente $j$.
+% \item
+%   La suma del denominador $\sum_{k=1}^{n}p^{V}_{kj}N_k$ corresponde al
+%   ``trabajo de contagio'' hipotético que se haría en el ambiente $j$ si
+%   toda la población estuviera en el estado $V$.
+% \item
+%   Visto así, creo que el término $\alpha_V$ es una medida de la
+%   efectividad del ``trabajo de contagio''. Debería ser un número en
+%   $[0,1]$, pero no estoy segura. Aún no tengo clara la unidad de medida.
+%   Podría ser como una medida de productividad. La productividad se
+%   mide en (cantidad producida)/(horas $\cdot$ hombre). Tiene sentido
+%   creo\ldots{} así se anularía después con el término $S_ip_{ij}$, que
+%   se mide en (horas $\cdot$ hombre). Lo especial de ese término es que
+%   se usa para comparar entre los distintos estados (debería cumplirse
+%   $\alpha_I > \alpha_{I^m}> \alpha_{E}$).
+% \item
+%   Si ahora consideramos la fracción
+%   $\frac{\sum_{k=1}^{n}p^{V}_{kj}V_k}{\sum_{k=1}^{n}p^{V}_{kj}N_k}$, lo
+%   que tendríamos es una fracción de ``esfuerzo'', sería algo como:
+%   ``trabajo real de contagio de $V$ en $j$''/``trabajo ideal de contagio
+%   de $V$''. Recalco lo de ``ideal''.
+% \item
+%   $S_i(t)\lambda_i(\vec{x},P)$ es un flujo, la tasa a la que se pasa del
+%   estado $S$ al estado $E$. Se mide en personas/tiempo. No queda otra
+%   alternativa entonces de que el término $\beta_j \alpha_V$ se mida en
+%   días$^{-2}$. Eso es extraño\ldots{} debería ser un término de
+%   aceleración y no de velocidad como pensé al principio. Eso me da la
+%   idea de calcular $S''_i(t)$\ldots{} pero no me llevó muy lejos.
+% \item
+%   Necesito setear algún valor. Digamos que $\alpha_I = 1$. Luego,
+%   $\beta_j p_{ij} \alpha_{I} \frac{\sum_{k=1}^{n} p^I_{ kj}I_k }{\sum_{k=1}^{n}p^I_{kj}N_k}$
+% \item
+%   Necesito llevar esa cantidad a contagios/tiempo. Necesito una medida
+%   de la eficiencia del trabajo de contagio. Eso debería medirse en
+%   contagios/(hora $\cdot$ persona).
+% \end{itemize}

@@ -1,0 +1,40 @@
+\chapter{Introducción}
+
+\textit{Esto es solo una idea}
+
+Las enfermedades transmisibles han jugado un rol importante en la historia [Insertar ejemplos]. Incluso ahora enfermedades transmisibles como la malaria, el VIH, y la tuberculosis afectan a miles de millones de personas en el mundo y causan más de cuatro millones de muertes cada año [Cita WHO].
+
+Durante el periodo en que se desarrolló este trabajo, la enfermedad provocada por coronavirus COVID-19, que apareció por primera vez en Wuhan (China) el 31 de diciembre de 2019 y a la fecha ha cobrado más de [INSERTAR NUMERO] víctimas en todo el mundo. 
+
+Enfrentar este tipo de emergencias sanitarias requiere de la planificación e implementación de políticas para disminuir el impacto de la enfermedad sobre la población. La recopilación y análisis de datos es crucial a la hora de tomar decisiones, y los modelos epidemiológicos tienen un rol central en este análisis.
+
+Modelos epidemiológicos... Un tipo interesante de modelo son los multiclase, que permiten incorporar heterogeneidad sin aumentar demasiado la complejidad, como un modelo de agentes por ejemplo. 
+
+Este tipo de modelos, sin embargo, son usualmente difíciles de manejar, puesto que requieren especificar las interacciones entre los distintos grupos mediante una matriz de contactos, los cuales son imposibles de medir en la práctica. \cite{Bichara2015} propone un modelo multiclase bajo dispersión virtual, el que elimina esta dificultad mediante la creación de ambientes virtuales (hogar, trabajo, transporte, etc); cada ambiente tiene un riesgo asociado y el tiempo de residencia en cada uno sirve como \textit{proxy} del número de contactos. 
+
+Este modelo no ha sido usado en la práctica (creo xD, al menos no para el covid, pero yo diría que tampoco para otras enfermedades).El objetivo de este trabajo es implementar este modelo y evaluar sus posibles ventajas/desventajas. 
+
+Motivación para el covid y la ciudad de santiago. 
+La crisis sanitaria como la producida por la pandemia de COVID-19; en [x] meses ha cobrado más de [y] víctimas fatales en todo el mundo. Es sabido [cita] que el COVID-19 tiene efectos muy dispares sobre distintos grupos etarios. [Mena et al] muestran además que en Santiago de Chile, una ciudad con una disparidad económica importante, el nivel socioeconómico ha sido determinante en las tasas de incidencia y mortalidad del virus. 
+
+Existencia de datos públicos de la ciudad de santiago que podrían usarse, tanto de movilidad (que se relaciona al uso del tiempo) como de cantidad de infecciones y todo eso. 
+Se usan datos de la encuesta Origen-Destino junto a la metodología propuesta en [Munizaga et al] para obtener una matriz de tiempos de residencia [esto ok]. La asimilación de datos para actualizar la matriz en el tiempo se hace usando Filtro de Kalman [esto sería bkn]. Los parámetros son ajustados usando... [por definir]. 
+
+
+%%%%% ESTABLECER QUE EL NIVEL SOCIOECONOMICO NO QUEREMOS DEJARLO FUERA
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Indice 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enfermedades contagiosas y la amenaza que suponen. % Esto habla de la importancia del tema.
+% Modelos epidemiológicos en general 
+%\include{1-1-modelosepi}
+% El modelo que nos interesa. También decir por qué es interesante y de qué limitaciones intenta hacerse cargo.
+%\include{1-2-virtualdispersal}
+% Con todo eso de arriba estoy estableciendo y delimitando mi territorio. 
+
+% Ahora establezco mi niche  
+% El modelo no ha sido utilizado con datos reales ... blah blah 
+
+
+

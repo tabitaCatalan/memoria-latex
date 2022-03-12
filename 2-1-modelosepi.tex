@@ -1,0 +1,129 @@
+
+
+\section{Modelos epidemiológicos}\label{sec:epi-model}
+
+Los modelos compartimentales son ampliamente utilizados a la hora de modelar una enfermedad contagiosa. La idea tras ellos es simple; en separar a la población en grupos o compartimientos de acuerdo al grado de avance de la enfermedad, y asignar reglas para pasar de un compartimiento a otro.
+
+Un modelo muy sencillo es el \textbf{SIR}, que separa a la población en \textbf{S}usceptibles, \textbf{I}nfectados y \textbf{R}emovidos. Trataremos este modelo de manera determinista, viéndolo como el sistema de ecuaciones diferenciales ordinarias \ref{eq:sir}. También es posible tratarlo de manera estocástica \cite{Daley1984}.
+
+\begin{equation}
+\label{eq:sir}
+\begin{aligned}
+S'(t) &=  -\alpha \frac{S(t)I(t)}{N} \\
+I'(t) &= \alpha \frac{S(t)I(t)}{N}- \gamma_I I(t) \\
+R'(t) &= \gamma_I I(t)
+\end{aligned}
+\end{equation}
+
+Los susceptibles son el grupo de la población que puede ser contagiado con la enfermedad. La enfermedad solo es esparcida por los individuos infectados. Cuando un susceptible se infecta, inmediatamente comienza a contagiar a otros. Tras un tiempo los infectados dejan de contagiar y son removidos. Esto puede deberse a una recuperación de la enfermedad con inmunidad completa (no pueden volver a contagiarse), al aislamiento del contagiado o bien a su muerte debido a la enfermedad. El diagrama de flujo para pasar de un compartimiento a otro puede verse en la figura \ref{fig:sir}.
+
+En este modelo, el total de la población dado por \(N = S + I + R\) permanece constante a lo largo del tiempo. Este modelo supone que un individuo hace en promedio \(\alpha\) contactos  ``efectivos'' o ``suficientes'' para contagiar la enfermedad por unidad de tiempo. Esto, en conjunto con la probabilidad \(S/N\) de que el individuo contactado sea susceptible, deja una cantidad de \(\alpha S I / N\) nuevos contagios por unidad de tiempo. Suponer una tasa de recuperación de la forma \(\gamma_I I\), con \(\gamma_I\) un valor positivo, implica un periodo de infección con distribución exponencial y media \(1/\gamma_I\) (más detalles en \cite{Brauer2019}).
+
+
+
+
+% \ctikzfig{sir}
+\begin{figure}
+\centering
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=black-edge] (0) at (-9, 0) {$S$};
+		\node [style=black-edge] (4) at (-1, 0) {$R$};
+		\node [style=black-edge] (5) at (-5, 0) {$I$};
+		\node [style=none] (6) at (-7, 0.5) {$\alpha I/N$};
+		\node [style=none] (7) at (-3, 0.5) {$\gamma_I$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=arrow] (0) to (5);
+		\draw [style=arrow, in=180, out=0] (5) to (4);
+	\end{pgfonlayer}
+\end{tikzpicture}
+
+\caption{Diagrama de flujo del modelo SIR dado por las ecuaciones \ref{eq:sir}.} \label{fig:sir}
+\end{figure}
+
+
+
+Es posible complejizar este modelo añadiendo compartimientos extras. El compartimiento de \textbf{E}xpuestos permite pasar por un periodo de incubación o latencia, de \(1/\gamma_E\) en promedio, antes de comenzar a contagiar la enfermedad, como se ve en las ecuaciones \ref{eq:seir}. Esto da lugar al modelo \textbf{SEIR}, cuyo diagrama puede verse en la figura \ref{fig:seir}. Otros compartimientos posibles son los \textbf{H}ospitalizados, fallecidos (\textit{\textbf{D}ead}), etc. Desde luego, los compartimientos del modelo dependen de la enfermedad a modelar.
+
+
+\begin{equation}
+\label{eq:seir}
+\begin{aligned}
+S' &=  -\alpha \frac{SI}{N} \\
+E' &= \alpha \frac{SI}{N} - \gamma_E E \\
+I' &= \gamma_E E - \gamma_I I \\
+R' &= \gamma_I I
+\end{aligned}
+\end{equation}
+
+
+% \ctikzfig{sir}
+\begin{figure}
+\centering
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=black-edge] (0) at (-9, 0) {$S$};
+		\node [style=black-edge] (4) at (-1, 0) {$I$};
+		\node [style=black-edge] (5) at (-5, 0) {$E$};
+		\node [style=none] (6) at (-7, 0.5) {$\alpha I/N$};
+		\node [style=none] (7) at (-3, 0.5) {$\gamma_E$};
+		\node [style=black-edge] (8) at (3, 0) {$R$};
+		\node [style=none] (9) at (1, 0.5) {$\gamma_I$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=arrow] (0) to (5);
+		\draw [style=arrow, in=180, out=0] (5) to (4);
+		\draw [style=arrow] (4) to (8);
+	\end{pgfonlayer}
+\end{tikzpicture}
+\caption{Diagrama de flujo del modelo SEIR dado por las ecuaciones \ref{eq:seir}.} \label{fig:seir}
+\end{figure}
+
+Los modelos dados por las ecuaciones \ref{eq:sir} y \ref{eq:seir} suponen que la población se mezcla perfectamente, de forma que las interacciones entre individuos son homogéneas. Una forma de incluir heterogeneidad es separar a la población en grupos, en un modelo multiclase. Esto permite considerar las distintas las capacidades de enfrentar y sobrevivir a la enfermedad de cada grupo, así como las diferencias en comportamiento.
+
+La edad es un factor a considerar en varias enfermedades; enfermedades como la  niños menores de 5 años son especialmente vulnerables a enfermedades como la malaria. Adultos mayores tienen mayor probabilidad de experimentar síntomas graves al contraer influenza. En las enfermedades de transmisión sexual, las parejas tienen edades similares en muchos casos. Para más detalles de cómo considerar la edad dentro del modelamiento epidemiológico puede verse el capítulo 13 de \cite{Brauer2019}.
+
+La ubicación espacial es otro factor a tener en cuenta
+Esto permitirá considerar diferentes patrones de actividad, lo que afectará la velocidad de propagación de la enfermedad.
+\subsection{Enfoques euleriano y lagrangiano}
+
+El objetivo de esta subsección es presentar dos enfoques distintivos que se observan al utilizar modelos con mezcla espacial heterogénea; euleriano y lagrangiano. Los nombres derivan de cierta similitud entre estos enfoques y las especificaciones euleriana y lagrangiana del movimiento de fluidos. Estas definiciones son bastante generales y no son excluyentes entre sí \cite{Cosner2009}.
+
+Se supone una situación con \(n\) regiones, donde la personas puede moverse de una región a otra. Por simplicidad se supone además que infección no altera los patrones de movimiento de la población.\\
+
+
+\noindent \textbf{Enfoque euleriano}
+
+El enfoque euleriano podría describirse como ``migratorio''; las personas no pertenecen a ninguna región, sino que se mueven entre ellas. El movimiento de la población entre dos regiones cualesquiera es conocido.
+
+Se presenta ahora un ejemplo más específico, tomado de una simplificación del modelo euleriano de \cite{Hsieh2007}. Se supone conocida una matriz \(C = (c_{ij})_{i, j = 1\dots n}\) de tasas de migración entre regiones.  \(c_{ij} \geq 0\) corresponde al número de personas por unidad de tiempo que sale desde la región \(i\) hacia la región \(j\). Por definición \(c_{ii} = 0\). 
+
+
+Similar a \cite{Cosner2009}, si \(N_i(t)\) corresponde a la población presente en la región \(i\) a tiempo \(t\), entonces se puede formar un modelo migratorio considerando las personas que salen y las que entran, con las siguientes ecuaciones
+\[
+N_i' = \sum_{j = 1}^n c_{ji} N_j - \sum_{j = 1}^n c_{ij} N_i
+\]
+
+Luego, es posible considerar la propagación de la enfermedad dentro de cada región. Si \(S_{i}(t), I_i(t)\) corresponden al número de susceptibles e infectados en la región \(i\) a tiempo \(t\), y \(\alpha_{i}\) es el número promedio de contactos efectivos que hace un individuo en la región \(i\), entonces 
+
+\[
+S'_i = - \alpha_i\frac{S_iI_i}{N_i}
+\]
+
+\noindent \textbf{Enfoque lagrangiano}
+
+Otra forma de modelar esta situación es enfocarse en las personas; cada una habita en cierta región, aunque puede visitar otras regiones. Esto permite calcular el número de infectados que residen (no están solo de visita) en cada región. Los habitantes de una región usualmente comparten parámetros epidemiológicos (tasa de exposición, recuperación, etc). 
+
+Los nuevos contagios se calculan a partir del número de infectados y susceptibles presentes en la región, comparado al total de personas en cada región, que pueden ser visitantes de otras regiones, o habitantes de esa región.
+
+Un ejemplo de modelo lagrangiano se encuentra en \cite{Ruan2006}. Este define \(S_{ij}(t), I_{ij}(t), R_{ij}(t)\) como los suceptibles, infectados y recuperados de la clase \(i\) que se encuentran en la clase \(j\) a tiempo \(t\).  Esto permite calcular, definiendo \(N_{ij} = S_{ij} + I_{ij} + R_{ij}\), el total de residentes de la región \(i\) como \(N^r_i := \sum_{j = 1}^n N_{ij}\) y el total de personas presentes en la región \(i\) como \(N^p_i := \sum_{j = 1}^n N_{ji}\). La tasa de infección de la población de la región \(i\) debido a los contagios producidos en la región \(k\) se calcula simplemente como la suma de todos los contactos efectivos entre susceptibles de la clase \(i\) con algún infectado de cualquier clase. \(\alpha_{ikj}\) corresponde a la cantidad de contactos efectivos entre la clase \(i\) y la clase \(j\) que ocurren en la región \(k\).
+\[
+S'_{ik} = -\sum_{j = 1}^n \alpha_{ikj} \frac{S_{ik}I_{jk}}{N^p_j}
+\]
+
+Este modelo, guardando similitud con el modelo euleriano expuesto antes, supone que los residentes susceptibles de la región \(i\) viajan a otras regiones a una tasa constante \(\sigma_i\). Desde la región \(i\) van a la región \(j\) con probabilidad \(\nu_{ij}\), y vuelven a su región con tasa \(\rho_{ij}\). Esta, sin embargo, no es la única forma de trabajar con la movilidad de la población. \cite{Cosner2009} y \cite{Bichara2015} utilizan matrices \(P = (p_{ij})_{i, j = 1 \dots n}\) de tiempos de residencia, donde \(p_{ij}\) corresponde a la fracción de su tiempo que los residentes de la clase \(i\) pasan en la región \(j\). Desde luego se cumple \(\sum_{j = 1}^n p_{ij} = 1\) para cada \(i\). Esta forma de abordar la movilidad será la más interesante para este trabajo, y se verá en más detalle en la siguiente sección.
+
+
+
+

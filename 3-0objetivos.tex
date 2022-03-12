@@ -1,0 +1,36 @@
+\section{Objetivos de la investigación}
+% Idealmente:
+% Este trabajo busca poner a prueba el modelo propuesto en \cite{Bichara2015}, mediante su aplicación al estudio de la evolución de la pandemia de Covid19 en la ciudad de Santiago de Chile. 
+% la idea es que ya no se necesitan las interacciones en cada clase. % Pero a cambio necesito saber en qué ambientes está la gente. 
+% De verdad me estoy preguntando qué pasa si solo lo dejo con dos ambientes. Siento que puedo dejarlo con hogar y fuera del hogar. Eso me permitiría meter casi directamente la información de movilidad. Creo que lograría tener movilidad por nivel socioeconómico, en base a la info por comunas. Pero la movilidad por edad creo que está harto más difícil de determinar. 
+
+% Poner a prueba en qué? Bajo qué criterios? El principal criterio es que no necesito conocer cómo interactúa la gente, quiero tener resultados interesantes sin necesariamente saber de qué forma se mezclan todos.
+
+% Cómo puedo evaluar? Comparando la cercanía con los resultados obtenidos con algún otro modelo multiclase?  
+
+El objetivo general de este trabajo es implementar el modelo lagrangiano multiclase con dispersión virtual propuesto en \cite{Bichara2015}, y utilizarlo en el estudio de la evolución de la pandemia de Covid19 en la ciudad de Santiago de Chile. 
+
+% Modelos multiclase en Santiagooooo, estoy segura de que hay gente haciendo eso, la fundación ciencia y vida estaba trabajando con un modelo de todas las comunas, haciendo algo parecido a lo que hacía yo pero mucho más complejo. 
+
+Se busca modelar el brote de Covid19 en la Región Metropolitana de Santiago, mediante un modelo lagrangiano de tipo SIR (Susceptibles, Infectados, Recuperados) de clases y ambientes, según aparece en \cite{Bichara2015}, y ajustar los parámetros de este modelo a los datos epidemiológicos disponibles.
+Más específicamente, el trabajo a realizar puede subdividirse en varias etapas; en primer lugar, se requiere decidir el modelo específico a utilizar, lo que incluye compartimientos a utilizar (susceptibles, expuestos, infectados, etc), clases, ambientes, parámetros fijos y variables en el tiempo, etc. En segundo lugar, es necesario estimar una matriz de tiempos de residencia para las clases y ambientes elegidos. En tercer lugar, se debe elegir e implementar una versión del filtro de Kalman (extendido, \textit{unscented}, filtro por ensambles, etc), y de estimación de parámetros (estado aumentado, filtro de Kalman con múltiples modelos, etc). Se debe decidir además qué variables observar y cómo ajustar el filtro.
+
+% Siempre deben ser verbos terminados en -ar -er -ir 
+% Mi objetivo es implementAR el modelo ... qué acciones hay que cumplir 
+% \begin{itemize}
+% \item Qué compartimientos usar? 
+% \item Qué clases elegir? 
+% \item Qué ambientes elegir? <-
+% \item Cómo formo la matriz de tiempos de residencia, de dónde obtengo los datos? 
+% \item Cómo actualizo esa matriz, ya que ha ido cambiando en el tiempo. 
+% \item Cómo elijo los parámetros para ajustarlo a los datos existentes de avance de la pandemia? Qué dejo constante? Qué dejo variable? Qué método uso para los constantes? 
+% \item Cómo evalúo lo bien que funciona el modelo?
+% \end{itemize}
+
+% - Elección del modelo. Esto aún tengo que discutirlo... pero incluye: qué clases usar, que compartimientos usar, cuántos ambientes, etc.
+% - Datos disponibles: EOD, datos de movilidad comunal, datos de movilidad de Google por ambiente. Esto para la matriz de 
+% - Metodologías dependen de cada objetivo específico 
+% - Ajuste del modelo: datos que le voy a dar para ajustar. De qué forma ajusto. 
+% - Datos que usaré para verificación, pa cachar qué tan bien funciona la cuestión. 
+
+

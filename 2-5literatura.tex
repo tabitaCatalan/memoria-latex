@@ -1,0 +1,62 @@
+\section{Revisión de literatura} \label{sec:literatura} 
+
+%% Índice 
+% El modelo que me interesa. 
+% En qué contextos se ha usado. 
+% Aquí hay un vacío, ya que la versión con ambientes no se ha ocupado nunca creo. 
+% Justificación de por qué es interesante usarla. 
+
+% Con respecto al covid y santiago (los antecedentes de mi caso de estudio) 
+% Cómo se ha estudiado el Covid? Hay muchísimos modelos disponibles, dar algunos ejemplos. 
+% Qué se ha hecho con respecto al covid en Chile? Qué modelos se han usado? Qué cosas se han descubierto? Creo que el artículo de Mena debería ir aquí. También debería volver a mirar los seminarios, ahí hay harta info. Buscar los papers.
+% Lo mismo pero en Santiago. 
+% Aquí sería interesante encontrar un nicho también... algo que no se haya intentado, algo que los modelos no han incorporado... etc 
+
+% Con respecto a las metodologías específicas que usaré.
+% Qué otras metodologías existen? De qué otra manera podría estimar los parámetros de esto.? 
+% Para filtro de kalman 
+% Cómo se ha usado en otras epidemias 
+% Cómo se ha usado en el caso del Covid
+% Algún vacío en la literatura? 
+
+% Revisar el artículo que estaba leyendo (Approximation rates), ellos tienen una revisión de literatura que me parece completa y bien escrita. 
+
+Varios artículos posteriores han implementado el primer modelo basado en tiempos de residencia propuesto por \cite{Bichara2015} [Revisar si es verdad]. Sin embargo, nadie ha usado aún el segundo modelo propuesto, donde se utilizan ambientes en lugar de clases. Este modelo es interesante pues... 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Covid en Santiago %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Mucha investigación se ha llevado a cabo con respecto al Covid19 estos últimos meses. Se han estudiado modelos como ... y ... 
+
+En Santiago, en particular ... ... 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% KALMAN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Para la estimación de parámetros se ha decidido usar el filtro de Kalman. Esto pues... % (buscar justificación dentro de los mismo artículos que he revisado)
+
+Las distintas variantes del Filtro de Kalman se han usado previamente en epidemiología para estimación de parámetros, tanto fijos como cambiantes en el tiempo, trabajando con datos relacionados a SIDA \cite{Cazelles1997}, ébola \cite{Ndanguza2017}, dengue \cite{Torres-Signes2021}, tuberculosis \cite{Narula2016}, etc. % Creo que puedo dar más detalles de cada uno. 
+
+En este último tiempo ha sido incorporado al análisis de datos de COVID-19. Se ve el uso repetido del EnKF en predicción [Hameni et al], \cite{Yang2020}, \cite{Song2021}. En \cite{Arroyo-Marioli2021} y \cite{Hasan2020} [Hasan et al (buscar año)] usan filtro de kalman y EKF respectivamente para estimar el número de reproducción efectivo \( \mathcal{R}_t \). En \cite{Rajaei2021} se usa EKF para desarrollar un control robusto basado en distanciamiento social, hospitalización y tratamiento, y vacunación. En \cite{Bansal2021} se usa \textit{Fractional Order Calculus}, un técnica de filtraje de la que EKF puede verse como un caso particular, para estimar transmisibilidad.
+
+
+% 11/05/2020 - [Gomez-Exposito et al] EKF para estimar un indicador predicción 
+% 12/06/2020 - [Aslam] Lo usa para hacer forecasting con datos de Pakistan, sin especificar más allá los detalles...
+% 11/07/2020 - [Hameni et al] Usan EnKF para predicciones... usando un modelo basado en SIR.
+% 05/08/2020 - [Yang et al] Usan EnKF para predicción de corto plazo.
+% 17/11/2020 - [Arroyo-Marioli] Usan el filtro de kalman para estimar el Rt
+% 2 December 2020 - [Li, Zhao, ..] Usan EnKF para forecasting.
+% 13/01/2021 - [Hasan et al] Usan EKF para estimar el número de reproducción efectivo \( \mathcal{R}_t \).
+% 15/02/2021 - [Bansal] Usa un técnica que engloba KF
+% 22/03/2021 - [Song et al] EKF 
+% 30/03/2021 - [Rajaei et al] Control robusto
+
+
+% Elección de parámetros 
+
+Mi impresión es que la elección de parámetros es verdaderamente un vacío en la literatura. Cuando leo los artículos no me parece que den una buena justificación de por qué lo hacen así. Me interesa leer a los tipos que usaron el filtro Hinfty, porque creo que debido a las incertezas que hay en todo el proceso de modelar esta cuestión, tiene mucho sentido usarlo.

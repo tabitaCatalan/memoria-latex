@@ -1,0 +1,60 @@
+\section{Estimación de parámetros}
+
+\subsection{Modelo con una clase}
+\subsection{Modelo multiclase con datos sintéticos}
+
+Usando condiciones iniciales, un valor de P... matrices de convarianza... 
+
+\insertimage[\label{synth-all-nohigh}]{resultados/synth/kalman_grouped_allstates_allgroups\parameterstring}{width=0.99\textwidth}{Resultados obtenidos con Filtro de Kalman Suavizado para el caso sintético}
+
+\begin{images}[\label{synth-e-comp-high}]{Casos Expuestos, comparando resultados obtenidos con solución real, en valores absolutos y normalizados con respecto a la cantidad de personas por clase.}
+    \addimage{resultados/synth/kalman_grouped_E_high1\parameterstring}{width=0.8\textwidth}{Clase \(1\).}
+    \addimage{resultados/synth/kalman_grouped_E_high2\parameterstring}{width=0.8\textwidth}{Clase \(2\).}
+    %\addimage{ejemplos/test-image}{width=12cm}{Ciudad más grande}
+\end{images}
+
+\begin{images}[\label{synth-alpha-comp-high}]{Factor sanitario, comparando resultados obtenidos con función de control usada para general los datos, acotando el dominio en el eje \(y\) para mejor apreciación.}
+    \addimage{resultados/synth/kalman_grouped_alpha_high1\parameterstring}{width=0.99\textwidth}{Clase \(1\).}
+    \addimage{resultados/synth/kalman_grouped_alpha_high2\parameterstring}{width=0.99\textwidth}{Clase \(2\).}
+    %\addimage{ejemplos/test-image}{width=12cm}{Ciudad más grande}
+\end{images}
+
+
+\subsection{Análisis de sensibilidad}
+% A los ambientes 
+% A los riesgos de contagio de sintomatico y asintomatico
+\subsection{Modelo con datos reales}
+
+
+\insertimage[\label{all-nohigh}]{resultados/kalman_grouped_allstates_allgroups\parameterstring}{width=0.99\textwidth}{Resultados obtenidos con Filtro de Kalman Suavizado para el caso sintético}
+
+\begin{images}[\label{e-comp-high}]{Cantidad de Infectados estimados a partir de datos reales, en valores absolutos y normalizados con respecto a la cantidad de personas por clase.}
+    \addimage{resultados/kalman_grouped_I_high1\parameterstring}{width=0.47\textwidth}{Clase \(1\).}
+    \addimage{resultados/kalman_grouped_I_high2\parameterstring}{width=0.47\textwidth}{Clase \(2\).}
+    \addimage{resultados/kalman_grouped_I_high3\parameterstring}{width=0.47\textwidth}{Clase \(3\).}
+    \addimage{resultados/kalman_grouped_I_high4\parameterstring}{width=0.47\textwidth}{Clase \(4\).}
+    \addimage{resultados/kalman_grouped_I_high5\parameterstring}{width=0.47\textwidth}{Clase \(5\).}
+    \addimage{resultados/kalman_grouped_I_allclass\parameterstring}{width=0.47\textwidth}{Todas las clases.}
+    %\addimage{ejemplos/test-image}{width=12cm}{Ciudad más grande}
+\end{images}
+
+\begin{images}[\label{s-comp-high}]{Cantidad de Susceptibles estimados a partir de datos reales, en valores absolutos y normalizados con respecto a la cantidad de personas por clase.}
+    \addimage{resultados/kalman_grouped_S_high1\parameterstring}{width=0.47\textwidth}{Clase \(1\).}
+    \addimage{resultados/kalman_grouped_S_high2\parameterstring}{width=0.47\textwidth}{Clase \(2\).}
+    \addimage{resultados/kalman_grouped_S_high3\parameterstring}{width=0.47\textwidth}{Clase \(3\).}
+    \addimage{resultados/kalman_grouped_S_high4\parameterstring}{width=0.47\textwidth}{Clase \(4\).}
+    \addimage{resultados/kalman_grouped_S_high5\parameterstring}{width=0.47\textwidth}{Clase \(5\).}
+    \addimage{resultados/kalman_grouped_S_allclass\parameterstring}{width=0.47\textwidth}{Todas las clases.}
+    %\addimage{ejemplos/test-image}{width=12cm}{Ciudad más grande}
+\end{images}
+
+\begin{images}[\label{alpha-comp}]{Factor sanitario estimado a partir de datos reales. Las líneas grises corresponden a algunas fechas relevantes: (1) 13/may/2020 - Comienzo de la cuarentena total en la RM; (2) 25/oct/2020 - Plesbicito por la nueva constitución; (3) 4/ene/2021 - Comienza a funcionar el pase de vacaciones; (4) 1/feb/2021 - Comienza un plan de vacunación más intensivo (ver visualizador CMM); (5) 26/may/2021 - Un 50\% de la población en la RM tiene la primera dosis de la vacuna.}
+    \addimage{resultados/kalman_grouped_alpha_allclass\parameterstring}{width=0.99\textwidth}{Todas las clases}
+    \addimage{resultados/kalman_grouped_alpha_high1\parameterstring}{width=0.47\textwidth}{Clase \(1\).}
+    \addimage{resultados/kalman_grouped_alpha_high2\parameterstring}{width=0.47\textwidth}{Clase \(2\).}
+    \addimage{resultados/kalman_grouped_alpha_high3\parameterstring}{width=0.47\textwidth}{Clase \(3\).}
+    \addimage{resultados/kalman_grouped_alpha_high4\parameterstring}{width=0.47\textwidth}{Clase \(4\).}
+    \addimage{resultados/kalman_grouped_alpha_high5\parameterstring}{width=0.47\textwidth}{Clase \(5\).}
+    %\addimage{ejemplos/test-image}{width=12cm}{Ciudad más grande}
+\end{images}
+

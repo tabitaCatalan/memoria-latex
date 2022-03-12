@@ -1,0 +1,47 @@
+\section{Número reproductivo básico y efectivo}\label{sec:R0}
+
+%Se sigue la explicación dada por \cite{Brauer2019}, que está basada en [Buscar autores].
+
+El número reproductivo básico \(\mathcal{R}_0\) se define como el número esperado de casos de una enfermedad producidos por un individuo `típico' en una población completamente susceptible [Tal vez cita, es traducción directa]. Solo se consideran las infecciones secundarias (las producidas por ese individuo, y no las producidas por otros que fueron infectados por él). Para epidemias donde se pueden ignorar los efectos demográficos y donde tras enfermarse los individuos tienen inmunidad completa, la línea \(\mathcal{R}_0=1\) es la línea divisoria entre una infección que desaparece (\(\mathcal{R}_0<1\)) y una que se transforma en una epidemia (\(\mathcal{R}_0>1\)).
+
+Una forma bastante general para calcularlo en modelos de ecuaciones diferenciales es usar la \textit{next generarion matrix}. La idea es la siguiente: separar los compartimientos en dos tipos: enfermo y sano. Los enfermos no necesariamente son contagiosos. Si hay \(n\) compartimientos de tipo enfermo, \(m\) de tipo sano y \(x \in \mathbb{R}^n, y \in \mathbb{R}^m\) son subpoblaciones de cada uno de esos compartimientos. Denotaremos \(\mathcal{F}_i\) al flujo de entrada al compartimiento \(i\)-ésimo debido a infecciones secundarias y \(\mathcal{V}_i\) al flujo de salida del compartimiento \(i\)-ésimo debido a progresión de la enfermedad, recuperación o muerte. Esto permite escribir 
+\begin{equation}
+\label{model-flows}
+\begin{aligned}
+x_i' &= \mathcal{F}_i(x,y) - \mathcal{V}_i(x,y) & i = 1, \dots, n \\ 
+y_j' &= g_j(x,y) & j = 1, \dots, m
+\end{aligned}
+\end{equation}
+
+Se consideran los siguientes supuestos 
+\begin{itemize}
+\item \(\mathcal{F}(0, y) = 0\) y \(\mathcal{V}(0, y) = 0\) para \(y \geq 0\). Esto dice que todas las nuevas infecciones son secundarias, provienen de alguien infectado dentro del sistema; no hay inmigración de individuos infectados hacia los compartimientos de enfermedad.
+\item El sistema libre de enfermedad \(y' = g(0,y) \) tiene un único equilibrio que es asintóticamente estable, ie. todas las soluciones con condiciones iniciales \((0,y)\) se aproximan a un punto \((0, y_0)\) a medida que \(t \to \infty\). Esto asegura que el equilibrio libre de enfermedad es un equilibrio del sistema.
+\item \(\mathcal{F}_i(x,y) \geq 0\) para \(x,y\) no negativos e \(i = 1, \dots, n\).
+\item \(\mathcal{V}_i(x,y) \leq 0\) si \(x_i = 0\), \(i = 1, \dots, n\).
+\item \(\sum_{i=1}^n\mathcal{V}_i(x,y) \geq 0\) si \(x,y\) son no-negativos.
+\end{itemize}
+
+Supongamos que introducimos una persona infectada al sistema libre de enfermedad. Si linealizamos en torno al punto de equilibrio libre de enfermedad \(0, y_0\) notamos que 
+\[
+\frac{\partial \mathcal{F}_i}{\partial y_j} (0,y_0) = \frac{\partial \mathcal{V}_i}{\partial y_j} (0,y_0) = 0
+\]
+
+Esto implica que las ecuaciones para los compartimientos de enfermedad está desacopladas del resto, por lo que se pueden escribir como 
+\[
+x' = (F-V)x
+\]
+Donde 
+\[
+F = \frac{\partial \mathcal{F}_i}{\partial x_j}(0, y_0) \quad
+V = \frac{\partial \mathcal{V}_i}{\partial x_j}(0, y_0) 
+\]
+
+Llamamos a la matriz \(FV^{-1}\) la \textit{matrix de próxima generación} o \textit{next generation matrix}. Su radio espectral \(\rho\), es decir, el valor propio con mayor módulo, corresponde a \(\mathcal{R}_0 = \rho(FV^{-1})\).
+
+\begin{teo}
+El equilibrio libre de enfermedad de \ref{model-flows} es localmente asintóticamente estable si \(\mathcal{R}_0 < 1\) pero inestable si \(\mathcal{R}_0 > 1\).
+\end{teo}
+
+
+

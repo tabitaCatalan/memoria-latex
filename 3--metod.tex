@@ -1,0 +1,53 @@
+\chapter{Metodología}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Presentación del apartado y reportar la estructura
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Este apartado detalla la metodología seguida en el trabajo. Se estructura como sigue: la primera sección lista los objetivos generales y específicos. La segunda describe las distintas fuentes de datos consideradas; la disponibilidad de datos influye en las decisiones de diseño tomadas más adelante. Las siguientes secciones describen los objetivos específicos en detalle; elección del modelo, construcción de la matriz de tiempos de residencia y uso de Filtro de Kalman en la estimación de parámetros.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Aqui solo voy a divagar c/r a lo que necesito hacer 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{itemize}
+%     \item Cuando trate el modelo completo (con clases y todo eso), los casos detectados pueden no ser la mejor opción para ajustar el modelo. La trazabilidad y la velocidad de detección en las clases bajas es menor que en clases altas (ellos tienen resultados mucho más rápidos). La cantidad de fallecidos, sin embargo, es un dato mucho más certero, el DEIS ha hecho un buen trabajo en saber quiénes han fallecido de covid. Según Mena, en los fallecidos además se nota la desigualdad, en el hecho que el exceso de muertes en jóvenes de clases sociales más bajas es mucho mayor. Creo que no hay problema en usar los fallecidos como observación... siempre y cuando las tasas sean conocidas y no por estimar, en ese caso creo que perdería la observabilidad.
+    
+    
+%     \item Esto debería llevarme a replantear el modelo que estoy usando, debo considerar los muertos, y es posible que los hospitalizados también sean una buena fuente de información. Pero esto deja la duda de cómo ordenar los compartimientos para infección. Debería considerar expuestos, supongo, y la mayoría separa sintomáticos de asintomáticos. El problema más grande que sigo teniendo y que me molesta, es el hecho de que estoy necesitando demasiados parámetros, y que para fijarlos probablemente no haré pooling (o bien terminaré haciendo pooling total). Estoy segura que alguna estrategia de pooling parcial sería maravilloso, pero no sabría hacerla. Además creo que esto no es tan necesario, creo que debería revisar otras publicaciones con modelos multiclases para ver cómo lo enfrentan. 
+    
+    
+%     \item Aun no tengo idea cómo fijar los riesgos. Definitivamente hay que hacer un análisis de sensibilidad (averiguar cómo), y aún no tengo claro si en la bibliografía se ha usado el modelo con ambientes (y no patches, que es el que sí usan). Creo que debo dedicar una sección a este estudio. No solo está el tema de los riesgos, también qué ambientes elijo, porque tampoco es claro, tenemos hartos, y podrían ser menos. Creo que sería bueno hacer un modelo de juguete con dos o tres ambientes, y ver qué pasa.
+    
+%     \item Cómo actualizar la matriz de tiempos de residencia. Este es por lejos el problema que más me molesta, porque Cattarina tiene razón, y los datos del plan paso a paso no capturan bien las diferencias (y está probado en varios artículos que las comunas de menor nivel socioeconómico disminuyen mucho menos su movilidad). Probablemente debería hacer algún tipo de análisis de sensibilidad aquí también, pero nuevamente no sé cómo. Me tinca que el ensamble de hecho funcionaría bien para eso, ver todas las posibles trayectorias. El problema con ensamble es que no tengo idea qué hacer con la distribución inicial, y cómo elegir bien las matrices de ruido, aunque había algunos artículos al respecto. 
+% \end{itemize}
+
+
+% Además aún no defino bien qué es lo que quiero hacer con esta cosa. Qué estoy tratando de hacer con KF? Averiguar un parámetro? Hasta ahora lo quiero usar para averiguar la tasa de contagio, que es un valor variable. Así que el paper de máx verosimilitud parece ser adecuado. Pero la controlabilidad es lo que me tiene con problemas. Creo que debería considerar el R efectivo, se puede calcular teóricamente y tal vez comparar con los que les dan en la página.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Índice 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Plantear objetivos generales y específicos, preguntas que guían la investigación. 
+\include{3-0objetivos}
+
+\include{3-05datos}
+
+% Justificación de la elección de los compartimientos, basada en las características del Covid en la región que estamos estudiando. 
+% Modelo multiclase elegido 
+
+\include{3-10metod-modelo}
+
+% Elección de matriz de tiempos de residencia 
+% Cómo variarla en el tiempo (sección por trabajar)
+% Justificación de la elección de ambientes, basada en los que hayan sido importantes, los que aparecen en los datos, etc. 
+\include{3-20matriz_residencia}
+
+% Estimación de parámetros 
+\include{3-30estimacion_parametros_variables}
+
+\include{3-40evaluacion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
