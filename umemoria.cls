@@ -21,10 +21,14 @@
 \DeclareOption{rightnum}{\@swapnumfalse}
 \DeclareOption{contnum}{\@contnumtrue}
 \DeclareOption{nocontnum}{\@contnumfalse}
-\DeclareOption{uprightd}{\AtEndOfPackage{\DeclareMathSymbol{d}{\mathalpha}{operators}{`d}}}
-\DeclareOption{uprighte}{\AtEndOfPackage{\DeclareMathSymbol{e}{\mathalpha}{operators}{`e}}}
-\DeclareOption{uprighti}{\AtEndOfPackage{\DeclareMathSymbol{i}{\mathalpha}{operators}{`i}}}
-\DeclareOption{upright}{\ExecuteOptions{uprightd,uprighte,uprighti}}
+% \DeclareOption{uprightd}{\AtEndOfPackage{\DeclareMathSymbol{d}{\mathalpha}{operators}{`d}}}
+% \DeclareOption{uprighte}{\AtEndOfPackage{\DeclareMathSymbol{e}{\mathalpha}{operators}{`e}}}
+% \DeclareOption{uprighti}{\AtEndOfPackage{\DeclareMathSymbol{i}{\mathalpha}{operators}{`i}}}
+
+% \DeclareOption{uprightd}{\AtEndOfPackage{\DeclareMathSymbol{d}{\mathalpha}{operators}{`d}}}
+% \DeclareOption{uprighte}{\AtEndOfPackage{\DeclareMathSymbol{e}{\mathalpha}{operators}{`e}}}
+% \DeclareOption{uprighti}{\AtEndOfPackage{\DeclareMathSymbol{i}{\mathalpha}{operators}{`i}}}
+% \DeclareOption{upright}{\ExecuteOptions{uprightd,uprighte,uprighti}}
 
 %% Pasar Opciones a clase Book
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
@@ -112,6 +116,11 @@
 \let\carrera\setcarrera
 \let\setcarrera\relax
 
+\global\let\@tesis\@empty
+\newcommand{\settesis}[1]{\def\@tesis{#1}}
+\let\tesis\settesis
+\let\settesis\relax
+
 \global\let\@memoria\@empty
 \newcommand{\setmemoria}[1]{\def\@memoria{#1}}
 \let\memoria\setmemoria
@@ -151,6 +160,9 @@
 		\centering
 			\MakeUppercase\@title
 
+		\vspace{1cm}
+			\MakeUppercase\@tesis
+			
 		\vspace{1cm}
 			\MakeUppercase\@memoria
 
