@@ -1,12 +1,14 @@
 \documentclass[upright, contnum]{umemoria}
-\depto{DEPARTAMENTO DE CIENCIAS DE LA COMPUTACIÓN}
+\depto{DEPARTAMENTO DE INGENIERÍA MATEMÁTICA}
 \author{TABITA ANDREA CATALÁN MUÑOZ}
 \title{Desarrollo de un modelo epidemiológico lagrangiano multiclase de tiempos de residencia y riesgos en ambientes, aplicado al brote de Covid19 en la Región Metropolitana de Chile}
-\auspicio{.}
+\auspicio{Proyecto Fondecyt 1191903 y \break CMM ANID PIA AFB170001.}
 \date{MARZO 2022}
 \guia{AXEL OSSES ALVARADO}
 \carrera{INGENIERA CIVIL MATEMÁTICA}
-\memoria{MEMORIA PARA OPTAR AL TÍTULO DE}
+\tesis{TESIS PARA OPTAR AL GRADO DE MAGÍSTER EN CIENCIAS DE LA
+INGENIERÍA, MENCIÓN MATEMÁTICAS APLICADAS}
+\memoria{MEMORIA PARA OPTAR AL TÍTULO DE INGENIERA CIVIL MATEMÁTICA}
 \comision{HÉCTOR RAMÍREZ CABRERA, CARLA CASTILLO LABORDE, PEDRO GAJARDO ADARO}
 
 \usepackage{lipsum}
@@ -39,6 +41,9 @@
 }
 
 \newcommand\parameterstring{gamma_e_0-2083_gamma_i_0-1493_beta_2_68-0000}
+\decimalpoint
+
+\usepackage{multirow}
 
 \usepackage{tikzit}
 \input{sample.tikzstyles}
@@ -81,4 +86,7 @@ Una dedicatoria corta.
 %\nocite{*} % esto hace que se vean todas
 \bibliographystyle{ieeetr}
 \bibliography{library}
+
+\appendix
+\input{7--anexos}
 \end{document}
