@@ -1,25 +1,128 @@
 \begin{intro}
 %\chapter{Introducción}
 
-\textit{Esto es solo una idea}
 
-Las enfermedades transmisibles han jugado un rol importante en la historia [Insertar ejemplos]. Incluso ahora enfermedades transmisibles como la malaria, el VIH, y la tuberculosis afectan a miles de millones de personas en el mundo y causan más de cuatro millones de muertes cada año [Cita WHO].
+% Las enfermedades transmisibles han jugado un rol importante en la historia [Insertar ejemplos]. Incluso ahora enfermedades transmisibles como la malaria, el VIH, y la tuberculosis afectan a miles de millones de personas en el mundo y causan más de cuatro millones de muertes cada año [Cita WHO].
 
-Durante el periodo en que se desarrolló este trabajo, la enfermedad provocada por coronavirus COVID-19, que apareció por primera vez en Wuhan (China) el 31 de diciembre de 2019 y a la fecha ha cobrado más de [INSERTAR NUMERO] víctimas en todo el mundo. 
+% Durante el periodo en que se desarrolló este trabajo, la enfermedad provocada por coronavirus COVID-19, que apareció por primera vez en Wuhan (China) el 31 de diciembre de 2019 y a la fecha ha cobrado más de [INSERTAR NUMERO] víctimas en todo el mundo. 
 
-Enfrentar este tipo de emergencias sanitarias requiere de la planificación e implementación de políticas para disminuir el impacto de la enfermedad sobre la población. La recopilación y análisis de datos es crucial a la hora de tomar decisiones, y los modelos epidemiológicos tienen un rol central en este análisis.
+% Enfrentar este tipo de emergencias sanitarias requiere de la planificación e implementación de políticas para disminuir el impacto de la enfermedad sobre la población. La recopilación y análisis de datos es crucial a la hora de tomar decisiones, y los modelos epidemiológicos tienen un rol central en este análisis.
 
-Modelos epidemiológicos... Un tipo interesante de modelo son los multiclase, que permiten incorporar heterogeneidad sin aumentar demasiado la complejidad, como un modelo de agentes por ejemplo. 
+\section*{Motivación y antecedentes}
 
-Este tipo de modelos, sin embargo, son usualmente difíciles de manejar, puesto que requieren especificar las interacciones entre los distintos grupos mediante una matriz de contactos, los cuales son imposibles de medir en la práctica. \cite{Bichara2015} propone un modelo multiclase bajo dispersión virtual, el que elimina esta dificultad mediante la creación de ambientes virtuales (hogar, trabajo, transporte, etc); cada ambiente tiene un riesgo asociado y el tiempo de residencia en cada uno sirve como \textit{proxy} del número de contactos. 
+El Covid19 es una enfermedad provocada por el virus SARS-CoV-2. Descubierta a finales de 2019, se convirtió en pandemia en 2020 y ha sido un desafío sanitario a nivel mundial; hacia marzo de 2022 ya ha causado más de 6 millones de muertes en todo el mundo según datos de \href{https://ourworldindata.org/explorers/coronavirus-data-explorer?facet=none&pickerSort=desc&pickerMetric=total_cases&Metric=Confirmed+deaths&Interval=Cumulative&Relative+to+Population=false&Color+by+test+positivity=false&country=~OWID_WRL}{COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University.} 
 
-Este modelo no ha sido usado en la práctica (creo xD, al menos no para el covid, pero yo diría que tampoco para otras enfermedades).El objetivo de este trabajo es implementar este modelo y evaluar sus posibles ventajas/desventajas. 
+El Covid19 se transmite por microgotas emitidas al respirar, hablar, toser o estornudar, o por contacto estrecho. Las autoridades han aplicado diferentes medidas de mitigación, que incluyen varias formas de distanciamiento social, como reducciones de movilidad, cuarentenas totales o parciales, teletrabajo, distancias mínimas entre personas, etc. También se ha potenciado el uso de medidas de higiene, como el uso de mascarillas, lavado frecuente de manos, ventilación de espacios, etc. En 2021 se ha masificado la vacunación masiva y ...
 
-Motivación para el covid y la ciudad de santiago. 
-La crisis sanitaria como la producida por la pandemia de COVID-19; en [x] meses ha cobrado más de [y] víctimas fatales en todo el mundo. Es sabido [cita] que el COVID-19 tiene efectos muy dispares sobre distintos grupos etarios. [Mena et al] muestran además que en Santiago de Chile, una ciudad con una disparidad económica importante, el nivel socioeconómico ha sido determinante en las tasas de incidencia y mortalidad del virus. 
+El impacto de la enfermedad ha sido heterogéneo entre la población. Se han señalado al factor socioeconómico \cite{Ahmed2020} como un agravante... y son conocidos los efectos de la enfermedad en los adultos mayores.
 
-Existencia de datos públicos de la ciudad de santiago que podrían usarse, tanto de movilidad (que se relaciona al uso del tiempo) como de cantidad de infecciones y todo eso. 
-Se usan datos de la encuesta Origen-Destino junto a la metodología propuesta en [Munizaga et al] para obtener una matriz de tiempos de residencia [esto ok]. La asimilación de datos para actualizar la matriz en el tiempo se hace usando Filtro de Kalman [esto sería bkn]. Los parámetros son ajustados usando... [por definir]. 
+Los datos de movilidad han sido utilizados ampliamente para modelar el avance de la enfermedad \cite{Lai2020}\cite{Oliver2020}, se correlacionan bien con los contactos \cite{Prem2020} y la transmisibilidad \cite{Nasan2021} (ver bien Nasan). \cite{Chang2021} nota como las diferencias en movilidad explican las diferencias en transmisión en diferentes grupos económicos, notando que además las clases de menor nivel socioeconómico se enfrentan a ambientes más riesgosos.
+
+El IPCC define el riesgo como una combinación entre tres factores; amenaza, ..., exposición (presencia de ..) y vulnerabilidad. Esta idea motiva el tener en consideración a la hora de estudiar los contagios; en qué lugares están, qué tantas amenazas hay en el lugar donde están, cuánto tiempo se exponen a esas amenazas y qué tan vulnerables son a ellas. 
+
+El lugar donde las personas están y el tiempo que pasan en ellos se asocia con la movilidad, de hecho la relación entre viajes y tiempos de actividad es utilizada en varios modelos \cite{} y aprovechada para obtener información de encuestas de viajes como la Origen-Destino \cite{Munizaga2011}. Lo amenazante de un lugar tiene que ver con la cantidad de personas presentes y cuántas de ellas están infectadas, además de las características del lugar en sí (no es lo mismo estar en el transporte público que en un parque). La vulnerabilidad se relacionaría a alguna característica de la clase que le permita ser.., como el uso adecuado de mascarillas..., el respecto por la distancia mínima, etc.
+
+Con esto en mente, se busca un modelo epidemiológico que considere estos factores. Suponiendo que hay varias clases \(i \in 1 \dots n\) y ambientes \(j \in 1 \dots m\), se propone una idea de amenaza de la forma \(\beta_j I_j/N_j\), que incluye la fracción de infectados en un lugar y un factor \(\beta_j\) dependiente de las características del lugar. Se consideran además valores \(p_{ij}\), que representan el tiempo que la clase \(i\) está en el ambiente \(j\), y un factor de vulnerabilidad \(\alpha_i\).
+
+\begin{equation}
+\alpha_i \sum_{j = 1}^m \beta_j p_{ij} \frac{I_j}{N_j}
+\end{equation}
+
+
+El modelo buscado es una variante del modelo de dispersión virtual presentado por \cite{Bichara2015} y desarrollado posteriormente en \cite{Bichara2018} como un framework. Este modelo tienes dos ventajas que lo hacen interesante: por una parte permite trabajar con heterogeneidad espacial y en clases. Pero además de eso utiliza los tiempos de residencia \(p_{ij}\) y el riesgo \(\beta_j\) del ambiente como un \textit{proxy} del número de contactos efectivos. La noción de contactos efectivos es vaga para enfermedades transmitidas por contacto estrecho. Suelen modelarse con matrices del tipo WAIFW (\textit{Who aquires infection from whom?}), que se aproximan por matrices de mezcla social o \textit{social mixing} \cite{Mossong2008}. Este método ha sido aplicado al Covid \cite{Prem2020}. 
+
+La movilidad (y los tiempos de residencia) pueden considerarse conocidos y los riesgos \(\beta_j\) ser estimados. La vulnerabilidad al contagio, que en este modelo está desacoplada de la movilidad, es un valor interesante que se busca estimar.
+
+Ya desde el comienzo de la pandemia por Covid en Santiago de Chile \cite{Olivares2020} hacía notar las dificultades de las clases socioeconómicas más bajas para cumplir las cuarentenas.
+Varios estudios \cite{Mena2021}\cite{Bennett2021}\cite{Gozzi2021} han notado las significativas diferencias en el impacto de la pandemia en los distintos sectores socioeconómicos de la capital del país, atribuyéndolas, entre otros factores, a la capacidad de cumplimiento de las cuarentenas. 
+
+Además de lo anterior, el Ministerio de Ciencia, Tecnología, Conocimiento e Innovación de Chile ha hecho disponibles públicamente varias series de datos epidemiológicos de casos infectados confirmados, hospitalizados, hospitalizados UCI, fallecidos, vacunados, etc. Estos datos poseen diversos niveles de segregación, ya sea por comuna, edad o sexo. La ciudad de Santiago ofrece un escenario con características adecuadas para la aplicación del modelo.
+
+\section*{Objetivos}
+
+El objetivo principal del trabajo es estimar la vulnerabilidad al contagio de distintas clases sociales, aislándola de los efectos de la movilidad, por medio de framework lagrangiano de clases y ambientes de \cite{Bichara2018}. Este objetivo se descompone en dos objetivos específicos:
+\begin{itemize}
+    \item Plantear un framework que permita estimar la vulnerabilidad al contagio.
+    \item Evaluar el framework mediante su aplicación al caso de estudio del Covid19 en Santiago.
+\end{itemize}
+
+
+% Idealmente:
+% Este trabajo busca poner a prueba el modelo propuesto en \cite{Bichara2015}, mediante su aplicación al estudio de la evolución de la pandemia de Covid19 en la ciudad de Santiago de Chile. 
+% la idea es que ya no se necesitan las interacciones en cada clase. % Pero a cambio necesito saber en qué ambientes está la gente. 
+% De verdad me estoy preguntando qué pasa si solo lo dejo con dos ambientes. Siento que puedo dejarlo con hogar y fuera del hogar. Eso me permitiría meter casi directamente la información de movilidad. Creo que lograría tener movilidad por nivel socioeconómico, en base a la info por comunas. Pero la movilidad por edad creo que está harto más difícil de determinar. 
+
+% Poner a prueba en qué? Bajo qué criterios? El principal criterio es que no necesito conocer cómo interactúa la gente, quiero tener resultados interesantes sin necesariamente saber de qué forma se mezclan todos.
+
+% Cómo puedo evaluar? Comparando la cercanía con los resultados obtenidos con algún otro modelo multiclase?  
+
+%El objetivo general de este trabajo es implementar el \textit{framework} lagrangiano multiclase con dispersión virtual presentado por \cite{Bichara2018}, 
+
+% ... La idea que tengo es... este modelo es lagrangiano, y dice que apaña para evitar tener que calcular las tasas de contacto específicas entre clases, es difícil saber cómo se relaciona la gente... y las opciones que hay son encuestas no necesariamente aplicables. La alternativa presentada es ...
+
+% Una vez que tenemos esa opción...
+
+%Más específicamente, y utilizarlo en la estimación del impacto de las medidas de contención del Covid19 en la ciudad de Santiago de Chile. 
+
+% Modelos multiclase en Santiagooooo, estoy segura de que hay gente haciendo eso, la fundación ciencia y vida estaba trabajando con un modelo de todas las comunas, haciendo algo parecido a lo que hacía yo pero mucho más complejo. 
+
+
+% Siempre deben ser verbos terminados en -ar -er -ir 
+% Mi objetivo es implementAR el modelo ... qué acciones hay que cumplir 
+% \begin{itemize}
+% \item Qué compartimientos usar? 
+% \item Qué clases elegir? 
+% \item Qué ambientes elegir? <-
+% \item Cómo formo la matriz de tiempos de residencia, de dónde obtengo los datos? 
+% \item Cómo actualizo esa matriz, ya que ha ido cambiando en el tiempo. 
+% \item Cómo elijo los parámetros para ajustarlo a los datos existentes de avance de la pandemia? Qué dejo constante? Qué dejo variable? Qué método uso para los constantes? 
+% \item Cómo evalúo lo bien que funciona el modelo?
+% \end{itemize}
+
+% - Elección del modelo. Esto aún tengo que discutirlo... pero incluye: qué clases usar, que compartimientos usar, cuántos ambientes, etc.
+% - Datos disponibles: EOD, datos de movilidad comunal, datos de movilidad de Google por ambiente. Esto para la matriz de 
+% - Metodologías dependen de cada objetivo específico 
+% - Ajuste del modelo: datos que le voy a dar para ajustar. De qué forma ajusto. 
+% - Datos que usaré para verificación, pa cachar qué tan bien funciona la cuestión. 
+
+
+ 
+
+\section*{Metodología}
+
+Con respecto a la implementación, el trabajo puede subdividirse en varias etapas
+
+\begin{enumerate}
+    \item Explorar las distintas fuentes de datos disponibles.
+    \item Decidir el modelo específico a utilizar, lo que incluye compartimientos a utilizar (susceptibles, expuestos, infectados, etc), clases, ambientes, parámetros fijos y variables en el tiempo, etc. Esto debe tener en consideración la disponibilidad de datos.
+    \item Estimar una matriz de tiempos de residencia para las clases y ambientes elegidos, y su evolución en el tiempo, considerando las variaciones impuestas por la pandemia.
+    \item Elegir e implementar una versión del filtro de Kalman (extendido, \textit{unscented}, filtro por ensambles, etc), y de estimación de parámetros (estado aumentado, filtro de Kalman con múltiples modelos, etc). 
+    \item Estimar los factores sanitarios para cada una de las clases elegidas, ajustando el modelo a los datos reales de la ciudad de Santiago. Para esto es necesario definir qué variables del modelo observar, que datos utilizar como observación y cómo ajustar los parámetros específicos del filtro.
+    \item Utilizar la matriz de tiempos de residencia y los factores sanitarios obtenidos para generar varios casos hipotéticos; variaciones en cuarentenas, diferentes niveles de cuidado, y estudiar la evolución de la pandemia en estos casos.
+\end{enumerate}
+
+
+
+\section*{Contribuciones y trabajos relacionados}
+
+Las principales contribuciones de este trabajo son: 
+
+\begin{itemize}
+    \item Planteamiento de un modelo que permite estudiar las medidas de cuidado de forma independiente a la movilidad. 
+    \item Aplicación a un caso de estudio del \textit{framework} lagrangiano de clases y ambientes presentado por \cite{Bichara2018}, no probado anteriormente. Este trabajo guarda cierta similitud con \cite{Shikhmurzaev}.
+    \item Implementación de la técnica de obtención de uso del tiempo  partir de los viajes de una Encuesta Origen-Destino, propuesta por \cite{Munizaga2011}. Aplicación de la técnica a la encuesta Santiago 2012.
+    \item Desarrollo de la librería KalmanFilter.jl, documentada, extensible y de código abierto, para el trabajo con Filtro de Kalman.
+    \item Planteamiento de una metodología para el ajuste de los hiperparámetros relacionados a la covarianza del filtro de Kalman, al estimar parámetros de un modelo epidemiológico. Este era un vacío en trabajos como \cite{Hasan2020} y \cite{Sameni2020}, donde se limitan a elegir un valor fijo para el caso particular que trabajan, sin ofrecer una justificación.
+    \item Aplicación del modelo al desarrollo de la pandemia de Covid19 en la ciudad de Santiago de Chile, lo que permite una estimación de la vulnerabilidad. Modelos anteriores de Santiago como \cite{Gozzi2021} solo consideran movilidad.
+\end{itemize}
+
+\section*{Estructura de la tesis}
+El resto de la tesis está organizado como sigue. El capítulo \ref{chap:marco} establece las bases para entender el trabajo realizado. Se presentan varios conceptos relevantes de modelos epidemiológicos y de la teoría de filtro de Kalman. Se exponen también los antecedentes del caso de estudio; la enfermedad Covid19 y su desarrollo en la ciudad de Santiago de Chile.
+
+El capítulo \ref{chap:metod} justifica y detalla los procedimientos seguidos; los datos utilizados, los supuestos y simplificaciones hechas, el modelo utilizado y las técnicas específicas implementadas.
+
+El capítulo \ref{chap:results} presenta los principales resultados obtenidos; la matriz de tiempos de residencia, el caso sintético utilizado para ajustar los parámetros del filtro de Kalman y las estimaciones para el factor sanitario obtenidas utilizando datos reales. Se muestran también los diferentes escenarios hipotéticos generados a partir de esas estimaciones. El capítulo \ref{chap:discus} discute los resultados obtenidos para el caso de estudio, sus implicaciones y limitaciones. Comenta además el  \textit{framework}, ventajas y dificultades a la hora de implementarlo.
+
 
 
 \end{intro}
@@ -35,7 +138,7 @@ Se usan datos de la encuesta Origen-Destino junto a la metodología propuesta en
 %\include{1-2-virtualdispersal}
 % Con todo eso de arriba estoy estableciendo y delimitando mi territorio. 
 
-% Ahora establezco mi niche  
+% Ahora establezco mi nicho 
 % El modelo no ha sido utilizado con datos reales ... blah blah 
 
 

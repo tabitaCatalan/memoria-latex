@@ -2,9 +2,12 @@
 
 % Una vez que se tiene el modelo, si se quiere aplicar a un contexto específico, es necesario incorporar los datos para ajustar los parámetros. Dos técnicas conocidas y ampliamente utilizadas para esto son, por una parte, resolver el problema de minimización de una función de costo dada por la diferencia entre los valores dados por el modelo y las observaciones, sobre los posibles parámetros. Por otra parte, es posible seguir un enfoque bayesiano, asignando densidades a priori a cada parámetro y luego usando los datos para actualizar esas densidades mediante el método de Monte Carlo. Una posibilidad menos explorada es la asimilación de datos usando el Filtro de Kalman.
 
-Filtro de Kalman es un método poderoso para estimar un estado a partir de observaciones ruidosas de este. Hay tres formas importantes de estimación de un estado \(x_k\), y pueden trabajarse de manera muy similar. El suavizado (o \emph{smoothing}) intenta obtener la mejor estimación posible de \(x_k\) usando la información (observaciones, controles) disponible hasta un instante posterior \(k+m\). El filtraje solo dispone de información hasta la iteración \(k\)-ésima, y la predicción tiene información hasta una iteración anterior \(k-m\). Debido a la cantidad de información que se supone conocida, el suavizado debería dar el mejor resultado de los tres, seguido por el filtraje y finalmente la predicción. 
+Filtro de Kalman es un método ampliamente utilizado en diversas aplicaciones de ingeniería como navegación, control de vehículos, análisis de series de tiempo, entre muchas otras. Permite estimar un estado a partir de su dinámica y de observaciones ruidosas de ese estado.
 
-El Filtro de Kalman tiene diversas aplicaciones en navegación, control de vehículos, análisis de series de tiempo, entre muchas otras áreas. Si bien el filtro original estaba enfocado en un problema lineal gaussiano [kalman], han surgido varias variantes como el Filtro de Kalman Extendido (EKF), Filtro \textit{Unscented} (UKF), Filtro de Kalman por Ensambles (EnKF) que permiten trabajar con problemas no lineales, o el Filtro H\(^\infty\) que es más robusto ante incertezas en el modelo. Más adelante hablaremos más en detalles de EKF \textit{(y tal vez de UKF o EnKF, si es que llego a usarlos)}.
+
+poderoso para estimar un estado a partir de observaciones ruidosas de este. Hay tres formas importantes de estimación de un estado \(x_k\), y pueden trabajarse de manera muy similar. El suavizado (o \emph{smoothing}) intenta obtener la mejor estimación posible de \(x_k\) usando la información (observaciones, controles) disponible hasta un instante posterior \(k+m\). El filtraje solo dispone de información hasta la iteración \(k\)-ésima, y la predicción tiene información hasta una iteración anterior \(k-m\). Debido a la cantidad de información que se supone conocida, el suavizado debería dar el mejor resultado de los tres, seguido por el filtraje y finalmente la predicción. 
+
+El Filtro de Kalman tiene diversas aplicaciones en navegación, control de vehículos, análisis de series de tiempo, entre muchas otras áreas. Si bien el filtro original estaba enfocado en un problema lineal gaussiano [kalman], han surgido diversas variantes para generalizarlo a otros problemas. Algunas de las variantes más conocidas son el Filtro de Kalman Extendido (EKF), que permite trabajar con sistemas no lineales Filtro ``sin olor'' \textit{Unscented} (UKF), Filtro de Kalman por Ensambles (EnKF) que permiten trabajar con problemas no lineales, o el Filtro H\(^\infty\) que es más robusto ante incertezas en el modelo. Más adelante hablaremos más en detalles de EKF \textit{(y tal vez de UKF o EnKF, si es que llego a usarlos)}.
 
 
 Esta sección está fuertemente basada en [Anderson] y \cite{Simon2006}. La estructura de esta sección es como sigue; comenzaremos estudiando en detalle el filtro de kalman para el caso en que el sistema es lineal y gaussiano. Luego mostraremos varias variantes que nos permitirán agregar complejidad, trabajando con sistemas no lineales, ecuaciones diferenciales\textit{ y tal vez suavizar los resultados y estimación de parámetros desconocidos}.
@@ -298,11 +301,6 @@ Notamos que \(f(x'_{k}, u_k, w_k, w_{kp}) \) es una función no lineal en el est
 
 % Mostrar que es posible que el filtro converja a valores erróneos, ver cómo eso depende de los errores que se le dan al filtro.
 
-
-\noindent\textbf{Funciones de verosimilitud}
-
-Los parámetros se estiman, ya sea por máxima verosimilitud o por métodos bayesianos... 
-
 \subsection{Suavizado o \textit{smoothing} } \label{smoother}
 
 % Hay tres variantes de smoothing, pero a mí solo me interesa una. Las otras creo que solo las mencionaré 
@@ -384,7 +382,28 @@ v_k &\sim  \mathcal{N}(0, R_k)
 
 
 
+\subsection{Observaciones (casi) perfectas} \label{casiperfect}
 
+El survey \cite{Simon2010} presenta varias alternativas para tratar con restricciones, y se decide usar la técnica de \textbf{Observaciones (casi) perfectas} para mantener constante el total de la población. Para la positividad de las variables, se decide simplemente aplicar la función \(\max(0, x)\) al estado después de los pasos de \textit{forecasting} y análisis.
+
+La idea de Observaciones (casi) perfectas es la siguiente: en un sistema de la forma \(x_{k+1} = f_k(x_k) + w_k\), observado mediante una ecuación \(y_k = Hx_k + v_k \), se busca imponer una restricción \(|Dx - d| \leq \epsilon\). Esto se consigue ampliando la matriz de observaciones como muestra la ecuación \ref{eq:perfect-obs}. Si se busca una restricción fuerte con \(\epsilon = 0\), la técnica es llamada Observaciones perfectas, y si se busca una restricción suave con \(\epsilon > 0\), recibe el nombre de observaciones casi perfectas.
+
+
+\begin{equation}\label{eq:perfect-obs}
+\begin{bmatrix}
+y_k \\
+d 
+\end{bmatrix} = 
+\begin{bmatrix}
+H \\
+D
+\end{bmatrix} x_k
++
+\begin{bmatrix}
+v_k \\
+\epsilon  
+\end{bmatrix}
+\end{equation}
 
 
 

@@ -14,7 +14,6 @@
 
 % comentar que este modelo permite modelar mascarillas y esas cosas... un avance según pedro 
 
-Ya en \ref{modelo-clases-vs-ambientes} se habló del modelo de \cite{Bichara2015}. En esta sección se decide el modelo específico a utilizar: los compartimientos y parámetros específicos a usar. Después se exploran algunos modelos usados específicamente para Covid19, para finalmente plantear el modelo final a utilizar.
 
 % Modelos de covid usualmente utilizados (compartimientos, etc)
 % Describir este modelo en particular, usando el numero 1. 
@@ -23,14 +22,9 @@ Ya en \ref{modelo-clases-vs-ambientes} se habló del modelo de \cite{Bichara2015
 
 % Esto ya lo discutí al inicio 
 
-\cite{Bichara2015} comenta acerca de la noción de ``contacto'' o ``contacto efectivo'' dentro del modelamiento epidemiológico de poblaciones que se mezclan de forma heterogénea. Menciona un problema de este enfoque; si bien este concepto es claro en el contexto de enfermedades de transmisión sexual, es mucho más vago y difícil de medir para enfermedades tales como la influenza.
 
-Propone como solución un modelo lagrangiano, donde cada grupo pertenece a una "parcela", cada parcela tiene un riesgo asociado, y la tasa de contagio depende del tiempo pasado en cada parcela y el riesgo de esta.
 
-El artículo \cite{Bichara2015} ofrece además una variante de este modelo, donde las interacciones ocurren en un conjunto de ambientes (hogar, trabajo, etc). Cada ambiente tiene un riesgo asociado, y los tiempos de residencia de los grupos en cada ambiente sirven como proxy del número de contactos. 
-
-Se ha expuesto previamente en \ref{modelo-clases-vs-ambientes} el modelo de dispersión virtual presentado por \cite{Bichara2015}. Ahora se discute las particularidades del modelo a usar en este caso específico. Como antes, separamos a la población en \(n\) clases, las cuales interactúan en \(m\) ambientes (o áreas de riesgo). Las clases y ambientes específicos se tratarán en  la siguiente sección. Se denota \(N_i(t), i = 1, \dots, n\) a la población de la clase \(i\).
-
+Se ha expuesto previamente en \ref{modelo-clases-vs-ambientes} el modelo de dispersión virtual presentado por \cite{Bichara2015}. Ahora se discute las particularidades del modelo a usar en este caso específico. Es necesario definir los compartimientos y parámetros específicos a usar, considerando la enfermedad a modelar, en este caso el Covid19.
 %A continuación se expone el modelo de dispersión virtual con ambientes de \cite{Bichara2015}. Está basado en un modelo de tipo SIS (\textbf{S}usceptibles, \textbf{I}nfectados). 
 
 % acerca de los compartimientos a usar 

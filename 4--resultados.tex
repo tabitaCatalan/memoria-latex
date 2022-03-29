@@ -1,4 +1,4 @@
-\chapter{Resultados}
+\chapter{Resultados} \label{chap:results}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Índice 
@@ -6,13 +6,14 @@
 
 En este capítulo se exponen los resultados obtenidos con la metodología propuesta. En la primera sección se mostrará una matriz de tiempos de residencia calculada a partir del algoritmo \ref{alg:timematrix}, para una lista de ambientes tan granular como los datos de la Encuesta Origen Destino permiten, y para una clasificación...
 
-Esta matriz, sin embargo, es demasiado detallada para nuestros propósitos. Como se discutió en \ref{met:decisiones}, las clases a utilizar son muchas menos, por lo que después se presenta la matriz de tiempos de residencia a utilizar. 
+Esta matriz, sin embargo, es demasiado detallada para nuestros propósitos. Como se discutió en \ref{met:decisiones}, las clases a utilizar son muchas menos, por lo que después se presenta la matriz de tiempos de residencia a utilizar. Posteriormente, se mostrarán los datos de movilidad para los distintos grupos, y la la matriz a tiempo variable, la cual desde luego es muy similar a los datos de movilidad reportados. 
 
-Posteriormente, se mostrarán los datos de movilidad para los distintos grupos, y la la matriz a tiempo variable, la cual desde luego es muy similar a los datos de movilidad reportados. 
+En la sección \ref{sec:estimacion-results} se mostrarán los resultados obtenidos al aplicar la metodología propuesta en el capítulo anterior. En primer lugar, la subsección \ref{subsec:sintetico} mostrará la recuperación de valores para un caso sintético. Las subsecciones siguientes se dedican a un estudio de sensibilidad con respecto a los parámetros. En primer lugar, \ref{subsec:sensibeta} muestra la influencia del parámetro de riesgo exterior y de las condiciones iniciales del filtro dadas al factor sanitario. En segundo lugar, en la sección \ref{subsec:sensicov} se exponen los efectos de las matrices de covarianza en los resultados, mostrando varios casos donde los valores no permiten obtener un buen resultado. Finalmente, la subsección \ref{subsec:smoother} muestra la diferencias al aplicar filtraje o suavizado.
 
-En la segunda sección se mostrarán los resultados obtenidos al aplicar la metodología propuesta en el capítulo anterior. En primer lugar, se mostrará la recuperación de valores para una caso sintético. Se expondrá la influencia de las matrices de covarianza en los resultados, mostrando varios casos donde los valores no permiten obtener un buen resultado. Finalmente se mostrará un conjunto de valores que permite una buena recuperación del factor sanitario en el caso sintético, valores que serán finalmente usados en el caso real. Los resultados para este caso se incluyen dentro de esta sección. 
 
-Finalmente, en la tercera sección, se evaluará el modelo. En la primera parte, se usan los valores estimados para simular varios casos hipotéticos; ¿cómo habría sido el desarrollo de la pandemia si todos se cuidaran de la misma forma pero pudieran guardar una cuarentena más estricta? ¿y si no se hacía cuarentena pero todos respetaban las medidas sanitarias de una mejor manera?. En la segunda parte se calcula el valor del \(\mathcal{R}_t\) para Santiago, y se compara con valor calculado con el método de Cori \ref{} por el Centro de Modelamiento Matemático. 
+El estudio anterior será de utilidad a lal hora de estudiar el caso con datos reales. A partir del caso sintético se obtendrá un conjunto de valores que permite una buena recuperación del factor sanitario. Se extrapolarán estos valores en el caso real. La sección \ref{sec:estimacion-results} concluye con los resultados para el caso con datos reales, utilizando los casos confirmados puestos a disposición por el MinCiencia. Esto se presenta en la subsección \ref{subsec:datosreales}.
+
+Finalmente, en la sección \ref{sec:evalmodel}, se evaluará el modelo. En primer lugar, la subsección \ref{subsec:casoshipot} usa los valores estimados en la sección anterior para simular varios casos hipotéticos; ¿cómo habría sido el desarrollo de la pandemia si todos se cuidaran de la misma forma pero pudieran guardar una cuarentena más estricta? ¿y si no se hacía cuarentena pero todos respetaban las medidas sanitarias de una mejor manera?. En segundo lugar, en la subsección \ref{subsec:rt}, se calcula el valor del \(\mathcal{R}_t\) para Santiago, y se compara con valor calculado con el método de Cori \cite{Cori2013} por el Centro de Modelamiento Matemático.
 
 
 

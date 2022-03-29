@@ -1,49 +1,51 @@
-\chapter{Discusión}
+\chapter{Discusión} \label{chap:discus}
 
-\section{Limitaciones}
+Meta: los objetivos específicos apuntan a conseguir el objetivo general? Se cumplió el objetivo? Qué puede decirse del framework.
 
-Hay varias cosas que mencionar aquí
--  Supuestos y simplificaciones sobre el modelo
-  - En la matriz de viajes... que el tiempo varió de manera proporcional a la movilidad...
-  - En que las personas se mantienen constantes
-  - En que la región metropolitana está aislada 
-  - Que los enfermos no se vuelven a contagiar (las variantes sugieren lo contrario)
-  - No se consideró el rol de los contagiados no informados
-  - Misma tasa de recuperación para todas las clases, podría ser distinto por diferencias en el sistema sanitario.
-- Limitaciones de las herramientas
-  - En kalman, no se logra estimar bien con tan pocos contagios
-  
+\section{Acerca del caso de estudio}
 
-\section{Acerca de los resultados}
+Con respecto a las limitaciones, es necesario recordar los supuestos y simplificaciones. Por un lado, se consideró que la población en la región metropolitana se mantenía constante, despreciando efectos como la natalidad, mortalidad debido a causas naturales y efectos migratorios entre ciudades. Por otro lado, algunos factores relevantes a la transmisión del Covid19 fueron dejados fuera al utilizar un modelo SEIR, como la importancia de los casos no detectados \cite{Li2020c} o la posibilidad de reinfección \cite{}. El supuesto de que todas las clases socioeconómicas tienen la misma tasa de incubación y recuperación es un factor a considerar, y que sería ciertamente excesivo al haber utilizado grupos etarios \cite{}. Este supuesto toma relevacia al considerar los estudios de sensibilidad; al considerar grupos con tasas muy distintas, nada asegura que se mantenga la relación entre los factores sanitarios.
 
-De la matriz de tiempos de residencia full
-  - Es interesante, tiene sentido con lo esperado...
- 
-Sensibilidad a los parámetros 
-
-Tienen sentido los resultados? Se condicen con la literatura o la contradicen? 
-
+El uso del filtro de Kalman tiene desde luego limitaciones. Teóricamente solo puede justificarse en el caso lineal, y el uso del filtro extendido lleva a errores numéricos que podrían mitigarse usando un filtro más apto para tratar con no linealidades, como el filtro \textit{unscented}. Los resultados muestran también que el filtro tiene dificultades para estimar los valores sanitarios al comienzo de la pandemia, cuando hay muy pocos casos, por lo que los resultados en la fase inicial son poco confiables. Desde luego está la estimación de las tasas, que genera variaciones importantes en los estados, y de las covarianzas... 
 
 %%% Factor sanitario 
 Con respecto al factor sanitario, a pesar de las diferencias al usar distintos parámetros, la diferencia entre los niveles socioeconómicos fue una constante, especialemente el hecho de que la clase más acomodada mantiene un factor sanitario por debajo de los demás. No fue posible obtener resultados razonables con esta metodología para un factor sanitario común a todas clases, lo que significaría que todos enfrentan el mismo riesgo en el exterior.
 
 Estos resultados sugieren que las diferencias en movilidad, las cuales han sido previamente mencionadas como una explicación de las diferencias en la incidencia entre los distintos grupos socioeconómicos \cite{Mena2021}\cite{Gozzi2021} [Revisar], por sí solas no son suficientes para explicar las diferencias en la cantidad de contagios.
 
-Las clases socioeconómicas más vulnerables no solo no pueden guardar la cuarentenas de la misma forma que las clases acomodadas, sino que además, al salir al exterior, se encuentran en ambientes más riesgosos, ya sea por estar en ambientes más concurridos, o por no utilizar adecuadamente las medidas de seguridad como el lavado de manos y el uso correcto de mascarillas. Estos resultados son consistentes con los encontrados por \cite{}[Chang2020].
+Las clases socioeconómicas más vulnerables no solo no pueden guardar la cuarentenas de la misma forma que las clases acomodadas, sino que además, al salir al exterior, se encuentran en ambientes más riesgosos, ya sea por estar en ambientes más concurridos, o por no utilizar adecuadamente las medidas de seguridad como el lavado de manos y el uso correcto de mascarillas. Estos resultados son consistentes con los encontrados por \cite{Chang2021}.
 
-Destaca la diferencia hacia el final de... lo que podría atribuirse a la fase de inicio de la vacunación en Chile. El por qué eso disminuye el riesgo en las clases más acomodadas es algo que cuya causas habría que explorar.
+Destaca la el factor sanitario en el periodo mayo-junio de 2021, donde se observa que la clase más acomodada consigue una reducción mucho más marcada que las demás. Esto podría atribuirse al comienzo de la vacunación en Chile. El por qué eso disminuye el riesgo en las clases más acomodadas es algo cuya causas habría que explorar.
 
-%%% Casos hipotéticos 
- 
+%% Casos hipotéticos 
+
+
+
 \section{Acerca de la metodología}
+
+  
 
 Cómo influyeron las decisiones tomadas en los resultados? 
 - Lagrangiano vs euleriano 
 - Usar la matriz de tiempos de residencia... aquí no, pero en otro contexto podría serlo.... Se podría haber usado de otra forma, con el enfoque de \cite{Chang2021}, la EOD tiene los viajes bases y la movilidad daba cómo modificarlos.
 
+No se aprovechó completamente la matriz de tiempos de residencia. Si bien se pudo calcular los tiempos en una gran variedad de ambientes, la forma de actualizar esa matriz en el tiempo presenta un desafío. Algunas dificultades incluyen la baja representatividad de los datos de algunas clases socieoconómicas, como los niños en los datos de movilidad obtenidos con las redes de telefonía. 
+
+La existencia de la EOD2012 ofrecía en primer lugar la posibilidad de un enfoque euleriano, ya que los datos de viajes entre comunas estableciendo una movilidad base, agrupado con los datos de movilidad modificada en pandemia ofrecían la posibilidad de usar un modelo muy similar al empleado por \cite{Lai2020}.
+
+
+Las ventajas de este enfoque lagrangiano se destacarían más al modelar una ciudad con menor disponibilidad de datos....
+
+
+
 - Comparación con la literatura de la metodología 
 
-\section{Posibles extensiones}
-- Probar el modelo por comuna en lugar de por agrupación, los datos están disponibles pero requiere más tiempo de cómputo.
-- Probar el modelo con otros ambientes o clases, pero se necesitaría estimar el riesgo en el 
-- Las posibilidades de la librería CovidMTK 
+
+
+El trabajo realizado abre varias posibles extensiones. Por un lado, la metodología empleada es aplicable con mínimas modificaciones a una gran variedad de modelos, con otros compartimientos o variables observadas.
+
+También era posible, puesto que los datos estaban disponibles, aplicar el modelo por comuna en lugar de por grupos socioeconómicos, aunque esto requería más tiempo de cómputo. 
+
+Probar el modelo con otros ambientes es una posibilidad interesante. Algunas sugerencias son incluir ambientes de trabajo, compras, etc, utilizando datos como los ofrecidos por Google (ver sección \ref{}).
+
+La librería ModelingToolkit.jl \cite{}, aun en una fase inicial de desarrollo, ofrece muchas posibilidades a la modelación y vale la pena verlas en más detalle.
