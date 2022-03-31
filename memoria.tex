@@ -73,41 +73,53 @@ INGENIERÍA, MENCIÓN MATEMÁTICAS APLICADAS}
 \maketitle
 
 \begin{abstract}
-El modelamiento epidemiológico con mezcla heterogénea usualmente considera clases (distintas características de la población, como edad o sexo) o ubicación espacial. En cualquiera de los dos casos, usualmente es necesario estimar el número de contactos efectivos entre los diferentes grupos. Estos contactos efectivos son difíciles de medir para enfermedades transmitidas por microgotas emitidas al respirar o hablar, o por contacto estrecho. \cite{Bichara2018} propone un marco de trabajo de \textit{dispersión virtual} que logra incorporar diferentes clases y ubicaciones espaciales; los grupos interactúan en distintos ambientes (hogar, trabajo, etc), cada ambiente tiene un riesgo asociado y los tiempos de residencia de los grupos en cada ambiente sirven como proxy del número de contactos. 
 
-Este marco de trabajo no ha sido aplicado en un caso de estudio y el Covid19 presenta una buena oportunidad para su uso práctico. El Covid19 es una enfermedad transmisible por microgota descubierta a finales de 2019 que se ha convertido en un desafío sanitario a nivel mundial; hacia marzo de 2022 ya ha causado más de 6 millones de muertes. Su impacto varía por grupo etario \cite{} y grupo socioeconómico \cite{Chang2021}, siendo la movilidad un factor importante a considerar \cite{Lai2020}. Las autoridades han intentado contener la enfermedad mediante una serie de medidas no farmacéuticas y farmacéuticas, que incluyen cuarentenas, uso de mascarillas, distanciamiento social, lavado de manos, y desarrollo de vacunas. Más aún, se han utilizado datos para combatirla. 
+El COVID-19 ha afectado a la población de forma heterogénea; \cite{Chang2021} afirma que las diferencias en movilidad explican las diferencias en transmisión en diferentes grupos socioeconómicos, notando además que las clases más bajas se exponen a ambientes más riesgosos. Partiendo de la idea del riesgo como una combinación entre amenaza (fracción de infectados en un ambiente), exposición (tiempo pasado en ese ambiente) y vulnerabilidad (de quien estuvo en el ambiente), se busca un modelo compartimental que permita estimar una medida de vulnerabilidad al contagio de las distintas clases.
 
-Estas características son exhibidas en el desarrollo de la pandemia en Santiago de Chile, y este plantea un escenario donde aplicar el \textit{framework}. Se busca implementar este \textit{framework} en un modelo del Covid19 en esta ciudad. 
+Se plantea la siguiente metodología: utilizar el \textit{framework} lagrangiano de clases y ambientes de \cite{Bichara2018} para definir el ``factor sanitario'', una medida de la capacidad de cumplimiento de las medidas de distanciamiento social no incluídas en la movilidad, como son el cuidado personal, uso de mascarillas, el lavado de manos y el guardar la distancia mínima con otras personas. Posteriormente, utilizar este factor sanitario mediante la técnica Filtro de Kalman, a partir de observaciones dadas por datos epidemiológicos como número de casos confirmados por comuna, etc.
 
-Utilizando datos de movilidad y de la evolución de la pandemia, se estima un factor sanitario que refleja la capacidad de cumplimiento de las distintas medidas de cuidado, como el uso de mascarillas y el mantenerse lejos de ambientes mal ventilados y abarrotados. Se usa este factor para generar varias situaciones hipotéticas, con distintos niveles de cuarentena y cuidado. 
+Esta idea se lleva a la práctica en un caso de estudio; el desarrollo de la pandemia de COVID-19 en la Región Metropolitana de Santiago de Chile. Usando Filtro de Kalman Extendido con estado aumentado en un modelo SEIR, se estima el factor sanitario para cinco grupos socioeconómicos de Santiago, agrupados según su Índice de Prioridad social \cite{SEREMIRM2019}, a partir de datos de casos confirmados por comuna y datos de movilidad durante la pandemia. Se utilizan estas estimaciones para generar varios casos hipotéticos con niveles variables de cuidado y cuarentena.
 
-Se observan diferencias importantes en los factores para distintos grupos socioeconómicos. Se observa que las diferencias socioeconómicas en la movilidad, que ya eran conocidas en la literatura \cite{Gozzi2021}, no son por si solas suficientes para explicar las diferencias en el número de contagios, lo que sugiere que las clases más vulnerables no solo redujeron menos su movilidad, sino que también fueron sometidos a condiciones más riesgosas, permaneciendo en ambientes con menor cuidado. Los casos hipotéticos sugieren que los efectos de la vacunación no fueron uniformes entre la población, y que aliviaron principalmente a las clases más acomodadas.
+Se observan diferencias importantes en los factores sanitarios calculados para los distintos grupos socioeconómicos, lo que sugiere que las diferencias socioeconómicas en movilidad en Santiago, que ya eran conocidas en la literatura \cite{Gozzi2021}, no son suficientes por sí solas para explicar las diferencias en el número de contagios. Esto implica que las clases más vulnerables no solo redujeron menos su movilidad, sino que también fueron sometidos a condiciones más riesgosas, permaneciendo en ambientes con menor cuidado, lo que concuerda con lo descubierto por \cite{Chang2021}. Los casos hipotéticos sugieren que los efectos de la vacunación no fueron uniformes entre la población, y que aliviaron principalmente a la clases más acomodada.
 
-La metodología propuesta puede ser extendida a otros modelos... El framework lagrangiano presenta, sin embargo, reemplaza varias dificultades por otras, haciendo necesarios datos que no se encuentran bien representados en ciertos grupos.
+La metodología propuesta puede ser fácilmente extendida a otros modelos compartimentales. El framework lagrangiano de \cite{Bichara2018}, sin embargo, dependiendo de las clases que se quieran considerar, puede requerir datos que no están disponibles o no se encuentran bien representados.
 
 
 \end{abstract}
 
+% \begin{dedicatoria}
+% Cuanto más vives, más fracasas.\break
+% El fracaso es la medida de una vida bien llevada.\break
+% Y la única forma de vivir sin fracaso es no servir de nada a nadie.\break
+% \emph{Brandon Sanderson, Juramentada}
+% \end{dedicatoria}
+
+% \begin{dedicatoria}
+% porque sabemos que el sufrimiento produce perseverancia;\break
+% la perseverancia, entereza de carácter;\break
+% la entereza de carácter, esperanza.\break
+% \emph{Romanos 5:3-4}
+% \end{dedicatoria}
+
 \begin{dedicatoria}
-Una dedicatoria corta.
+Invoca Mi nombre en el día de la angustia;\break
+Yo te libraré, y tú me honrarás\break
+\emph{Salmo 50:15}
 \end{dedicatoria}
+
 
 \begin{thanks}
 
-A mi profesor guía Axel Osses, por su apoyo en cada etapa, y porque siempre parece creer en mí más que yo misma.
+Hay varias personas que me han acompañado durante todo mi paso por la universidad, que han creído en mí y me han animado a seguir adelante; agradecerles ahora es lo menos que puedo hacer. A mi familia, por su amor, apoyo y cuidado. A mi tía y mi abuelito, que ya no están pero sé que habrían estado felices de verme titulada. A mi tío y a mi hermano, porque siempre puedo contar con ellos. A mi abuelita por su cariño infinito. A mi mamá, una fuerza de la naturaleza, porque no sé qué haría sin ella. A Sonia Díaz, que es familia prácticamente, por todo; por darme un hogar estos siete años, por los muchos buenos momentos compartidos, por sus oraciones y también por la paciencia y el llamado de atención cuando lo necesitaba. No estaría aquí ahora de no ser por todos ellos.
 
-Mi familia, por su amor, apoyo y cuidado. A mi tía y mi abuelito, que ya no están; sé que habrían estado felices de verme titulada. A mi tío y a mi hermano, porque siempre puedo contar con ellos. A mi abuelita por su cariño infinito. A mi mamá, una fuerza de la naturaleza, porque no sé qué haría sin ella.
+Escribir esta tesis ha sido un proceso lleno de altibajos; este trabajo no habría sido posible sin las personas que me han ayudado en el camino. Agradezco en primer lugar a mi profesor guía Axel Osses, por su apoyo en cada etapa, y porque siempre parece creer en mí más que yo misma. Agradezco también a quienes trabajan en el Laboratorio de Escritura Armadillo, especialmente a Amparo Galdames, que fue un rayo de luz en los días más oscuros, y Enrique Sologuren. Ambos me dieron el mapa para orientarme en el caos de la tesis y cambiaron para siempre mi perspectiva del proceso de investigación.
 
-A Sonia Díaz, que es familia prácticamente, por todo; por darme un hogar estos siete años, por los muchos buenos momentos compartidos, y también por la paciencia y el llamado de atención cuando lo necesitaba.
-
-A mi familia en Cristo, mi iglesia Estanque de Siloé, quienes me ayudaron a mirarlo a Él y a esperar en Él con paciencia. A Fernando Espinoza e Isaac Jara, que me cuidan como si fuera su hija. A Jamilette Becerra, por las risas. A Víctor y Victoria Harvey, por las horas de buenas conversaciones. A Maribel Troncoso, por su cariño maternal en los días tristes y por sus oraciones.
-
-A las personas maravillosas que conocí en mi transcurso por la universidad. A Evelyn Lorca, una de las mujeres más fuertes que conozco y una buena amiga. A los de la oficina 435, que me adoptaron y alegraron mis días en el DIM. A Felipe Matus, con quien tuve el gusto de trabajar y a quien admiro. A Manuel Suil, que fue un invaluable apoyo durante el proceso de la tesis.
-
-A los profesores y funcionarios del DIM. A la miss Caro Santander, que hizo más felices los cinco semestres en que fui su alumna en inglés. A quienes trabajan en el Laboratorio de Escritura Armadillo, especialmente a Amparo Gadalmes y Enrique Sologuren, por darme el mapa para orientame en el caos de la tesis.
+A mi familia en Cristo, mi iglesia Estanque de Siloé, quienes me ayudan a mirarlo a Él y a esperar en Él con paciencia. A Fernando Espinoza e Isaac Jara, que me cuidan como si fuera su hija. A Jamilette Becerra, por las risas. A Víctor y Victoria Harvey, por las horas de buenas conversaciones. A Maribel Troncoso y Gamaliel Harvey; su cariño animó muchos días tristes.
 
 
-Finalmente, a quienes creyeron en mí en el camino, y me hicieron ver que era posible llegar a la universidad. A Mirta Rivas, que me ha animado todos estos años. A mis profesores, especialmente a Luis Castro, quien me mostró el maravilloso desafío de las matemáticas, y a Daniela Lizama, una persona increíblemente inspiradora, y quien creyó en mí y se la jugó antes que nadie. 
+Me siento agradecida por las personas maravillosas que conocí en mi transcurso por la universidad. Evelyn Lorca, una mujer admirable y de las más fuertes que conozco, y una buena amiga. Los de la oficina 435, que me adoptaron y alegraron mis días en el DIM. Destaco al inigualable Felipe Matus, con quien tuve el gusto de trabajar como auxiliar y a Manuel Suil que fue un invaluable apoyo en la tesis. Los profesores y funcionarios del DIM. La miss Caro Santander, que hizo más felices los cinco semestres en que fui su alumna en inglés. 
+
+Finalmente, agradezco a quienes creyeron en mí y me hicieron ver que era posible llegar a la universidad. A Mirta Rivas, que me ha animado todos estos años. A mis profesores, especialmente a Luis Castro, quien me mostró el maravilloso desafío de las matemáticas, y a Daniela Lizama, una persona increíblemente inspiradora, y quien creyó en mí y se la jugó antes que nadie. 
 
 
 \end{thanks}

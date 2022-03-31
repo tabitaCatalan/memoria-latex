@@ -12,7 +12,7 @@
 
 El Covid19 es una enfermedad provocada por el virus SARS-CoV-2. Descubierta a finales de 2019, se convirtió en pandemia en 2020 y ha sido un desafío sanitario a nivel mundial; hacia marzo de 2022 ya ha causado más de 6 millones de muertes en todo el mundo según datos de \href{https://ourworldindata.org/explorers/coronavirus-data-explorer?facet=none&pickerSort=desc&pickerMetric=total_cases&Metric=Confirmed+deaths&Interval=Cumulative&Relative+to+Population=false&Color+by+test+positivity=false&country=~OWID_WRL}{COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University.} 
 
-El Covid19 se transmite por microgotas emitidas al respirar, hablar, toser o estornudar, o por contacto estrecho. Las autoridades han aplicado diferentes medidas de mitigación, que incluyen varias formas de distanciamiento social, como reducciones de movilidad, cuarentenas totales o parciales, teletrabajo, distancias mínimas entre personas, etc. También se ha potenciado el uso de medidas de higiene, como el uso de mascarillas, lavado frecuente de manos, ventilación de espacios, etc. En 2021 se ha masificado la vacunación masiva y ...
+El Covid19 se transmite por microgotas emitidas al respirar, hablar, toser o estornudar, o por contacto estrecho. Las autoridades han aplicado diferentes medidas de mitigación, que incluyen varias formas de distanciamiento social, como reducciones de movilidad, cuarentenas totales o parciales, teletrabajo, distancias mínimas entre personas, etc. También se ha potenciado el uso de medidas de higiene, como el uso de mascarillas, lavado frecuente de manos, ventilación de espacios, etc. En 2021 se comenzó la vacunación masiva y ...
 
 El impacto de la enfermedad ha sido heterogéneo entre la población. Se han señalado al factor socioeconómico \cite{Ahmed2020} como un agravante... y son conocidos los efectos de la enfermedad en los adultos mayores.
 
@@ -31,18 +31,18 @@ Con esto en mente, se busca un modelo epidemiológico que considere estos factor
 
 El modelo buscado es una variante del modelo de dispersión virtual presentado por \cite{Bichara2015} y desarrollado posteriormente en \cite{Bichara2018} como un framework. Este modelo tienes dos ventajas que lo hacen interesante: por una parte permite trabajar con heterogeneidad espacial y en clases. Pero además de eso utiliza los tiempos de residencia \(p_{ij}\) y el riesgo \(\beta_j\) del ambiente como un \textit{proxy} del número de contactos efectivos. La noción de contactos efectivos es vaga para enfermedades transmitidas por contacto estrecho. Suelen modelarse con matrices del tipo WAIFW (\textit{Who aquires infection from whom?}), que se aproximan por matrices de mezcla social o \textit{social mixing} \cite{Mossong2008}. Este método ha sido aplicado al Covid \cite{Prem2020}. 
 
-La movilidad (y los tiempos de residencia) pueden considerarse conocidos y los riesgos \(\beta_j\) ser estimados. La vulnerabilidad al contagio, que en este modelo está desacoplada de la movilidad, es un valor interesante que se busca estimar.
+La movilidad (y los tiempos de residencia) pueden considerarse conocidos y los riesgos \(\beta_j\) ser estimados. La vulnerabilidad al contagio \(\alpha_i\), que en este modelo está desacoplada de la movilidad, es un valor interesante que se busca estimar. De ahora en adelante llamaremos a \(\alpha_i\) ``factor sanitario'', puesto que se relaciona con las distintas medidas de distanciamiento social no relacionadas a la movilidad, como lo son el uso de mascarillas, lavado de manos, cumplimiento de la distancia mínima entre personas, etc. Puede estimarse mediante Filtro de Kalman, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de Covid19 \cite{Hasan2020}\cite{Song2021}.
 
 Ya desde el comienzo de la pandemia por Covid en Santiago de Chile \cite{Olivares2020} hacía notar las dificultades de las clases socioeconómicas más bajas para cumplir las cuarentenas.
 Varios estudios \cite{Mena2021}\cite{Bennett2021}\cite{Gozzi2021} han notado las significativas diferencias en el impacto de la pandemia en los distintos sectores socioeconómicos de la capital del país, atribuyéndolas, entre otros factores, a la capacidad de cumplimiento de las cuarentenas. 
 
-Además de lo anterior, el Ministerio de Ciencia, Tecnología, Conocimiento e Innovación de Chile ha hecho disponibles públicamente varias series de datos epidemiológicos de casos infectados confirmados, hospitalizados, hospitalizados UCI, fallecidos, vacunados, etc. Estos datos poseen diversos niveles de segregación, ya sea por comuna, edad o sexo. La ciudad de Santiago ofrece un escenario con características adecuadas para la aplicación del modelo.
+Además de lo anterior, el Ministerio de Ciencia, Tecnología, Conocimiento e Innovación de Chile ha hecho disponibles públicamente varias series de datos epidemiológicos de casos infectados confirmados, hospitalizados, hospitalizados UCI, fallecidos, vacunados, etc. Estos datos poseen diversos niveles de segregación, ya sea por comuna, edad o sexo. La ciudad de Santiago ofrece un buen escenario escenario donde implementar el modelo.
 
 \section*{Objetivos}
 
-El objetivo principal del trabajo es estimar la vulnerabilidad al contagio de distintas clases sociales, aislándola de los efectos de la movilidad, por medio de framework lagrangiano de clases y ambientes de \cite{Bichara2018}. Este objetivo se descompone en dos objetivos específicos:
+El objetivo principal del trabajo es estimar el factor sanitario de distintas clases sociales, por medio de framework lagrangiano de clases y ambientes de \cite{Bichara2018}. Este objetivo se descompone en dos objetivos específicos:
 \begin{itemize}
-    \item Plantear un framework que permita estimar la vulnerabilidad al contagio.
+    \item Plantear un framework que permita estimar el factor sanitario.
     \item Evaluar el framework mediante su aplicación al caso de estudio del Covid19 en Santiago.
 \end{itemize}
 
@@ -119,9 +119,11 @@ Las principales contribuciones de este trabajo son:
 \section*{Estructura de la tesis}
 El resto de la tesis está organizado como sigue. El capítulo \ref{chap:marco} establece las bases para entender el trabajo realizado. Se presentan varios conceptos relevantes de modelos epidemiológicos y de la teoría de filtro de Kalman. Se exponen también los antecedentes del caso de estudio; la enfermedad Covid19 y su desarrollo en la ciudad de Santiago de Chile.
 
-El capítulo \ref{chap:metod} justifica y detalla los procedimientos seguidos; los datos utilizados, los supuestos y simplificaciones hechas, el modelo utilizado y las técnicas específicas implementadas.
+El capítulo \ref{chap:metod} justifica y detalla los procedimientos seguidos; cómo se usó el framework de \cite{Bichara2018}, los datos utilizados, los supuestos y simplificaciones hechas, el modelo final utilizado y las técnicas específicas implementadas.
 
-El capítulo \ref{chap:results} presenta los principales resultados obtenidos; la matriz de tiempos de residencia, el caso sintético utilizado para ajustar los parámetros del filtro de Kalman y las estimaciones para el factor sanitario obtenidas utilizando datos reales. Se muestran también los diferentes escenarios hipotéticos generados a partir de esas estimaciones. El capítulo \ref{chap:discus} discute los resultados obtenidos para el caso de estudio, sus implicaciones y limitaciones. Comenta además el  \textit{framework}, ventajas y dificultades a la hora de implementarlo.
+El capítulo \ref{chap:results} presenta los principales resultados obtenidos; la matriz de tiempos de residencia, el caso sintético utilizado para ajustar los parámetros del filtro de Kalman y las estimaciones para el factor sanitario obtenidas utilizando datos reales. Se muestran también los diferentes escenarios hipotéticos generados a partir de esas estimaciones.
+
+El capítulo \ref{chap:discus} discute los resultados obtenidos para el caso de estudio, sus implicaciones y limitaciones. Comenta además el  \textit{framework} lagrangiano planteado en \cite{Bichara2018}, sus ventajas y dificultades a la hora de implementarlo. Se plantean posibles extensiones y trabajo futuro.
 
 
 

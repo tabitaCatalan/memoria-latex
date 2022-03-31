@@ -1,14 +1,16 @@
-\section{Evaluación del modelo} \label{met:evaluacion}
+\section{Evaluación del modelo mediante casos hipotéticos} \label{met:evaluacion}
 
-Para evaluar los resultados obtenidos con la metodología propuesta, se usan dos métodos. En primer lugar se calculará el número reproductivo efectivo \(\mathcal{R}_t\) y se compará con el estimado usando el método de Cori et al. \cite{Cori2013}. En segundo lugar, se usarán los resultados obtenidos para generar varias situaciones hipotéticas.
+Para evaluar los resultados obtenidos con la metodología propuesta se usarán los resultados obtenidos en la sección anterior (matriz de tiempos de residencia, factor sanitario) para generar varias situaciones hipotéticas.
+%En primer lugar se calculará el número reproductivo efectivo \(\mathcal{R}_t\) y se compará con el estimado usando el método de Cori et al. \cite{Cori2013}
 
-\subsection{Comparación del número reproductivo efectivo}
 
-El Centro de Modelamiento Matemático (CMM) de la Universidad de Chile, en conjunto con varias instituciones, desarrolló un visualizador (\url{https://covid-19vis.cmm.uchile.cl/geo}) para los datos producidos por el Ministerio de Salud y reportados por el Ministerio de Ciencia en \url{https://github.com/MinCiencia/Datos-COVID19}, y para varios indicadores calculados a partir de estos datos.
+% \subsection{Comparación del número reproductivo efectivo}
 
-Entre los indicadores expuestos se encuentra el número reproductivo efectivo \(\mathcal{R}_t\), el cual ha sido calculado siguiendo la metodología de Cori et al. \cite{Cori2013}. Se compara el \(\mathcal{R}_t\) calculado para el modelo con el publicado por el CMM para la región Metropolitana. 
+% El Centro de Modelamiento Matemático (CMM) de la Universidad de Chile, en conjunto con varias instituciones, desarrolló un visualizador (\url{https://covid-19vis.cmm.uchile.cl/geo}) para los datos producidos por el Ministerio de Salud y reportados por el Ministerio de Ciencia en \url{https://github.com/MinCiencia/Datos-COVID19}, y para varios indicadores calculados a partir de estos datos.
 
-\subsection{Casos hipotéticos}\label{met:evaluacion-hipot}
+% Entre los indicadores expuestos se encuentra el número reproductivo efectivo \(\mathcal{R}_t\), el cual ha sido calculado siguiendo la metodología de Cori et al. \cite{Cori2013}. Se compara el \(\mathcal{R}_t\) calculado para el modelo con el publicado por el CMM para la región Metropolitana. 
+
+% \subsection{Casos hipotéticos}\label{met:evaluacion-hipot}
 
 En la sección \ref{met:matriz} se calculó una matriz de tiempos de residencia variable en el tiempo \((r_{i,j})_{i \in 1\dots 5, j \in \{ \text{hogar}, \text{exterior}\}}\).  Una vez aplicada la metodología de la sección anterior \ref{met:estimacion} se obtiene una estimación de los factores sanitarios \((\alpha_i(t))_{i \in 1 \dots 5}\) para cada grupo. En este apartado se busca evaluar, utilizando variantes de esas estimaciones, una serie de casos hipotéticos. Se considerarán tres niveles de cuarentena y tres niveles de cuidado, definidos a continuación. Se recuerda que para \(m\) ambientes, basta con definir los valores de la matriz de residencia en \(m-1\) columnas, debido a la restricción \(\sum_{j = 1}^m r_{ij} = 1\). 
 

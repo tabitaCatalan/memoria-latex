@@ -269,59 +269,59 @@ Las matrices de covarianza se ajustan de tal forma que las estimaciones obtenida
 
 Como ya vimos, en el caso lineal con dinámica constante, se requiere observabilidad para tener convergencia al estado real del sistema, pero el caso no lineal es más difícil. En este trabajo solamente se verifica la observabilidad localmente para el sistema linealizado, de manera numérica. 
 
-\subsection{Número reproductivo efectivo}
+% \subsection{Número reproductivo efectivo}
 
-% El cálculo fue hecho por Bichara. Al final mencionar que se hace computacionalmente.
+% % El cálculo fue hecho por Bichara. Al final mencionar que se hace computacionalmente.
 
 
-Se calcula la matriz de próxima generación para nuestro sistema, en base al método presentado en \ref{sec:R0}. Los compartimientos de tipo \textit{disease} son \(X = (E, I)^{\top}\), y los \textit{disease-free} son \( Y = (S, R)^{\top}\). Basado en la dinámica, la tasa de infecciones secundarias es 
-\[
-\mathcal{F}(X,Y) = 
-\begin{pmatrix}
-\alpha S \big( p_E E + p_{I^m} I^m + p_I I \big) \\
-(1-\phi) \gamma_E  E \\
-\phi \gamma_E  E 
-\end{pmatrix}
-\]
-La tasa de progresión de la enfermedad es 
-\[
-\mathcal{V}(X,Y) = 
-\begin{pmatrix}
-\gamma_E E \\
-\gamma_{I^m} I^m \\
-\gamma_{I} I
-\end{pmatrix}
-\]
-de tal forma que \(X' = \mathcal{F}(X,Y) - \mathcal{V}(X,Y)\). Notamos que efectivamente \(\mathcal{F}(\mathbf{0},Y) = \mathbf{0}\) y \(\mathcal{V}(\mathbf{0},Y) = \mathbf{0}\). 
-Calculamos 
-\[
-F = \frac{\partial \mathcal{F}}{\partial X}(\mathbf{0},Y) = 
-\begin{pmatrix}
-\alpha p_E S & \alpha p_{I^m} S & \alpha p_I S \\
-(1-\phi)\gamma_E & 0 & 0 \\
-\phi\gamma_E & 0 & 0>
- \end{pmatrix}
-\]
-\[
-V = \frac{\partial \mathcal{V}}{\partial X}(\mathbf{0},Y) = 
-\begin{pmatrix}
-\gamma_E & 0 & 0 \\
-0 & \gamma_{I^m} & 0 \\
-0 & 0 & \gamma_I
- \end{pmatrix}
-\]
+% Se calcula la matriz de próxima generación para nuestro sistema, en base al método presentado en \ref{sec:R0}. Los compartimientos de tipo \textit{disease} son \(X = (E, I)^{\top}\), y los \textit{disease-free} son \( Y = (S, R)^{\top}\). Basado en la dinámica, la tasa de infecciones secundarias es 
+% \[
+% \mathcal{F}(X,Y) = 
+% \begin{pmatrix}
+% \alpha S \big( p_E E + p_{I^m} I^m + p_I I \big) \\
+% (1-\phi) \gamma_E  E \\
+% \phi \gamma_E  E 
+% \end{pmatrix}
+% \]
+% La tasa de progresión de la enfermedad es 
+% \[
+% \mathcal{V}(X,Y) = 
+% \begin{pmatrix}
+% \gamma_E E \\
+% \gamma_{I^m} I^m \\
+% \gamma_{I} I
+% \end{pmatrix}
+% \]
+% de tal forma que \(X' = \mathcal{F}(X,Y) - \mathcal{V}(X,Y)\). Notamos que efectivamente \(\mathcal{F}(\mathbf{0},Y) = \mathbf{0}\) y \(\mathcal{V}(\mathbf{0},Y) = \mathbf{0}\). 
+% Calculamos 
+% \[
+% F = \frac{\partial \mathcal{F}}{\partial X}(\mathbf{0},Y) = 
+% \begin{pmatrix}
+% \alpha p_E S & \alpha p_{I^m} S & \alpha p_I S \\
+% (1-\phi)\gamma_E & 0 & 0 \\
+% \phi\gamma_E & 0 & 0>
+%  \end{pmatrix}
+% \]
+% \[
+% V = \frac{\partial \mathcal{V}}{\partial X}(\mathbf{0},Y) = 
+% \begin{pmatrix}
+% \gamma_E & 0 & 0 \\
+% 0 & \gamma_{I^m} & 0 \\
+% 0 & 0 & \gamma_I
+%  \end{pmatrix}
+% \]
 
-Con lo que el número reproductivo básico (obtenido con Symbolics.jl)
-\[
-\mathcal{R}_{0} = \rho(FV^{-1}) = \rho \left(
-\begin{pmatrix}
-\alpha p_E S/\gamma_E & \alpha p_{I^m} S/ \gamma_{I^m}& \alpha p_I S/\gamma_I \\
-(1-\phi) & 0 & 0 \\
-\phi & 0 & 0
-\end{pmatrix}
-\right)
-\]
-El número reproductivo será \(\mathcal{R}_t = S\mathcal{R}_0 /N\).
+% Con lo que el número reproductivo básico (obtenido con Symbolics.jl)
+% \[
+% \mathcal{R}_{0} = \rho(FV^{-1}) = \rho \left(
+% \begin{pmatrix}
+% \alpha p_E S/\gamma_E & \alpha p_{I^m} S/ \gamma_{I^m}& \alpha p_I S/\gamma_I \\
+% (1-\phi) & 0 & 0 \\
+% \phi & 0 & 0
+% \end{pmatrix}
+% \right)
+% \]
+% El número reproductivo será \(\mathcal{R}_t = S\mathcal{R}_0 /N\).
 
 
 % Sus valores propios serán [Obtenidos con wolfram]

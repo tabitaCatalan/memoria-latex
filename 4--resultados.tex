@@ -13,19 +13,20 @@ En la sección \ref{sec:estimacion-results} se mostrarán los resultados obtenid
 
 El estudio anterior será de utilidad a lal hora de estudiar el caso con datos reales. A partir del caso sintético se obtendrá un conjunto de valores que permite una buena recuperación del factor sanitario. Se extrapolarán estos valores en el caso real. La sección \ref{sec:estimacion-results} concluye con los resultados para el caso con datos reales, utilizando los casos confirmados puestos a disposición por el MinCiencia. Esto se presenta en la subsección \ref{subsec:datosreales}.
 
-Finalmente, en la sección \ref{sec:evalmodel}, se evaluará el modelo. En primer lugar, la subsección \ref{subsec:casoshipot} usa los valores estimados en la sección anterior para simular varios casos hipotéticos; ¿cómo habría sido el desarrollo de la pandemia si todos se cuidaran de la misma forma pero pudieran guardar una cuarentena más estricta? ¿y si no se hacía cuarentena pero todos respetaban las medidas sanitarias de una mejor manera?. En segundo lugar, en la subsección \ref{subsec:rt}, se calcula el valor del \(\mathcal{R}_t\) para Santiago, y se compara con valor calculado con el método de Cori \cite{Cori2013} por el Centro de Modelamiento Matemático.
+Finalmente, en la sección \ref{sec:evalmodel}, se evaluará el modelo usando los valores estimados en la sección anterior para simular varios casos hipotéticos; ¿cómo habría sido el desarrollo de la pandemia si todos se cuidaran de la misma forma pero pudieran guardar una cuarentena más estricta? ¿y si no se hacía cuarentena pero todos respetaban las medidas sanitarias de una mejor manera?.
+%En segundo lugar, en la subsección \ref{subsec:rt}, se calcula el valor del \(\mathcal{R}_t\) para Santiago, y se compara con valor calculado con el método de Cori \cite{Cori2013} por el Centro de Modelamiento Matemático.
 
 
 
 % Resultados de la matriz con tiempo constantes 
-\include{4-1-matriz}
+\input{4-1-matriz}
 
-\include{4-2-sensibilidad}
+\input{4-2-sensibilidad}
 
 % Resultados de usar el filtro de kalman 
-\include{4-3-estimacionparametros}
+\input{4-3-estimacionparametros}
 
 % Agrupar para usar datos reales, calcular Rt y comparar con Cori
-\include{4-4comparacion}
+\input{4-4comparacion}
 
 % Esto ya es solo una pregunta... pero se puede hacer el proceso a la inversar? obtener estimaciones de movilidad para distintos grupos usando los datos de infecciones.... el problema es que el mejor indicador son los fallecidooooos y los resultados dependen mucho de las tasas de muerte.

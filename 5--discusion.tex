@@ -6,10 +6,14 @@ Meta: los objetivos específicos apuntan a conseguir el objetivo general? Se cum
 
 Con respecto a las limitaciones, es necesario recordar los supuestos y simplificaciones. Por un lado, se consideró que la población en la región metropolitana se mantenía constante, despreciando efectos como la natalidad, mortalidad debido a causas naturales y efectos migratorios entre ciudades. Por otro lado, algunos factores relevantes a la transmisión del Covid19 fueron dejados fuera al utilizar un modelo SEIR, como la importancia de los casos no detectados \cite{Li2020c} o la posibilidad de reinfección \cite{}. El supuesto de que todas las clases socioeconómicas tienen la misma tasa de incubación y recuperación es un factor a considerar, y que sería ciertamente excesivo al haber utilizado grupos etarios \cite{}. Este supuesto toma relevacia al considerar los estudios de sensibilidad; al considerar grupos con tasas muy distintas, nada asegura que se mantenga la relación entre los factores sanitarios.
 
-El uso del filtro de Kalman tiene desde luego limitaciones. Teóricamente solo puede justificarse en el caso lineal, y el uso del filtro extendido lleva a errores numéricos que podrían mitigarse usando un filtro más apto para tratar con no linealidades, como el filtro \textit{unscented}. Los resultados muestran también que el filtro tiene dificultades para estimar los valores sanitarios al comienzo de la pandemia, cuando hay muy pocos casos, por lo que los resultados en la fase inicial son poco confiables. Desde luego está la estimación de las tasas, que genera variaciones importantes en los estados, y de las covarianzas... 
+El uso del filtro de Kalman tiene desde luego limitaciones. Teóricamente solo puede justificarse en el caso lineal, y el uso del filtro extendido lleva a errores numéricos que podrían mitigarse usando un filtro más apto para tratar con no linealidades, como el filtro \textit{unscented}. El estudio del caso sintético muestra también que el filtro tiene dificultades para estimar los valores sanitarios al comienzo de la pandemia, cuando hay muy pocos casos, por lo que los resultados en la fase inicial son poco confiables. Desde luego está la estimación de las tasas, que genera variaciones importantes en los estados, y de las covarianzas... 
+
+Los datos utilizados como observaciones no son los ideales; se ha mencionado de la capacidad de detectar los casos contagiados difiere entre clases socioeconómicas \cite{Mena2021}, sin embargo, eso sugiere que el número de casos acumulados está subestimado para las clases más vulnerables, y que de usar los reales se conseguirían diferencias aún más grandes en el factor sanitario.
+
+Una medida de gran relevancia que no fue considerada en el trabajo fue la vacunación. Esta, sin embargo, debería verse directamente reflejada como una disminución importante del factor sanitario una vez que se vacuna gran parte de la población.
 
 %%% Factor sanitario 
-Con respecto al factor sanitario, a pesar de las diferencias al usar distintos parámetros, la diferencia entre los niveles socioeconómicos fue una constante, especialemente el hecho de que la clase más acomodada mantiene un factor sanitario por debajo de los demás. No fue posible obtener resultados razonables con esta metodología para un factor sanitario común a todas clases, lo que significaría que todos enfrentan el mismo riesgo en el exterior.
+Con respecto al factor sanitario, el hecho de que la clase más acomodada mantiene un factor sanitario por debajo de las demás clases es algo que se mantiene constante a través de los estudios de sensibilidad. Se intentó obtener un factor sanitario común a todas las clases, lo que sugeriría que todos enfrentan el mismo riesgo en el exterior, pero no fue posible obtener resultados razonables, .
 
 Estos resultados sugieren que las diferencias en movilidad, las cuales han sido previamente mencionadas como una explicación de las diferencias en la incidencia entre los distintos grupos socioeconómicos \cite{Mena2021}\cite{Gozzi2021} [Revisar], por sí solas no son suficientes para explicar las diferencias en la cantidad de contagios.
 
@@ -37,8 +41,10 @@ La existencia de la EOD2012 ofrecía en primer lugar la posibilidad de un enfoqu
 Las ventajas de este enfoque lagrangiano se destacarían más al modelar una ciudad con menor disponibilidad de datos....
 
 
-
 - Comparación con la literatura de la metodología 
+
+
+Se cumplieron los objetivos??
 
 
 
