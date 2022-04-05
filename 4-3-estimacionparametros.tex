@@ -5,11 +5,9 @@ En todos los resultados presentados se utiliza \(\Delta t = 1 \text{día}\). Se 
 %\subsection{Modelo con una clase}
 \subsection{Modelo multiclase con datos sintéticos} \label{subsec:sintetico}
 
-Se ...
+Se utilizan los datos de movilidad de dos comunas (San Bernardo y las Condes) para generar las matrices de tiempos de residencia variables en el tiempo. Se fijan valores \(\gamma_E = 1/5.1, \gamma_I = 1/8.2\) y condiciones iniciales... Se fija riesgos \(\beta_{\text{hogar}} = 1\) y \(\beta_{\text{exterior}} = 1.88\). 
 
-Se utilizan los datos de movilidad de dos comunas (...) para generar las matrices de tiempos de residencia variables en el tiempo. Se fijan valores \(\gamma_E = 1/5.1, \gamma_I = 1/8.2\) y condiciones iniciales... Se fija riesgos \(\beta_{\text{hogar}} = 1\) y \(\beta_{\text{exterior}} = 1.88\). 
-
-Mediante prueba y error se genera controles (diferentes) para cada clase, de forma que el total de casos acumulados tengan órdenes de magnitud similares a los datos reales.
+Mediante prueba y error se genera dos controles diferentes para cada clase, de forma que el total de casos acumulados tengan órdenes de magnitud similares a los datos reales.
 
 A partir de la solución de la ecuación diferencial es posible obtener las series \(C_1, C_2\). Las observaciones son obtenidas con \(\Delta t = 1\) [día]. Se utilizan estas observaciones directamente (sin añadir ruido), y el filtro asume que tienen un ruido pequeño (G = diag(10)...). 
 
@@ -186,18 +184,13 @@ Cuando los parámetros \(\gamma_E\) y \(\gamma_I\) son conocidos, la estimación
 
 En el caso en que los parámetros \(\gamma_E\) y \(\gamma_I\) son desconocidos y solo se usan valores pausibles, la estimación es menos exacata; el factor sanitario (para este caso particular) es subestimado al usar \(\beta_{\text{exterior}} = 1.8\), el más cercano al real (\(1.88\)) de entre los utilizados. Esto se observa en la figuras \ref{fig:legend-sensi-b-class1-gamma_estimado} y \ref{fig:legend-sensi-b-class2-gamma_estimado}, donde las estimaciones más oscuras están por debajo de la línea verde del factor sanitario de control.
 
-
-% Conclusión del análisis de sensibilidad. 
-Mientras la hipótesis \(\gamma_{Ei} = \gamma_E\) y \(\gamma_{Ii} = \gamma_I\) sea válida, es decir, que las tasas de incubación y remoción son iguales en cada clase, se puede esperar que las estimaciones del factor sanitario \(\alpha_i\) conserven la proporción entre ellas, de forma que, aunque no sean exactas, sí sea posible hacer afirmaciones del tipo ``la clase \(1\) enfrentó un 20\% más de riesgo que la clase \(2\) en este período de tiempo''. Si esto falla, entonces no se puede esperar que los factores sanitarios se expandan o contraigan uniformemenmte.
-
-
 %gamma_e_real = 1/5.1; gamma_i_real = 1/7.2; beta_exterior_real = 1.88; 
 
 %gamma_e = 1/5.8 ; gamma_i = 1/8.2; beta_exterior = 2.
 
 
 
-%\subsection{Sensibilidad ante los parámetros \(\gamma_E, \gamma_I\)} \label{subsec:sensigamma}
+\subsection{Sensibilidad ante los parámetros \(\gamma_E, \gamma_I\)} \label{subsec:sensigamma}
 
 \subsection{Sensibilidad ante la covarianza} \label{subsec:sensicov}
 % 20. .^ collect(-2:0.4:0)
@@ -303,7 +296,27 @@ La figura \ref{fig:legend-sensi-alphacov} muestra la estimación del factor sani
 
 El estudio realizado en las subsecciones anteriores entrega herramientas para trabajar con el caso real.
 
-\begin{figure}[!h]
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|| m{1cm} m{3cm} m{8cm}||} 
+ \hline
+ & \textbf{Fecha} & \textbf{Evento} \\
+ \hline 
+ (1) & 13/may/2020 & Comienzo de la cuarentena total en la RM.\\
+ (2) & 28/jul/2020 & Comienza a regir el Plan Paso a Paso.\\
+ (3) & 04/ene/2021 & Comienza a funcionar el pase de vacaciones.\\ 
+ (4) & 03/feb/2021 & Comienza campaña de vacunación masiva (ver \ref{}).\\
+ (5) & 26/may/2021 &  Un 50\% de la población en la RM tiene la primera dosis de la vacuna. \\
+ \hline
+\end{tabular}
+\caption{Algunas fechas relevantes para el desarrollo de la pandemia en Santiago.}
+\label{table:fechas-relevantes}
+\end{table}
+
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.99\textwidth]{img/resultados/kalman_grouped_allstates_allgroups\parameterstring}
 \caption[\textit{Kalman RTS Smoother} aplicado al caso real ]{\textit{Kalman RTS Smoother} aplicado al caso real. Se utiliza el Producto 15 de casos acumulados confirmados}
@@ -312,7 +325,7 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
 
 
 
-\begin{figure}[!h]
+\begin{figure}[H]
      \centering
      \begin{subfigure}[b]{0.47\textwidth}
          \centering
@@ -355,7 +368,7 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
 
 
 
-\begin{figure}[!h]
+\begin{figure}[H]
      \centering
      \begin{subfigure}[b]{0.47\textwidth}
          \centering
@@ -399,7 +412,7 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
 
 
 
-\begin{figure}[!h]
+\begin{figure}[H]
      \centering
      \begin{subfigure}[b]{.99\textwidth}
          \centering
@@ -436,8 +449,47 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_alpha_high5\parameterstring}
          \caption{Clase \(5\).}
      \end{subfigure}
-        \caption[Factor sanitario estimado a partir de datos reales.]{Factor sanitario estimado a partir de datos reales. Las líneas grises corresponden a algunas fechas relevantes: (1) 13/may/2020 - Comienzo de la cuarentena total en la RM; (2) 25/oct/2020 - Plesbicito por la nueva constitución; (3) 4/ene/2021 - Comienza a funcionar el pase de vacaciones; (4) 1/feb/2021 - Comienza un plan de vacunación más intensivo (ver visualizador CMM); (5) 26/may/2021 - Un 50\% de la población en la RM tiene la primera dosis de la vacuna.}
+        \caption[Factor sanitario estimado a partir de datos reales.]{Factor sanitario estimado a partir de datos reales. Las líneas grises corresponden a las fechas relevantes de la tabla \ref{table:fechas-relevantes}.}
         \label{alpha-comp-high}
+\end{figure}
+
+
+El estudio de sensibilidad mostró que los resultados dependen en mayor medida de \(\gamma_I\), y que \(\gamma_E\) solo produce variaciones muy pequeñas en el factor sanitario. Con esto en mente, la figura \ref{sensi-gammai-real} muestra la sensibilidad de los resultados con respecto a la variable \(\gamma_I\). Si bien la relación entre los factores sanitario no se mantiene constante en cada caso, sí se observa claramente que la Clase sin prioridad, o la más acomodada, disminuye considerablemente su riesgo mucho antes que las demás.
+
+\begin{figure}[H]
+     \centering
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/sensigammai_6-5_0alphaini0-15_0-1_0-45_high1__acov0-8_aini0-27675_gcov0-05gamma_e_0-1724_gamma_i_0-1389_beta_2_2-0000.pdf}
+         \caption{\(1/\gamma_I = 6.5 [\text{días}]\)}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/sensigammai_8-5_0alphaini0-15_0-1_0-45_high1__acov0-8_aini0-27675_gcov0-05gamma_e_0-1724_gamma_i_0-1389_beta_2_2-0000.pdf}
+         \caption{\(1/\gamma_I = 8.5 [\text{días}]\)}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/sensigammai_10-5_0alphaini0-15_0-1_0-45_high1__acov0-8_aini0-27675_gcov0-05gamma_e_0-1724_gamma_i_0-1389_beta_2_2-0000.pdf}
+         \caption{\(1/\gamma_I = 10.5 [\text{días}]\)}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/sensigammai_12-5_0alphaini0-15_0-1_0-45_high1__acov0-8_aini0-27675_gcov0-05gamma_e_0-1724_gamma_i_0-1389_beta_2_2-0000.pdf}
+         \caption{\(1/\gamma_I = 12.5 [\text{días}]\)}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/sensigammai_14-5_0alphaini0-15_0-1_0-45_high1__acov0-8_aini0-27675_gcov0-05gamma_e_0-1724_gamma_i_0-1389_beta_2_2-0000.pdf}
+         \caption{\(1/\gamma_I = 14.5 [\text{días}]\)}
+     \end{subfigure}
+     \hfill
+    \caption[Sensibilidad factor sanitario estimado para los datos reales, ante distintos \(\gamma_I\).]{}
+    \label{sensi-gammai-real}
 \end{figure}
 
 

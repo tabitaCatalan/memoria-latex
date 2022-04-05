@@ -30,11 +30,11 @@ Como era de esperarse, las diferencias socioeconómicas disminuyen debido a que 
  & Cuidado & \begin{tabular}{@{}c@{}}\textbf{Cuidado} \\ \textbf{normal}\end{tabular} & \begin{tabular}{@{}c@{}}\textbf{Cuidado} \\ \textbf{extra}\end{tabular}\\ 
  \hline
  \textbf{Sin cuarentena} & \textit{Caso 1}: Se contagia \(\sim 90\%\) de la población en los primeros 6 meses, de manera uniforme entre las distintas clases. Luego la enfermedad desaparece. & \textit{Caso 2}: Se contagia \(\sim 90\%\) de la población en los primeros 6 meses, de manera uniforme entre las distintas clases. Luego la enfermedad desaparece. & \textit{Caso 3}: Se logra controlar el alza de casos, alcanzando el \textit{peak} de mediados de julio de 2020 y el de inicios de mayo de 2021 con menos de la mitad de casos, e incluso se evita el rebrote de junio de 2021. \\ 
- \textbf{Cuarentena normal} & \textit{Caso 4} El primer \textit{peak} de julio de 2020 alcanza más del doble de casos y tiene una reducción lenta, de tal forma que el \textit{peak} de mayo de 2021 es apenas registrado como un alza ligera. & \textit{Caso 5} & \textit{Caso 6} \\
+ \textbf{Cuarentena normal} & \textit{Caso 4}: El primer \textit{peak} de julio de 2020 alcanza más del doble de casos y tiene una reducción lenta, de tal forma que el \textit{peak} de mayo de 2021 es apenas registrado como un alza ligera. & \textit{Caso 5}: Desarrollo real de la pandemia, tomado como referencia& \textit{Caso 6}: La enfermedad alcanza un pequeño \textit{peak} en julio de 2020 y luego se extingue.\\
  \textbf{Cuarentena fuerte} & \textit{Caso 7} El primer \textit{peak} es muy similar en fecha y número de infectados, pero con un alza sostenida en el número de casos a partir septiembre de 2020, llegando a un \textit{peak} de más del doble de infectados en julio de 2021. & \textit{Caso 8} Se observan dos \textit{peaks} de unas 5000 personas, similar al Caso 3 pero sin poder contener el rebrote de junio de 2021. & \textit{Caso 9} \\
  \hline
 \end{tabular}
-\caption{Observaciones para cada caso hipotético.}
+\caption{Observaciones para cada caso hipotético, escenario con \(\beta_{\text{exterior}} = 68.\) (el escenario exterior domina los contagios).}
 \label{table:descripcion-casos-hipot}
 \end{table}
 
@@ -64,8 +64,8 @@ La figura \ref{img:hip-3478-I-comp} muestra cuatro casos interesantes, comparán
 
 
 En estos tres casos, el impacto es mayor sobre la clase 5 (la más vulnerable). Esto puede atribuirse al hecho de que es esa la clase que presenta en general un mayor factor sanitario y movilidad.
-
-
+ 
+ 
 
 % Fechas 
 % important_dates = [
@@ -102,7 +102,7 @@ En estos tres casos, el impacto es mayor sobre la clase 5 (la más vulnerable). 
          \includegraphics[width=\textwidth]{img/resultados/comparecase_8withnormal_I_\parameterstring}
          \caption{Caso \(8\): Cuidado normal y cuarentena fuerte.}
      \end{subfigure}
-        \caption[Personas infectadas para caso hipotéticos seleccionados.]{Personas infectadas para caso hipotéticos seleccionados, con la estimación de los casos reales de fondo. Diferentes límites para el eje \(y\). Las líneas grises corresponden a algunas fechas relevantes: (1) 13/may/2020 - Comienzo de la cuarentena total en la RM; (2) 25/oct/2020 - Plesbicito por la nueva constitución; (3) 4/ene/2021 - Comienza a funcionar el pase de vacaciones; (4) 1/feb/2021 - Comienza un plan de vacunación más intensivo (ver visualizador CMM); (5) 26/may/2021 - Un 50\% de la población en la RM tiene la primera dosis de la vacuna.}
+        \caption[Personas infectadas para caso hipotéticos seleccionados.]{Personas infectadas para caso hipotéticos seleccionados, con la estimación de los casos reales de fondo. Diferentes límites para el eje \(y\). Las líneas grises corresponden a las fechas relevantes de la tabla \ref{table:fechas-relevantes}.}
         \label{img:hip-3478-I-comp}
 \end{figure}
 

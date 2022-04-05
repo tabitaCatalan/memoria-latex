@@ -19,11 +19,17 @@ Estos resultados sugieren que las diferencias en movilidad, las cuales han sido 
 
 Las clases socioeconómicas más vulnerables no solo no pueden guardar la cuarentenas de la misma forma que las clases acomodadas, sino que además, al salir al exterior, se encuentran en ambientes más riesgosos, ya sea por estar en ambientes más concurridos, o por no utilizar adecuadamente las medidas de seguridad como el lavado de manos y el uso correcto de mascarillas. Estos resultados son consistentes con los encontrados por \cite{Chang2021}.
 
-Destaca la el factor sanitario en el periodo mayo-junio de 2021, donde se observa que la clase más acomodada consigue una reducción mucho más marcada que las demás. Esto podría atribuirse al comienzo de la vacunación en Chile. El por qué eso disminuye el riesgo en las clases más acomodadas es algo cuya causas habría que explorar.
+Destaca la el factor sanitario en el periodo mayo-junio de 2021, donde se observa que la clase más acomodada consigue una reducción mucho más marcada que las demás. Una posible hipótesis sería atribuir esto al avance del proceso de vacunación en Chile (ver figura \ref{img:cmm-vacunados}); ¿fue el proceso de vacunación más marcado en las comunas acomodadas? La distribución de vacunas ocurrió por tramos de edad, de mayores a jóvenes, y la distribución de adultos mayores en las comunas acomodadas es mayor.
+
+Otra posible explicación nace del análisis de sensibilidad realizado en 
 
 %% Casos hipotéticos 
+Con respecto a los casos hipotéticos, se observan dos escenarios que dependen del valor del riesgo \(\beta_{\text{exterior}}\). Para este análisis ese necesario considerar el aporte a la derivada de cada uno de los ambientes, calculado en \ref{}. 
+Por un lado, al usar un valor notoriamente mayor que \(1\) (\(\beta_{\text{exterior}} = 10\), el aporte a la derivada dado por el ambiente \(\text{hogar}\) es despreciable en comparación al dado por el \(\text{exterior}\). Esto quiere decir que prácticamente todos los contagios ocurren cuando la gente sale de su hogar. Esto, sin embargo, no es consistente con \cite{Ferguson2020}, quien afirma que aproximadamente 1/3 de los contagios ocurren en el hogar. Incluso en esta situación, se observa que las medidas de cuidado son sumamente relevantes, pudiendo prevenir un segundo \textit{peak} como muestra el caso 3.
 
+Por otro lado, cuando se usa un valor ligeramente mayor a \(1\) (\(\beta_{\text{exterior}} = 1.2\) por ejemplo) el aporte del ambiente \texttt{hogar} a la derivada ya es perceptible \texttt{exterior} (para este caso en particular, es unas 10 veces menor). El estudio de los casos hipotéticos, sin embargo, revela que la cuarentena casi no influya en nada en los resultados finales, y que todo depende de las medidas de cuidado.
 
+El modelo en ambos escenarios coincide, sin embargo, en que si fuera posible que todos se cuidaran al mismo nivel que el grupo más acomodado, se podría controlar el virus incluso sin la exigencia de cuarentenas.
 
 \section{Acerca de la metodología}
 
@@ -41,16 +47,19 @@ La existencia de la EOD2012 ofrecía en primer lugar la posibilidad de un enfoqu
 Las ventajas de este enfoque lagrangiano se destacarían más al modelar una ciudad con menor disponibilidad de datos....
 
 
+% Conclusión del análisis de sensibilidad. 
+Mientras la hipótesis \(\gamma_{Ei} = \gamma_E\) y \(\gamma_{Ii} = \gamma_I\) sea válida, es decir, que las tasas de incubación y remoción son iguales en cada clase, se puede esperar que las estimaciones del factor sanitario \(\alpha_i\) conserven la proporción entre ellas, de forma que, aunque no sean exactas, sí sea posible hacer afirmaciones del tipo ``la clase \(1\) enfrentó un 20\% más de riesgo que la clase \(2\) en este período de tiempo''. 
+
+Si esto falla, entonces no se puede esperar que los factores sanitarios se expandan o contraigan uniformemente. El análisis hecho en la subsección \ref{subsec:sensigamma} muestra que el valor \(\gamma_I\) es el que más influye en esta contracción.
+
+Con respecto al ajuste del factor sanitario, a pesar de la gran incerteza que surge de utilizar valores grandes de covarianza, el caso sintético sugiere que se obtienen mejores resultados de esta forma.
+
 - Comparación con la literatura de la metodología 
-
-
 Se cumplieron los objetivos??
 
 
 
-El trabajo realizado abre varias posibles extensiones. Por un lado, la metodología empleada es aplicable con mínimas modificaciones a una gran variedad de modelos, con otros compartimientos o variables observadas.
-
-También era posible, puesto que los datos estaban disponibles, aplicar el modelo por comuna en lugar de por grupos socioeconómicos, aunque esto requería más tiempo de cómputo. 
+El trabajo realizado ofrece varias posibles extensiones. Por un lado, la metodología empleada es aplicable con mínimas modificaciones a una gran variedad de modelos, con otros compartimientos o variables observadas. También era posible, puesto que los datos están disponibles para el caso de la región Metropolitana, aplicar el modelo por comuna en lugar de por grupos socioeconómicos, aunque esto requería más tiempo de cómputo. 
 
 Probar el modelo con otros ambientes es una posibilidad interesante. Algunas sugerencias son incluir ambientes de trabajo, compras, etc, utilizando datos como los ofrecidos por Google (ver sección \ref{}).
 

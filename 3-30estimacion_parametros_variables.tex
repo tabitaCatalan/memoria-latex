@@ -243,7 +243,18 @@ S_{n,k} + E_{n,k} + I_{n,k} + R_{n,k}
 
 
 \subsection{Estimación de parámetros fijos}
-Hasta ahora se ha supuesto que \(\gamma_E, \gamma_I\) y \(\beta_1, \dots, \beta_m\) son valores fijos y conocidos. Esto, en la práctica, no es así. Puesto que se trabajará solamente con \(m= 2\) (\texttt{hogar} y \texttt{exterior}), y ya se mencionó en la sección \ref{met:decisiones} que se fijaría el valor de \(\beta_{\text{hogar}} = 1\), basta con dar un valor a \(\beta_{\text{exterior}}\). Lo esperado es que estar en el exterior sea más riesgoso que en el hogar, así que tiene sentido considerar \(\beta_{\text{exterior}} > \beta_{\text{hogar}}\). Se decide fijar \(\beta_{\text{exterior}} = 2\), en concordancia con \cite{Ferguson2020}\cite{}, quienes afirman que un tercio de los contagios ocurren en el hogar. La sensibilidad a este parámetro se estudia en \ref{subsec:sensibeta}.
+Hasta ahora se ha supuesto que \(\gamma_E, \gamma_I\) y \(\beta_1, \dots, \beta_m\) son valores fijos y conocidos. Esto, en la práctica, no es así. Puesto que se trabajará solamente con \(m= 2\) (\texttt{hogar} y \texttt{exterior}), y ya se mencionó en la sección \ref{met:decisiones} que se fijaría el valor de \(\beta_{\text{hogar}} = 1\), basta con dar un valor a \(\beta_{\text{exterior}}\). Lo esperado es que estar en el exterior sea más riesgoso que en el hogar, así que tiene sentido considerar \(\beta_{\text{exterior}} > \beta_{\text{hogar}}\). 
+
+Para darle un valor a este parámetro, se considerará lo cálculo siguiente
+
+
+\[
+\begin{aligned}
+\lambda &= \alpha_i S_i \sum_{j = 1}^m p_{ij} \frac{\sum_{k = 1}^n I_{k} p_{kj}}{\sum_{k = 1}^n N_{k} p_{kj}} \\
+&= \alpha_i S_i \sum_{j = 1}^m p_{ij} \frac{\sum_{k = 1}^n I_{k} p_{kj}}{\sum_{k = 1}^n N_{k} p_{kj}} \\
+\end{aligned}
+\]
+, en concordancia con \cite{Ferguson2020}\cite{}, quienes afirman que un tercio de los contagios ocurren en el hogar. La sensibilidad a este parámetro se estudia en \ref{subsec:sensibeta}.
 
 % Aquí también me falta investigación. Necesito las estimaciones que dan los estudios para esos valores,
 
