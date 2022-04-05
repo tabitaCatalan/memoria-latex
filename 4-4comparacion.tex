@@ -1,7 +1,9 @@
 \section{Evaluación del modelo mediante casos hipotéticos}\label{sec:evalmodel-casoshipot}
 
 % Descripción de los tipos de cuarentena y las medidas de cuidado 
-Las combinaciones entre los distintos niveles de cuidado y cuarentena presentados en \ref{met:evaluacion-hipot} dan lugar a una serie de casos, los cuales son presentados en la tabla \ref{table:casos-hipoteticos}. Se resuelve el sistema para cada caso, comenzando desde las condiciones iniciales y los parámetros \(\gamma_E, \gamma_I, \beta_{\text{exterior}}\) estimados con \textit{RTS smoother} en la sección anterior.
+Las combinaciones entre los distintos niveles de cuidado y cuarentena presentados en \ref{met:evaluacion-hipot} dan lugar a una serie de casos, los cuales son presentados en la tabla \ref{table:casos-hipoteticos}. Se resuelve el sistema para cada caso, comenzando desde las condiciones iniciales y los parámetros \(\gamma_E, \gamma_I\) estimados con \textit{RTS smoother} en la sección anterior. Se prueban dos escenarios; el primero, en que el \(\beta_{\text{exterior}}\) es un valor mayor pero cercano a \(1\), de tal forma que es la tasa de contagio depende del ambiente hogar, y cuando es un valor mucho más grande que \(1\), de forma que la tasa de contagio está totalmente dominada por el ambiente exterior (todos los contagios ocurren fuera de la casa).
+\subsection{Escenario con \(\beta_{\text{exterior}} \approx 1\)}
+
 
 \begin{table}[h!]
 \centering
@@ -31,7 +33,7 @@ Como era de esperarse, las diferencias socioeconómicas disminuyen debido a que 
  \hline
  \textbf{Sin cuarentena} & \textit{Caso 1}: Se contagia \(\sim 90\%\) de la población en los primeros 6 meses, de manera uniforme entre las distintas clases. Luego la enfermedad desaparece. & \textit{Caso 2}: Se contagia \(\sim 90\%\) de la población en los primeros 6 meses, de manera uniforme entre las distintas clases. Luego la enfermedad desaparece. & \textit{Caso 3}: Se logra controlar el alza de casos, alcanzando el \textit{peak} de mediados de julio de 2020 y el de inicios de mayo de 2021 con menos de la mitad de casos, e incluso se evita el rebrote de junio de 2021. \\ 
  \textbf{Cuarentena normal} & \textit{Caso 4}: El primer \textit{peak} de julio de 2020 alcanza más del doble de casos y tiene una reducción lenta, de tal forma que el \textit{peak} de mayo de 2021 es apenas registrado como un alza ligera. & \textit{Caso 5}: Desarrollo real de la pandemia, tomado como referencia& \textit{Caso 6}: La enfermedad alcanza un pequeño \textit{peak} en julio de 2020 y luego se extingue.\\
- \textbf{Cuarentena fuerte} & \textit{Caso 7} El primer \textit{peak} es muy similar en fecha y número de infectados, pero con un alza sostenida en el número de casos a partir septiembre de 2020, llegando a un \textit{peak} de más del doble de infectados en julio de 2021. & \textit{Caso 8} Se observan dos \textit{peaks} de unas 5000 personas, similar al Caso 3 pero sin poder contener el rebrote de junio de 2021. & \textit{Caso 9} \\
+ \textbf{Cuarentena fuerte} & \textit{Caso 7} El primer \textit{peak} es muy similar en fecha y número de infectados, pero con un alza sostenida en el número de casos a partir septiembre de 2020, llegando a un \textit{peak} de más del doble de infectados en julio de 2021. & \textit{Caso 8} Se observan dos \textit{peaks} de unas 5000 personas, similar al Caso 3 pero sin poder contener el rebrote de junio de 2021. & \textit{Caso 9}: La enfermedad se extingue luego de los primeros meses. \\
  \hline
 \end{tabular}
 \caption{Observaciones para cada caso hipotético, escenario con \(\beta_{\text{exterior}} = 68.\) (el escenario exterior domina los contagios).}
@@ -44,19 +46,19 @@ Se puede ver como en los casos 1 y 2, que corresponden a casos sin cuarentena co
 Es interesante que la simulación muestra como el cuidado extra (casos 3, 6 y 9) es suficiente por sí mismo de controlar el alza de casos, incluso sin ningún tipo de cuarentena (caso 3). Con cuarentena (casos 6 y 9), la enfermedad desaparece rápidamente de entre la población en los primeros meses. Esto desde luego no considera importación de casos externos.
 
 % Aquí pongo todos los resultados de casos hipotéticos que obtuve... cuarentenas fuertes, etc... 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.99\textwidth]{img/resultados/allhipcases_S-N_commonylim0_1\parameterstring}
-\caption{Estimación de susceptibles, normalizados por el total de cada grupo \(S_i/N_i\), para cada caso hipotético.}
-\label{img:all-hip-S-N}
-\end{figure}
+% \begin{figure}[h]
+% \centering
+% \includegraphics[width=0.99\textwidth]{img/resultados/allhipcases_S-N_commonylim0_1\parameterstring}
+% \caption{Estimación de susceptibles, normalizados por el total de cada grupo \(S_i/N_i\), para cada caso hipotético.}
+% \label{img:all-hip-S-N}
+% \end{figure}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.99\textwidth]{img/resultados/allhipcases_I-N_commonylim0-015\parameterstring}
-\caption{Estimación de infectados normalizados por el total de cada grupo \(I_i/N_i\), para cada caso hipotético.}
-\label{img:all-hip-I-N}
-\end{figure}
+% \begin{figure}[h]
+% \centering
+% \includegraphics[width=0.99\textwidth]{img/resultados/allhipcases_I-N_commonylim0-015\parameterstring}
+% \caption{Estimación de infectados normalizados por el total de cada grupo \(I_i/N_i\), para cada caso hipotético.}
+% \label{img:all-hip-I-N}
+% \end{figure}
 
 La figura \ref{img:hip-3478-I-comp} muestra cuatro casos interesantes, comparándolos con la situación normal. 
 
@@ -106,3 +108,34 @@ En estos tres casos, el impacto es mayor sobre la clase 5 (la más vulnerable). 
         \label{img:hip-3478-I-comp}
 \end{figure}
 
+
+\subsection{Escenario con \(\beta_{\text{exterior}} >> 1\)}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/comparecase_3withnormal_I_\parameterstring}
+         \caption{Caso \(3\): Cuidado extra sin cuarentena.}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/comparecase_4withnormal_I_\parameterstring}
+         \caption{Caso \(4\): Cuidado insuficiente y cuarentena normal.}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/comparecase_7withnormal_I_\parameterstring}
+         \caption{Caso \(7\): Cuidado insuficiente y cuarentena fuerte.}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{.47\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{img/resultados/comparecase_8withnormal_I_\parameterstring}
+         \caption{Caso \(8\): Cuidado normal y cuarentena fuerte.}
+     \end{subfigure}
+        \caption[Personas infectadas para caso hipotéticos seleccionados.]{Personas infectadas para caso hipotéticos seleccionados, con la estimación de los casos reales de fondo. Diferentes límites para el eje \(y\). Las líneas grises corresponden a las fechas relevantes de la tabla \ref{table:fechas-relevantes}.}
+        \label{img:hip-3478-I-comp}
+\end{figure}
