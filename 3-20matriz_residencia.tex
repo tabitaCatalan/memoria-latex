@@ -63,8 +63,12 @@ Ante la falta de la información adecuadamente desagregada para edad y sexo, se 
 En \cite{Munizaga2011} se propone un método para obtener información acerca del uso del tiempo de una persona a partir de los tiempos de inicio y fin de sus viajes, contenidos en la Encuesta Origen-Destino, y el propósito declarado de este. Para esto supone que el primer viaje comienza desde el hogar (esto puede verificarse revisando que calcen la zona de origen del viaje con la del hogar). Luego, a cada período de tiempo entre dos viajes consecutivos es asignado a la actividad declarada como propósito en el viaje anterior. La Figura \ref{img:ciclo-viajes} es un diagrama de este proceso. El Algoritmo \ref{alg:timematrix} explica el proceso en detalle de manera general, agregando además ambientes para los distintos modos de transporte. La matriz obtenida usando este algoritmo se denota \(\mathbf{R}_0\). La matriz variable en el tiempo será construida a partir de esta en la siguiente subsección.
 % Insertar el algoritmo para esto, traducir 
 
-\insertimage[\label{img:ciclo-viajes}]{img/metodologia/matrizPnormal/ciclo-viajes.eps}{width=.6\linewidth}{Transformar propósitos de viaje en tiempo de actividad. Fuente: \cite{Munizaga2011}, traducción propia.}
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=.6\linewidth]{img/metodologia/matrizPnormal/ciclo-viajes.eps}
+\caption[Transformar propósitos de viaje en tiempo de actividad.]{Transformar propósitos de viaje en tiempo de actividad. Fuente: \cite{Munizaga2011}, traducción propia.}
+\label{img:ciclo-viajes}
+\end{figure}
 
 \begin{algorithm}[H]
 \SetAlgoLined
