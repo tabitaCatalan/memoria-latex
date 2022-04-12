@@ -21,7 +21,11 @@ Las clases socioeconómicas más vulnerables no solo no pueden guardar la cuaren
 
 Destaca la el factor sanitario en el periodo mayo-junio de 2021, donde se observa que la clase más acomodada consigue una reducción mucho más marcada que las demás. Una posible hipótesis sería atribuir esto al avance del proceso de vacunación en Chile (ver figura \ref{img:cmm-vacunados}); ¿fue el proceso de vacunación más marcado en las comunas acomodadas? La distribución de vacunas ocurrió por tramos de edad, de mayores a jóvenes, y la distribución de adultos mayores en las comunas acomodadas es mayor.
 
-Otra posible explicación nace del análisis de sensibilidad con respecto a los valores \(\gamma_E\) y \(\gamma_I\). Se vio que el valor \(\gamma_I\), la tasa de remoción del sistema, la tasa de personas que dejan de contagiar, es la que tiene más relevancia sobre el factor sanitario. Durante todo el análisis se supuso que este valor era igual para todas las clases (\(\gamma_{Ii} = \gamma_I\) para cada \(i\)). Este valor, sin embargo, podría ser distinto para cada nivel socioeconómico, ya que incluye a las personas que fallecen debido a la enfermedad o que se recupera, y ambas cosas dependen de factores clínicos, los que podrían variar en distintos niveles socioeconómicos \cite{Mena2021}.
+Mientras la hipótesis \(\gamma_{Ei} = \gamma_E\) y \(\gamma_{Ii} = \gamma_I\) sea válida, es decir, que las tasas de incubación y remoción son iguales en cada clase, se puede esperar que las estimaciones del factor sanitario \(\alpha_i\) conserven la proporción entre ellas, de forma que, aunque no sean exactas, sí sea posible hacer afirmaciones del tipo ``la clase \(1\) enfrentó un 20\% más de riesgo que la clase \(2\) en este período de tiempo''. 
+
+Si esto falla, entonces no se puede esperar que los factores sanitarios se expandan o contraigan uniformemente. El análisis hecho en la subsección \ref{subsec:sensigamma} muestra que el valor \(\gamma_I\),la tasa de remoción del sistema, la tasa de personas que dejan de contagiar, es el que más influye en esta contracción;. Durante todo el análisis se supuso que este valor era igual para todas las clases (\(\gamma_{Ii} = \gamma_I\) para cada \(i\)), lo que sugiere una segunda consideración a los resultados; es posible que la tasa de remoción sea distinta para cada nivel socioeconómico, ya que incluye a las personas que fallecen debido a la enfermedad o que se recuperan, y ambas cosas dependen de factores clínicos, los que podrían variar en distintos niveles socioeconómicos \cite{Mena2021}. El hecho de que se vea una reducción marcada en el factor para la clase acomodada, específicamente en los meses posteriores a la vacunación, hace que la primera siga siendo una opción plausible.
+
+Con respecto al ajuste del factor sanitario, a pesar de la gran incerteza que surge de utilizar valores grandes de covarianza, el caso sintético sugiere que se obtienen mejores resultados de esta forma.
 
 %% Casos hipotéticos 
 Con respecto a los casos hipotéticos, se observan dos escenarios que dependen del valor del riesgo \(\beta_{\text{exterior}}\). Para este análisis ese necesario considerar el aporte a la derivada de cada uno de los ambientes, calculado en \ref{}. 
@@ -35,32 +39,32 @@ El modelo en ambos escenarios coincide, sin embargo, en que si fuera posible que
 
   
 
-Cómo influyeron las decisiones tomadas en los resultados? 
-- Lagrangiano vs euleriano 
-- Usar la matriz de tiempos de residencia... aquí no, pero en otro contexto podría serlo.... Se podría haber usado de otra forma, con el enfoque de \cite{Chang2021}, la EOD tiene los viajes bases y la movilidad daba cómo modificarlos.
+% Cómo influyeron las decisiones tomadas en los resultados? 
 
-No se aprovechó completamente la matriz de tiempos de residencia. Si bien se pudo calcular los tiempos en una gran variedad de ambientes, la forma de actualizar esa matriz en el tiempo presenta un desafío. Algunas dificultades incluyen la baja representatividad de los datos de algunas clases socieoconómicas, como los niños en los datos de movilidad obtenidos con las redes de telefonía. 
+% Matriz de tiempos de residencia - EOD2012
 
-La existencia de la EOD2012 ofrecía en primer lugar la posibilidad de un enfoque euleriano, ya que los datos de viajes entre comunas estableciendo una movilidad base, agrupado con los datos de movilidad modificada en pandemia ofrecían la posibilidad de usar un modelo muy similar al empleado por \cite{Lai2020}.
+Una de las diferencias distintivas de este enfoque es utilizar los datos de movilidad para estimar tiempos de residencia, siguiendo la forma lagrangiana. Esta no era la única forma posible, los datos de la Encuesta Origen Destino contienen información detallada de viajes, incluyendo comunas de salida y llegada. Usando esto, una forma alternativa de usar la Encuesta habría sido usar sus datos como movilidad basa entre las distintas comunas, y aprovechar los datos de movilidad en pandemia, como los del ISCI presentados en la sección \ref{}, para modificar estos viajes, siguiendo una metodología similar a \cite{Lai2020}.
 
 
-Las ventajas de este enfoque lagrangiano se destacarían más al modelar una ciudad con menor disponibilidad de datos....
+De seguir esta forma de trabajo, habría sido posible definir algo análogo al factor sanitario, para cada comuna. El no tener una distinción entre clases y ambientes sin embargo, impone el tener que trabajar únicamente con divisiones espaciales, como zonas censales, comunas y agrupaciones de comunas, dificultando el trabajo con grupos etarios.
 
+Ahora, si bien la metodología propuesta sí permite sortear esta dificultad, no se elimina completamente, puesto que sigue siendo necesario estimar los tiempos de residencia para cada una de las clases, y la forma en que estos variaron en cada ambiente no fue uniforme en distintos grupos etarios. A modo de ejemplo, podría ser posible considerar grupos etarios, puesto que existen series de tiempo de número de contagios agrupados por edad. La variación de movilidad por grupo etario, sin embargo, no es tan fácil de obtener, considerando que hay grupos mal representados en los datos disponibles; los datos de ISCI por ejemplo, se derivan del uso de torres de telefonía móvil, que en el caso de niños y adultos mayores podría no ser adecuado.
 
-% Conclusión del análisis de sensibilidad. 
-Mientras la hipótesis \(\gamma_{Ei} = \gamma_E\) y \(\gamma_{Ii} = \gamma_I\) sea válida, es decir, que las tasas de incubación y remoción son iguales en cada clase, se puede esperar que las estimaciones del factor sanitario \(\alpha_i\) conserven la proporción entre ellas, de forma que, aunque no sean exactas, sí sea posible hacer afirmaciones del tipo ``la clase \(1\) enfrentó un 20\% más de riesgo que la clase \(2\) en este período de tiempo''. 
+Al intentar agregar más ambientes al análisis, surgen problemas similares. Los datos más cercanos a movilidad por ambiente en pandemia son los provistos por Google, presentados en la sección \ref{}. Estos datos están agrupados a nivel regional/provincial, pero se sabe \cite{Olivares2020} que no son uniformes entre distintos niveles socioeconómicos; el teletrabajo es mucho más común en niveles altos, mientras que un porcentaje importante de la población más vulnerable tiene trabajos esenciales que no pueden detenerse en pandemia \cite{}.
 
-Si esto falla, entonces no se puede esperar que los factores sanitarios se expandan o contraigan uniformemente. El análisis hecho en la subsección \ref{subsec:sensigamma} muestra que el valor \(\gamma_I\) es el que más influye en esta contracción.
+Debido a este problema, la Encuesta Origen Destino terminó jugando un rol muy secundario en el trabajo, ya que su utilidad se vio relegada a una simple estimación del tiempo que pasaban en el hogar, antes de la pandemia, los distintos grupos socioeconómicos, y habría sido de mejor aprovechada siguiendo la metodología euleriana antes propuesta. 
 
-Con respecto al ajuste del factor sanitario, a pesar de la gran incerteza que surge de utilizar valores grandes de covarianza, el caso sintético sugiere que se obtienen mejores resultados de esta forma.
+La metodología propuesta, sin embargo, presenta la ventaja de ser utilizable con menos datos de movilidad disponible, por lo que a aplicable incluso en regiones donde no se tenga el detalle de las tasas de movilidad entre cada par de zonas; solo es necesario saber cuánto se mueve la gente, no hacia dónde lo hace, debido a que todos interactúan en un ambiente \texttt{exterior} común.
 
-- Comparación con la literatura de la metodología 
-Se cumplieron los objetivos??
+Una desventaja no prevista en un principio es la estimación de los riesgos específicos por ambiente; no es tan clara como se supuso. Esto quedó en evidencia al observar los resultados de la sección \ref{sec:evalmodel-casoshipot}. Estimaciones de la forma: ``aproximadamente 1/3 de los contagios ocurren en el hogar'' \cite{Ferguson2020} no se traducen directamente en asignar \( 2 \beta_{\text{hogar}} = \beta_{\text{exterior}}\).
 
+% Conclusión del análisis de sensibilidad
 
+El framework propuesto puede aplicarse a una amplia variedad de modelos, compartimientos, parámetros y observaciones. Algunas posibles extensiones son considerar los efectos de la vacunación en los compartimientos, usar comunas en lugar de grupos socioeconómicos, usar un filtro que se comporte mejor frente a no linealidades (como el filtro \textit{unscented} o ``sin olor''), ampliar el modelo para considerar fallecidos, etc.
 
-El trabajo realizado ofrece varias posibles extensiones. Por un lado, la metodología empleada es aplicable con mínimas modificaciones a una gran variedad de modelos, con otros compartimientos o variables observadas. También era posible, puesto que los datos están disponibles para el caso de la región Metropolitana, aplicar el modelo por comuna en lugar de por grupos socioeconómicos, aunque esto requería más tiempo de cómputo. 
+Un aporte lateral del trabajo realizado es el código realizado, que se encuentra disponible en línea en la plataforma GitHub. El repositorio \url{} contiene una implementación en Matlab del algoritmo de extracción de tiempos de residencia mencionado brevemente en \cite{Munizaga2011}. El repositorio \url{} tiene la librería KalmanFilter.jl, documentada, modular y extensible, desarrollada en el lenguaje Julia, que permite trabajar con Filtro de Kalman lineal, extendido y ``sin olor`` en sus versiones continuas y discretas, utilizando observadores lineales y no lineales. Finalmente, el repositorio \url{} contiene el código utilizado en el análisis del caso de estudio del Covid en Santiago. Este repositorio hace uso de la novedosa librería ModelingToolkit.jl \cite{}, aun en una fase inicial de desarrollo, la cual, de forma similar a Modellica o ... [insertar software] ofrece herramientas para el trabajo con modelos de ecuaciones diferenciales, cálculo simbólico de derivadas, de forma eficiente, y extensible.
 
-Probar el modelo con otros ambientes es una posibilidad interesante. Algunas sugerencias son incluir ambientes de trabajo, compras, etc, utilizando datos como los ofrecidos por Google (ver sección \ref{}).
+% Comparación con la literatura de la metodología 
+% Se cumplieron los objetivos?? Era atingentes los objetivos? 
 
-La librería ModelingToolkit.jl \cite{}, aun en una fase inicial de desarrollo, ofrece muchas posibilidades a la modelación y vale la pena verlas en más detalle.
+Los objetivos específicos fueron logrados en su mayor parte, puesto que fue posible plantear una forma de estimar el factor sanitario y realizar una implementación para el caso de estudio. Sin embargo, era deseable poder incluir en el modelo ambientes como \texttt{trabajo}, \texttt{estudios}, \texttt{compras} o \texttt{transporte público}, o considerar grupos etarios, y esto no fue logrado.
