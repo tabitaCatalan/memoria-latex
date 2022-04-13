@@ -204,7 +204,7 @@ y_{k} &= H_k x_k + v_k + \underbrace{h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1}}
 \end{equation}
 
 
-Ahora podemos usar simplemente las ecuaciones del filtro de kalman lineal, salvo en el paso de \textit{forecast}, donde conservaremos la dinámica no lineal. Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(\hat{P}_{0,-1}:= P_0\), las ecuaciones del EKF son:
+Ahora podemos usar simplemente las ecuaciones del filtro de Kalman lineal, salvo en el paso de \textit{forecast}, donde conservaremos la dinámica no lineal. Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(\hat{P}_{0,-1}:= P_0\), las ecuaciones del EKF son:
 
 \begin{equation}\label{eq:kalman-extended}
 \begin{aligned}

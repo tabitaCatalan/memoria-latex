@@ -40,21 +40,28 @@ Si bien la noción de contactos efectivos es clara para enfermedades de transmis
 Puesto que la movilidad y los tiempos de residencia pueden considerarse conocidos, y que los riesgos \(\beta_j\) pueden ser aproximados, se busca estimar la vulnerabilidad. Esta vulnerabilidad al contagio \(\alpha_i\), que en este modelo está desacoplada de la movilidad, la llamaremos de ahora en adelante ``factor sanitario'', puesto que se relaciona con las distintas medidas de distanciamiento social no relacionadas a la movilidad, como lo son el uso de mascarillas, lavado de manos, cumplimiento de la distancia mínima entre personas, etc.
 
 Consideraremos que el factor sanitario es variable en el tiempo. Para estimarlo, una técnica común es Mínimos Cuadrados o Mínimos Cuadrados Recursivo (RLS) \cite{Sameni2020}\cite{Piccolomini2020}.
-Una alternativa es utilizar Filtro de Kalman, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de Covid19 \cite{Hasan2020}\cite{Song2021}\cite{Sameni2020}.
+Una alternativa es utilizar Filtro de Kalman, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de COVID-19 \cite{Hasan2020}\cite{Song2021}\cite{Sameni2020}.
 
-Ya desde el comienzo de la pandemia por Covid en Santiago de Chile \cite{Olivares2020} hacía notar las dificultades de las clases socioeconómicas más bajas para cumplir las cuarentenas.
-Varios estudios \cite{Mena2021}\cite{Bennett2021}\cite{Gozzi2021} han notado las significativas diferencias en el impacto de la pandemia en los distintos sectores socioeconómicos de la capital del país, atribuyéndolas, entre otros factores, a la capacidad de cumplimiento de las cuarentenas. 
 
-Además de lo anterior, el Ministerio de Ciencia, Tecnología, Conocimiento e Innovación de Chile ha hecho disponibles públicamente \cite{MINCIENCIA} varias series de datos epidemiológicos de casos infectados confirmados, hospitalizados, hospitalizados UCI, fallecidos, vacunados, etc. Estos datos poseen diversos niveles de segregación, ya sea por comuna, edad o sexo. La ciudad de Santiago ofrece un buen escenario escenario donde implementar el modelo.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{img/metodologia/datos/movilidad-RM.png}
+\caption[Diferencias en la variación de movilidad de cinco comunas de la Región Metropolitana.]{Diferencias en la variación de movilidad de cinco comunas de la Región Metropolitana, desde marzo de 2020 a marzo de 2022. Fuente: ISCI Covid Analytics.}
+\label{img:ISCI-movilidad-RM-1}
+\end{figure}
+
+La metodología será puesta a prueba estudiando el desarrollo de la pandemia por COVID-19 en la ciudad de Santiago de Chile. Ya desde el comienzo de la pandemia en Santiago, \cite{Olivares2020} hacía notar las dificultades de las clases socioeconómicas más bajas para cumplir las cuarentenas. Esto puede verse claramente en la figura \ref{img:ISCI-movilidad-RM-1}; comunas más acomodadas como Las Condes y Vitacura tienen una reducción de movilidad superior a comunas con menos recursos como La Pintana, a lo largo de toda la pandemia. Varios estudios \cite{Mena2021}\cite{Bennett2021}\cite{Gozzi2021} han notado las significativas diferencias en el impacto de la pandemia en los distintos sectores socioeconómicos de la capital del país, atribuyéndolas, entre otros factores, a la capacidad de cumplimiento de las cuarentenas y las diferencias en el acceso a salud.
+
+Además de lo anterior, el Ministerio de Ciencia, Tecnología, Conocimiento e Innovación de Chile ha hecho disponibles públicamente \cite{MINCIENCIA} varias series de datos epidemiológicos de casos infectados confirmados, hospitalizados, hospitalizados UCI, fallecidos, vacunados, etc. Estos datos poseen diversos niveles de segregación, por comuna, edad o sexo. Todas estas características hacen de la ciudad de Santiago un buen escenario escenario donde implementar el modelo.
+
+
+
 
 \section*{Objetivos}
 
-El objetivo principal del trabajo es estimar el factor sanitario de distintas clases sociales, por medio de framework lagrangiano de clases y ambientes de \cite{Bichara2018}. Este objetivo se descompone en dos objetivos específicos:
-\begin{itemize}
-    \item Plantear un framework que permita estimar el factor sanitario.
-    \item Evaluar el framework mediante su aplicación al caso de estudio del Covid19 en Santiago.
-\end{itemize}
+El objetivo principal del trabajo es estimar el factor sanitario de distintas clases sociales, por medio del \textit{framework} lagrangiano de clases y ambientes de \cite{Bichara2018}. Este objetivo se descompone en dos objetivos específicos. En primer lugar, se necesita definir una metodología que permita estimar el factor sanitario. En segundo lugar, se debe implementar y evaluar la metodología, aplicándola al caso de estudio: la pandemia de COVID-19 en Santiago. 
 
+Definir la metodología requiere plantear el modelo lagrangiano, haciéndole los ajustes necesarios al planteado por \cite{Bichara2018} y considerando las características del COVID-19. Se debe además definir cómo estimar la matriz de tiempos de residencia en base a los datos disponibles. Finalmente, es necesario elegir la variante de filtro de Kalman específica a utilizar en la estimación de parámetros. La implementación requiere de la obtención de datos, el cálculo de la matriz de tiempos de residencia, y la escritura del código para el modelo y el filtro de Kalman.
 
 % Idealmente:
 % Este trabajo busca poner a prueba el modelo propuesto en \cite{Bichara2015}, mediante su aplicación al estudio de la evolución de la pandemia de Covid19 en la ciudad de Santiago de Chile. 
@@ -99,34 +106,32 @@ El objetivo principal del trabajo es estimar el factor sanitario de distintas cl
 
 \section*{Metodología}
 
-Con respecto a la implementación, el trabajo puede subdividirse en varias etapas
+Para cumplir los objetivos antes expuestos se lleva a cabo la siguiente metodología, la cual se divide en varias etapas. En primer lugar, es necesario explorar las distintas fuentes de datos disponibles, tanto de movilidad y viajes como las series de tiempo epidemiológicas, como cantidad de casos registrados, fallecidos, etc. Esto permite decidir el modelo específico a utilizar, lo que debe considerar las características del COVID-19 para elegir los compartimientos a utilizar (susceptibles, expuestos, infectados, etc), y también los datos disponibles para elegir clases y ambientes.
 
-\begin{enumerate}
-    \item Explorar las distintas fuentes de datos disponibles.
-    \item Decidir el modelo específico a utilizar, lo que incluye compartimientos a utilizar (susceptibles, expuestos, infectados, etc), clases, ambientes, parámetros fijos y variables en el tiempo, etc. Esto debe tener en consideración la disponibilidad de datos.
-    \item Estimar una matriz de tiempos de residencia para las clases y ambientes elegidos, y su evolución en el tiempo, considerando las variaciones impuestas por la pandemia.
-    \item Elegir e implementar una versión del filtro de Kalman (extendido, \textit{unscented}, filtro por ensambles, etc), y de estimación de parámetros (estado aumentado, filtro de Kalman con múltiples modelos, etc). 
-    \item Estimar los factores sanitarios para cada una de las clases elegidas, ajustando el modelo a los datos reales de la ciudad de Santiago. Para esto es necesario definir qué variables del modelo observar, que datos utilizar como observación y cómo ajustar los parámetros específicos del filtro.
-    \item Utilizar la matriz de tiempos de residencia y los factores sanitarios obtenidos para generar varios casos hipotéticos; variaciones en cuarentenas, diferentes niveles de cuidado, y estudiar la evolución de la pandemia en estos casos.
-\end{enumerate}
+Una vez decididas las clases y ambientes, es necesario estimar una matriz de tiempos de residencia, que diga cuánto tiempo pasa cada clase en cada lugar. Se desea que esta matriz sea variable en el tiempo, de forma que incorpore cambios en la movilidad causados por las medidas de mitigación, como cuarentenas, teletrabajo, etc.
 
+Todo lo anterior ya permite correr un modelo de la ciudad de Santiago, definiendo factores sanitarios sintéticos y obtener simulaciones. Se busca ahora estimar el factor sanitario a partir de observaciones del modelo. Para esto se utiliza Filtro de Kalman, y es necesario elegir e implementar una de sus muchas variantes (extendido, \textit{unscented}, filtro por ensambles, etc), y elegir cómo usar el filtro para hacer estimación de parámetros (estado aumentado, filtro de Kalman con múltiples modelos, etc).
+
+Posteriormente se estiman los factores sanitarios para cada una de las clases elegidas, ajustando el modelo a los datos reales de la ciudad de Santiago. Para esto es necesario definir qué variables del modelo observar, que datos utilizar como observación y cómo ajustar los parámetros específicos del filtro.
+
+Finalmente, se utiliza la matriz de tiempos de residencia y los factores sanitarios obtenidos para generar varios casos hipotéticos; distintas variaciones en cuarentenas, diferentes niveles de cuidado. Esto entrega varios desarrollos hipotéticos de la pandemia, y se usará para evaluar el modelo.
 
 
 \section*{Contribuciones y trabajos relacionados}
 
-Las principales contribuciones de este trabajo son: 
+A continuación se describen las principales contribuciones de este trabajo. En primer lugar, la propuesta de una metodología que permite estudiar las medidas de cuidado de forma independiente a la movilidad. En segundo lugar, la aplicación del \textit{framework} lagrangiano de clases y ambientes presentado por \cite{Bichara2018} a un caso de estudio, lo cual no había sido hecho con anterioridad. Este trabajo guarda, sin embargo, cierta similitud con \cite{Shikhmurzaev}, que plantea un modelo que incorpora patrones de actividad.
 
-\begin{itemize}
-    \item Planteamiento de un modelo que permite estudiar las medidas de cuidado de forma independiente a la movilidad. 
-    \item Aplicación a un caso de estudio del \textit{framework} lagrangiano de clases y ambientes presentado por \cite{Bichara2018}, no probado anteriormente. Este trabajo guarda cierta similitud con \cite{Shikhmurzaev}.
-    \item Implementación de la técnica de obtención de uso del tiempo  partir de los viajes de una Encuesta Origen-Destino, propuesta por \cite{Munizaga2011}. Aplicación de la técnica a la encuesta Santiago 2012.
-    \item Desarrollo de la librería KalmanFilter.jl, documentada, extensible y de código abierto, para el trabajo con Filtro de Kalman.
-    \item Planteamiento de una metodología para el ajuste de los hiperparámetros relacionados a la covarianza del filtro de Kalman, al estimar parámetros de un modelo epidemiológico. Este era un vacío en trabajos como \cite{Hasan2020} y \cite{Sameni2020}, donde se limitan a elegir un valor fijo para el caso particular que trabajan, sin ofrecer una justificación.
-    \item Aplicación del modelo al desarrollo de la pandemia de Covid19 en la ciudad de Santiago de Chile, lo que permite una estimación de la vulnerabilidad. Modelos anteriores de Santiago como \cite{Gozzi2021} solo consideran movilidad.
-\end{itemize}
+En tercer lugar, se implementación en Matlab de la técnica propuesta por \cite{Munizaga2011} de obtención de uso del tiempo partir de los viajes de una Encuesta Origen-Destino. Esta implementación es de código abierto y se encuentra isponible en el repositorio \url{https://github.com/tabitaCatalan/lagrangian-time}. Se utilizan datos de la Encuesta Origen-Destino Santiago 2012.
+
+En cuarto lugar, el desarrollo de una librería, escrita en el lenguaje Julia, para el trabajo con Filtro de Kalman con dinámica y observadores lineales y/o no lineales. Esta se encuentra documentada, es extensible y de código abierto. Está disponible en el repositorio \url{https://github.com/tabitaCatalan/kalman}. Existen librerías similares en el mismo lenguaje como KalmanFilters.jl y Kalman.jl, pero estas no fueron usadas debido a que en la etapa de decidir qué Filtro utilizar, ninguna contaba con todas las opciones que se quería explorar. 
+
+En quinto lugar, el planteamiento de una metodología para el ajuste de los hiperparámetros relacionados a la covarianza del filtro de Kalman, al estimar parámetros de un modelo epidemiológico. Este era un vacío en trabajos como \cite{Hasan2020} y \cite{Sameni2020}, donde se limitan a elegir un valor fijo para el caso particular que trabajan, sin ofrecer una justificación.
+
+Finalmente, la aplicación del modelo al desarrollo de la pandemia de Covid19 en la ciudad de Santiago de Chile, lo que permite una estimación de la vulnerabilidad/factor sanitario, de forma independiente a la movilidad. Modelos anteriores de Santiago como \cite{Gozzi2021} solo consideran movilidad.
+
 
 \section*{Estructura de la tesis}
-El resto de la tesis está organizado como sigue. El capítulo \ref{chap:marco} establece las bases para entender el trabajo realizado. Se presentan varios conceptos relevantes de modelos epidemiológicos y de la teoría de filtro de Kalman. Se exponen también los antecedentes del caso de estudio; la enfermedad Covid19 y su desarrollo en la ciudad de Santiago de Chile.
+El resto de esta tesis está organizado como sigue. El capítulo \ref{chap:marco} establece las bases para entender el trabajo realizado. Se presentan varios conceptos relevantes de modelos epidemiológicos y de la teoría de filtro de Kalman. Se exponen también los antecedentes del caso de estudio; la enfermedad Covid19 y su desarrollo en la ciudad de Santiago de Chile.
 
 El capítulo \ref{chap:metod} justifica y detalla los procedimientos seguidos; cómo se usó el framework de \cite{Bichara2018}, los datos utilizados, los supuestos y simplificaciones hechas, el modelo final utilizado y las técnicas específicas implementadas.
 

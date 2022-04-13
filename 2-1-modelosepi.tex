@@ -2,9 +2,9 @@
 
 \section{Modelos epidemiológicos}\label{sec:epi-model}
 
-Los modelos compartimentales son ampliamente utilizados a la hora de modelar una enfermedad contagiosa. La idea tras ellos es simple; en separar a la población en grupos o compartimientos de acuerdo al grado de avance de la enfermedad, y asignar reglas para pasar de un compartimiento a otro.
+Los modelos compartimentales son ampliamente utilizados a la hora de modelar una enfermedad contagiosa. La idea tras ellos es simple; separar a la población en grupos o compartimientos de acuerdo al grado de avance de la enfermedad, y asignar reglas para pasar de un compartimiento a otro.
 
-Un modelo muy sencillo es el \textbf{SIR}, que separa a la población en \textbf{S}usceptibles, \textbf{I}nfectados y \textbf{R}emovidos. Trataremos este modelo de manera determinista, viéndolo como el sistema de ecuaciones diferenciales ordinarias \ref{eq:sir}. También es posible tratarlo de manera estocástica \cite{Daley1984}.
+Un modelo muy sencillo es el \textbf{SIR}, que separa a la población en \textbf{S}usceptibles, \textbf{I}nfectados y \textbf{R}emovidos. En este trabajo se trata este modelo de manera determinista, viéndolo como el sistema de ecuaciones diferenciales ordinarias \ref{eq:sir}, pero también es posible tratarlo de manera estocástica \cite{Daley1984}.
 
 \begin{equation}
 \label{eq:sir}
@@ -15,7 +15,7 @@ R'(t) &= \gamma_I I(t)
 \end{aligned}
 \end{equation}
 
-Los susceptibles son el grupo de la población que puede ser contagiado con la enfermedad. La enfermedad solo es esparcida por los individuos infectados. Cuando un susceptible se infecta, inmediatamente comienza a contagiar a otros. Tras un tiempo los infectados dejan de contagiar y son removidos. Esto puede deberse a una recuperación de la enfermedad con inmunidad completa (no pueden volver a contagiarse), al aislamiento del contagiado o bien a su muerte debido a la enfermedad. El diagrama de flujo para pasar de un compartimiento a otro puede verse en la figura \ref{fig:sir}.
+Los susceptibles son el grupo de la población que puede ser contagiado con la enfermedad. La enfermedad solo es propagada por los individuos infectados. Cuando un susceptible se infecta, inmediatamente comienza a contagiar a otros. Tras un tiempo los infectados dejan de contagiar y son removidos. Esto puede deberse a una recuperación de la enfermedad con inmunidad completa (no pueden volver a contagiarse), al aislamiento del contagiado o bien a su muerte debido a la enfermedad. El diagrama de flujo para pasar de un compartimiento a otro puede verse en la figura \ref{fig:sir}.
 
 En este modelo, el total de la población dado por \(N = S + I + R\) permanece constante a lo largo del tiempo. Este modelo supone que un individuo hace en promedio \(\alpha\) contactos  ``efectivos'' o ``suficientes'' para contagiar la enfermedad por unidad de tiempo. Esto, en conjunto con la probabilidad \(S/N\) de que el individuo contactado sea susceptible, deja una cantidad de \(\alpha S I / N\) nuevos contagios por unidad de tiempo. Suponer una tasa de recuperación de la forma \(\gamma_I I\), con \(\gamma_I\) un valor positivo, implica un periodo de infección con distribución exponencial y media \(1/\gamma_I\) (más detalles en \cite{Brauer2019}).
 
