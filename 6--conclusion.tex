@@ -1,2 +1,38 @@
 \begin{conclusion} \label{chap:conclu}
+
+% Responder la pregunta de investigación 
+% Se cumplieron los objetivos? 
+% Reflexionar en el trabajo realizado 
+% Aportes del trabajo 
+% Extensiones posibles 
+
+El objetivo principal... 
+
+Los objetivos específicos fueron logrados en su mayor parte, puesto que fue posible plantear una forma de estimar el factor sanitario y realizar una implementación para el caso de estudio. Sin embargo, era deseable poder incluir en el modelo ambientes como \texttt{trabajo}, \texttt{estudios}, \texttt{compras} o \texttt{transporte público}, o considerar grupos etarios, y esto no fue logrado. 
+
+Con respecto al caso de estudio específicamente...
+
+La utilidad del framework... resultados interesantes...
+
+A continuación se describen las principales contribuciones de este trabajo. En primer lugar, la propuesta de una metodología que permite estudiar las medidas de cuidado de forma independiente a la movilidad. En segundo lugar, la aplicación del \textit{framework} lagrangiano de clases y ambientes presentado por \cite{Bichara2018} a un caso de estudio, lo cual no había sido hecho con anterioridad. Este trabajo guarda, sin embargo, cierta similitud con \cite{Shikhmurzaev}, que plantea un modelo que incorpora patrones de actividad.
+
+En tercer lugar, la implementación en Matlab de la técnica propuesta por \cite{Munizaga2011} de obtención de uso del tiempo partir de los viajes de una Encuesta Origen-Destino. Esta implementación es de código abierto y se encuentra isponible en el repositorio \url{https://github.com/tabitaCatalan/lagrangian-time}. Se utilizan datos de la Encuesta Origen-Destino Santiago 2012.
+
+En cuarto lugar, el desarrollo de una librería, escrita en el lenguaje Julia, para el trabajo con Filtro de Kalman con dinámica y observadores lineales y/o no lineales. Esta se encuentra documentada, es modular, extensible y de código abierto. Está disponible en el repositorio \url{https://github.com/tabitaCatalan/kalman}. Existen librerías similares en el mismo lenguaje como KalmanFilters.jl y Kalman.jl, pero estas no fueron usadas debido a que en la etapa de decidir qué Filtro utilizar, ninguna contaba con todas las opciones que se quería explorar. 
+
+En quinto lugar, el planteamiento de una metodología para el ajuste de los hiperparámetros relacionados a la covarianza del filtro de Kalman, al estimar parámetros de un modelo epidemiológico. Este era un vacío en trabajos como \cite{Hasan2020} y \cite{Sameni2020}, donde se limitan a elegir un valor fijo para el caso particular que trabajan, sin ofrecer una justificación.
+
+Finalmente, la aplicación del modelo al desarrollo de la pandemia de COVID-19 en la ciudad de Santiago de Chile, lo que permite una estimación de la vulnerabilidad/factor sanitario, de forma independiente a la movilidad. Modelos anteriores de Santiago como \cite{Gozzi2021} solo consideran movilidad.
+
+
+El framework propuesto puede aplicarse a una amplia variedad de modelos, compartimientos, parámetros y observaciones. Algunas posibles extensiones son considerar los efectos de la vacunación en los compartimientos, usar comunas en lugar de grupos socioeconómicos, usar un filtro que se comporte mejor frente a no linealidades (como el filtro \textit{unscented} o ``sin olor''), ampliar el modelo para considerar fallecidos, etc.
+
+Un aporte lateral del trabajo realizado es el código realizado, que se encuentra disponible en línea en la plataforma GitHub. El repositorio \url{} contiene una implementación en Matlab del algoritmo de extracción de tiempos de residencia mencionado brevemente en \cite{Munizaga2011}. El repositorio \url{} tiene la librería KalmanFilter.jl, documentada, modular y extensible, desarrollada en el lenguaje Julia, que permite trabajar con Filtro de Kalman lineal, extendido y ``sin olor`` en sus versiones continuas y discretas, utilizando observadores lineales y no lineales.
+
+Finalmente, el repositorio \url{https://github.com/tabitaCatalan/CovidMTK} contiene el código utilizado en el análisis del caso de estudio del COVID-19 en Santiago. Este repositorio hace uso de la novedosa librería ModelingToolkit.jl \cite{ma2021modelingtoolkit}, aun en una fase inicial de desarrollo, la cual, de forma similar a Modellica o ... [insertar software] ofrece herramientas para el trabajo con modelos de ecuaciones diferenciales, cálculo simbólico de derivadas, de forma eficiente, y extensible.
+
+% Comparación con la literatura de la metodología 
+% Se cumplieron los objetivos?? Era atingentes los objetivos? 
+
+
 \end{conclusion}
