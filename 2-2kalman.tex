@@ -31,7 +31,7 @@ Para una condición inicial gaussiana \(x_0 \sim \mathcal{N}(\hat{x}_0, P_0)\), 
 
 Existen tres formas de estimación, que dependen del valor de \(l\); en primer lugar, si \(l < k\), se está intentando estimar \(x_k\) con información hasta un instante \(l\) anterior a \(k\). A esta forma se le llama predicción o \textit{forecasting}. En segundo lugar, si \(l>k\), entonces se está estimando \(x_k\) con información hasta un instante \(l\) posterior a \(k\). Se llamará a esto suavizado o \textit{smoothing}. Finalmente, si \(l = k\) se llamará filtraje o \textit{filtering}. Es esta última forma la que nos presenta mayor interés y que facilita la explicación, por lo que es la forma que será utilizada.
 
-Se sigue el siguiente procedimiento. Se comienza suponiendo que la distribución a posteriori de \(x_{k-1}\) con observaciones hasta el instante \(k-1\) es conocida, \(x_{k-1, k-1} \sim \mathcal{N}(\hat{x}_{k-1, k-1}, P_{k-1, k-1})\). Se busca la distribución \(x_{k, k}\). Esto se logra mediante una iteración del filtro de Kalman, la cual se divide en dos etapas; una de predicción, para obtener \(x_{k+1, k}\), y una de análisis que incorpora \(y_k\), para obtener \(x_{k, k}\).
+Se sigue el siguiente procedimiento. Se comienza suponiendo que la distribución a posteriori de \(x_{k-1}\) con observaciones hasta el instante \(k-1\) es conocida, \(x_{k-1, k-1} \sim \mathcal{N}(\hat{x}_{k-1, k-1}, P_{k-1, k-1})\); se busca la distribución \(x_{k, k}\). Esto se logra mediante una iteración del filtro de Kalman, la cual se divide en dos etapas; una de predicción, que usa la dinámica para obtener \(x_{k+1, k}\), y una de análisis, que incorpora \(y_k\) para obtener \(x_{k, k}\).
 
 La propiedad \ref{prop:conj-gauss-cond}, cuya demostración puede leerse en \cite{Anderson2005} y que ocupa el Teorema de Bayes, será útil a la hora de hacer los cálculos.
 
@@ -66,18 +66,21 @@ Y
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  En el paso de \textbf{predicción} se hace una suposición \emph{a priori} de dónde estará el estado real en la próxima iteración a partir de la dinámica y de la estimación actual, sin utilizar la observación \(y_k\). Usando que \(x_{k-1,k-1} \sim \mathcal{N}(\hat{x}_{k-1,k-1}, P_{k-1,k-1})\), y la ecuación \ref{eq:kalman-lineal-discreto}, no es difícil ver que \(x_{k,k-1} \sim \mathcal{N}(\hat{x}_{k,k-1}, P_{k,k-1})\), con 
+  En el paso de predicción se hace una suposición \emph{a priori} de dónde estará el estado real en la próxima iteración a partir de la dinámica y de la estimación actual, sin utilizar la observación \(y_k\). Usando que \(x_{k-1,k-1} \sim \mathcal{N}(\hat{x}_{k-1,k-1}, P_{k-1,k-1})\), y la ecuación \ref{eq:kalman-lineal-discreto}, no es difícil ver que \(x_{k,k-1} \sim \mathcal{N}(\hat{x}_{k,k-1}, P_{k,k-1})\), con 
     \begin{equation}
     \begin{aligned}
     \hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
-    %\hat{P}_{k,n-1} &= M_k \hat{P}_{k-1,n-1} M_k' + F_k Q_k F_k'
-    P_{k,k-1} &= F_{k-1} \hat{P}_{k-1,k-1} F_{k-1}^{T} + G_k Q_k G_k^T
+    %P_{k,n-1} &= M_k P_{k-1,n-1} M_k' + F_k Q_k F_k'
+    P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{T} + G_k Q_k G_k^T
     \end{aligned}
     \end{equation}
 \item
-  En el paso de análisis, se incorpora la observación \(y_k\) para obtener una estimación \emph{a posteriori}. Para esto basta con usar la proposición \ref{prop:conj-gauss-cond}, calculando la distribución conjunta 
+  En el paso de análisis, se incorpora la observación \(y_k\) para obtener una estimación \emph{a posteriori}. Para esto basta con usar la proposición \ref{prop:conj-gauss-cond}, calculando la distribución conjunta de \(x_k\) e \(y_k\) dado \(y_{1:k}\), para obtener la expresión \ref{eq:conjunta}. La propiedad \ref{prop:conj-gauss-cond} nos permite decir que \(
+    x_{k,k} \sim
+     \mathcal{N} \left( \hat{x}_{k,k}, P_{k,k} \right)
+    \), con \(\hat{x}_{k,k}\) y \(P_{k,k}\) definidos en las ecuaciones \ref{eq:terminos-raros}.
   
-    \begin{equation}
+    \begin{equation}\label{eq:conjunta}
     \begin{pmatrix}
     x_k \\
     y_k
@@ -93,24 +96,15 @@ Y
     \right)
     \end{equation}
 
-    La propiedad \ref{prop:conj-gauss-cond} nos permite decir que \(
-    x_{k,k} \sim
-     \mathcal{N} \left( \hat{x}_{k,k}, \hat{P}_{k,k} \right)
-    \)
-
-    con 
-
-    \begin{equation}
+    \begin{equation}\label{eq:terminos-raros}
     \begin{aligned}
-    K_k &= \hat{P}_{k,k-1} H'_{k}(H_{k}\hat{P}_{k,k-1}H_{k}' + R_k)^{-1}\\
+    K_k &= P_{k,k-1} H'_{k}(H_{k}P_{k,k-1}H_{k}' + R_k)^{-1}\\
     \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
-    \hat{P}_{k,k} &= \hat{P}_{k,k-1}- K_k H_{k}\hat{P}_{k,k-1} \\
+    P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
     \end{aligned}
     \end{equation}
 \end{enumerate}
-Lo anterior entrega una regla que permite iterar. Basta con definir la condición inicial como \(\hat{x}_{0,-1} := x_0\), \(\hat{P}_{0,-1} := P_0\).
-
-El Teorema \ref{teo:min-var}, cuya demostración está en \cite{Anderson2005}, asegura que los valores \(\hat{x}_{n,n}\) son estimadores de mínima varianza para \(x_{n,n}\).
+Estos dos pasos de predicción y análisis entregan una regla que permite iterar; basta con definir la condición inicial como \(\hat{x}_{0,-1} := x_0\), \(P_{0,-1} := P_0\). El Teorema \ref{teo:min-var}, cuya demostración está en \cite{Anderson2005}, asegura que los valores \(\hat{x}_{k,k}\) son estimadores de mínima varianza para \(x_{k,k}\).
 
 \begin{teo}
 \label{teo:min-var}
@@ -122,30 +116,29 @@ Sean \(X, Y\) vectores aleatorios conjuntamente gaussianos. Sea también \(\hat{
 \]
 \end{teo}
 
-Finalmente, se entregan las ecuaciones del filtro de Kalman en el caso lineal discreto.
 
-\[
+\begin{mdframed}[style=mystyle,frametitle=Filtro de Kalman Lineal Discreto]
+
+Para el caso lineal discreto como el presentado por las ecuaciones \ref{eq:system-ecs}, el filtro de Kalman se define como \ref{eq:kalman-final}, donde \(\hat{x}_{0,-1}:= x_0\) y \(P_{0,-1}:= P_0\). Los valores \(\hat{x}_{k,k}\) son estimadores de mínima varianza de \(x_{n,n}\). 
+
+\begin{equation}\label{eq:system-ecs}
 \begin{aligned}
 x_{k+1} &= M_k x_k + F_k w_k \\ 
 y_k &= H_k x_k + v_k
 \end{aligned}
-\]
-
-Las ecuaciones del filtro de Kalman son las siguientes 
+\end{equation}
 
 
-\begin{mdframed}[style=mystyle,frametitle=Filtro de Kalman Lineal Discreto]
-Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(\hat{P}_{0,-1}:= P_0\), y definiendo 
-\[
+\begin{equation}\label{eq:kalman-final}
 \begin{aligned}
 \hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
-\hat{P}_{k,k-1} &= F_{k-1} \hat{P}_{k-1,k-1} F_{k-1}' + G_{k-1} Q_{k-1} G_{k-1}'\\
-K_k &= \hat{P}_{k,k-1} H'_{k}(H_{k}\hat{P}_{k,k-1}H_{k}' + R_k)^{-1}\\
+P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}' + G_{k-1} Q_{k-1} G_{k-1}'\\
+K_k &= P_{k,k-1} H'_{k}(H_{k}P_{k,k-1}H_{k}' + R_k)^{-1}\\
 \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
-\hat{P}_{k,k} &= \hat{P}_{k,k-1}- K_k H_{k}\hat{P}_{k,k-1} \\
+P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
 \end{aligned}
-\]
-Los valores \(\hat{x}_{k,k}\) son estimadores de mínima varianza de \(x_{n,n}\). 
+\end{equation}
+
 \end{mdframed}
 
 
@@ -204,16 +197,16 @@ y_{k} &= H_k x_k + v_k + \underbrace{h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1}}
 \end{equation}
 
 
-Ahora podemos usar simplemente las ecuaciones del filtro de Kalman lineal, salvo en el paso de \textit{forecast}, donde conservaremos la dinámica no lineal. Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(\hat{P}_{0,-1}:= P_0\), las ecuaciones del EKF son:
+Ahora podemos usar simplemente las ecuaciones del filtro de Kalman lineal, salvo en el paso de \textit{forecast}, donde conservaremos la dinámica no lineal. Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(P_{0,-1}:= P_0\), las ecuaciones del EKF son:
 
 \begin{equation}\label{eq:kalman-extended}
 \begin{aligned}
 \hat{x}_{k,n-1} &= f_{k-1}( \hat{x}_{k-1,n-1}) \\
-\hat{P}_{k,n-1} &= F_{k-1} \hat{P}_{k-1,n-1} F_{k-1}' + G_k Q_k G_k'\\
-K_k &= \hat{P}_{k,n-1} H'_{k}(H_{k}\hat{P}_{k,n-1}H_{k}' + R_k)^{-1}\\
+P_{k,n-1} &= F_{k-1} P_{k-1,n-1} F_{k-1}' + G_k Q_k G_k'\\
+K_k &= P_{k,n-1} H'_{k}(H_{k}P_{k,n-1}H_{k}' + R_k)^{-1}\\
 %z_k &= h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1} \\
 \hat{x}_{k,n} &= \hat{x}_{k, n-1} + K_k(y_k-h_k(\hat{x}_{k,n-1})) \\
-\hat{P}_{k,n} &= \hat{P}_{k,n-1}- K_k H_{k}\hat{P}_{k,n-1} \\
+P_{k,n} &= P_{k,n-1}- K_k H_{k}P_{k,n-1} \\
 \end{aligned}
 \end{equation}
 
@@ -237,12 +230,12 @@ K_k &= \hat{P}_{k,n-1} H'_{k}(H_{k}\hat{P}_{k,n-1}H_{k}' + R_k)^{-1}\\
 % \[
 % \begin{aligned}
 % \frac{d\hat{x}}{dt} &= f(t, \hat{x}) \\ 
-% \frac{d\hat{P}}{dt} &= \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \hat{P} + \hat{P} \left( \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \right)^{T} + g(t)Q(t)g(t)^{T} \\ 
+% \frac{dP}{dt} &= \frac{\partial f(t, \hat{x})}{\partial \hat{x}} P + P \left( \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \right)^{T} + g(t)Q(t)g(t)^{T} \\ 
 % \end{aligned}
 % \]
-% la que tendremos que resolver en el intervalo \([t_{k-1}, t_{k}]\) con las condiciones iniciales \(\hat{x}(t_{k-1}) = \hat{x}_{k-1, n-1}, \hat{P}(t_{k-1}) = \hat{P}_{k-1, n-1}\), para luego definir \(\hat{x}_{k,n-1} := \hat{x}(t_k), \hat{P}_{k,n-1} := \hat{P}(t_k)\). El paso de análisis permanece sin cambios. 
+% la que tendremos que resolver en el intervalo \([t_{k-1}, t_{k}]\) con las condiciones iniciales \(\hat{x}(t_{k-1}) = \hat{x}_{k-1, n-1}, P(t_{k-1}) = P_{k-1, n-1}\), para luego definir \(\hat{x}_{k,n-1} := \hat{x}(t_k), P_{k,n-1} := P(t_k)\). El paso de análisis permanece sin cambios. 
 
-% Notamos que este enfoque tiene dos problemas importantes; la ecuación debe ser tratada numéricamente, lo que introduce un error de discretización adicional. La segunda se relaciona con la semipositividad de la matriz \(\hat{P}(t_k)\), la cual no está garantizada.
+% Notamos que este enfoque tiene dos problemas importantes; la ecuación debe ser tratada numéricamente, lo que introduce un error de discretización adicional. La segunda se relaciona con la semipositividad de la matriz \(P(t_k)\), la cual no está garantizada.
 
 % \subsection{Filtro por ensambles}\label{filtro-por-ensambles}
 
@@ -251,7 +244,7 @@ K_k &= \hat{P}_{k,n-1} H'_{k}(H_{k}\hat{P}_{k,n-1}H_{k}' + R_k)^{-1}\\
 % El filtro de Kalman por ensambles (\textbf{EnKF} por su nombre en inglés \emph{Ensemble Kalman Filter}), es una versión aproximada del filtro de Kalman, donde la distrubución del estado se representa con una muestra o
 % ``ensamble'' de esa distribución .
 
-% Más específicamente, suponemos que \(\hat{x}^{(1)}_{k,n}, \dots, \hat{x}^{(N)}_{k,n}\) es una muestra de la distribución filtrada en tiempo \(k\), es decir, que \(\hat{x}^{(i)}_{k,n} \sim \mathcal{N}(\hat{x}_{k,n}, \hat{P}_{k,n})\).
+% Más específicamente, suponemos que \(\hat{x}^{(1)}_{k,n}, \dots, \hat{x}^{(N)}_{k,n}\) es una muestra de la distribución filtrada en tiempo \(k\), es decir, que \(\hat{x}^{(i)}_{k,n} \sim \mathcal{N}(\hat{x}_{k,n}, P_{k,n})\).
 
 % Al igual que con el filtro de Kalman, una iteración de EnKF también se hará en un paso de \emph{forecast} y un paso de análisis.
 
@@ -344,7 +337,7 @@ v_k &\sim  \mathcal{N}(0, R_k)
     \[
     \begin{aligned}
     \hat{x}_{f0} &= \mathbb{E}(x_0) \\
-    \hat{P}^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{T}\right] 
+    P^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{T}\right] 
     \end{aligned}
     \]
     
@@ -352,11 +345,11 @@ v_k &\sim  \mathcal{N}(0, R_k)
     
     \[
     \begin{aligned}
-    \hat{P}^{-}_{fk} &= F_{k-1}\hat{P}^{+}_{f,k-1}F_{k-1}^{T} + Q_{k-1} \\ 
-    K_{fk} &= \hat{P}^{-}_{fk} H_k^{T} (H_k \hat{P}^{-}_{fk}H_k^{T} + R_k)^{-1}  \\
+    P^{-}_{fk} &= F_{k-1}P^{+}_{f,k-1}F_{k-1}^{T} + Q_{k-1} \\ 
+    K_{fk} &= P^{-}_{fk} H_k^{T} (H_k P^{-}_{fk}H_k^{T} + R_k)^{-1}  \\
     \hat{x}^{-}_{fk} &= F_{k-1}\hat{x}^{+}_{f,k-1} + G_{k-1}u_{k-1} \\
     \hat{x}^{+}_{fk} &= \hat{x}^{-}_{fk} + K_{fk} \left(y_k - H_k \hat{x}^{-}_{fk} \right)\\ 
-    \hat{P}^{+}_{fk} &= (I - K_{fk}H_k) P^{-}_{fk} (I-K_{fk}H_k)^{T} + K_{fk}R_{k}K_{fk}^{T} \\
+    P^{+}_{fk} &= (I - K_{fk}H_k) P^{-}_{fk} (I-K_{fk}H_k)^{T} + K_{fk}R_{k}K_{fk}^{T} \\
     &= \left[ (P^{-}_{fk})^{-1} + H_k^{T} R_{k}^{-1}H_k\right]^{-1} \\ 
     &= (I - K_{fk}H_k)P^{-}_{fk}
     \end{aligned}
@@ -366,15 +359,15 @@ v_k &\sim  \mathcal{N}(0, R_k)
     \[
     \begin{aligned}
     \hat{x}_{k} &= \hat{x}^{+}_{fN} \\
-    \hat{P}_k &= \hat{P}^{+}_{fN}
+    P_k &= P^{+}_{fN}
     \end{aligned}
     \]
     \item Para \(k = N-1, \dots, 1, 0\) ejecutar las ecuaciones del \textit{RTS smoother} 
     \[
     \begin{aligned}
-    \mathcal{I}^{-}_{f, k+1} &= \left( \hat{P}^{-}_{f, k+1}\right)^{-1} \\
-    K_k &= \hat{P}^{+}_{fk} F_{k}^{T} \mathcal{I}^{-}_{f, k+1} \\
-    \hat{P}_k &= \hat{P}^{+}_{fN} - K_k (\hat{P}^{-}_{f, k+1} - \hat{P}_{k+1})K_k^{T} \\ 
+    \mathcal{I}^{-}_{f, k+1} &= \left( P^{-}_{f, k+1}\right)^{-1} \\
+    K_k &= P^{+}_{fk} F_{k}^{T} \mathcal{I}^{-}_{f, k+1} \\
+    P_k &= P^{+}_{fN} - K_k (P^{-}_{f, k+1} - P_{k+1})K_k^{T} \\ 
     \hat{x}_k &= \hat{x}^{+}_{fk} + K_k(\hat{x}_{k+1} - \hat{x}^{-}_{f,k+1})
     \end{aligned}
     \]
