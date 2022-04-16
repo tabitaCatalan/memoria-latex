@@ -42,9 +42,7 @@ Si bien la noción de contactos efectivos es clara para enfermedades de transmis
 
 Puesto que la movilidad y los tiempos de residencia pueden considerarse conocidos, y que los riesgos \(\beta_j\) pueden ser aproximados, se busca estimar la vulnerabilidad. Esta vulnerabilidad al contagio \(\alpha_i\), que en este modelo está desacoplada de la movilidad, la llamaremos de ahora en adelante ``factor sanitario'', puesto que se relaciona con las distintas medidas de distanciamiento social no relacionadas a la movilidad, como lo son el uso de mascarillas, lavado de manos, cumplimiento de la distancia mínima entre personas, entre otras.
 
-Consideraremos que el factor sanitario es variable en el tiempo. Para estimar parámetros, una técnica común es Mínimos Cuadrados o Mínimos Cuadrados Recursivo (RLS) \cite{Sameni2020}\cite{Piccolomini2020}.
-Una alternativa es utilizar Filtro de Kalman, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de COVID-19 \cite{Hasan2020}\cite{Song2021}\cite{Sameni2020} para estimar el número reproductivo efectivo \(\mathcal{R}_t\)
-
+Consideraremos que el factor sanitario es variable en el tiempo. Para estimar parámetros, una técnica común es Mínimos Cuadrados o Mínimos Cuadrados Recursivo (RLS) \cite{Sameni2020}\cite{Piccolomini2020}. Una alternativa que permite incorporar más información de la dinámica del sistema es utilizar Filtro de Kalman, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de COVID-19 \cite{Hasan2020}\cite{Song2021}\cite{Sameni2020}.
 
 \begin{figure}[h]
 \centering

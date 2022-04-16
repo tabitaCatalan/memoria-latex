@@ -1,47 +1,43 @@
 \subsection{Modelo multiclase con dispersión virtual}\label{modelo-clases-vs-ambientes}
 
-Si bien separar a la población en distintos grupos permite incorporar heterogeneidad en las interacciones, estos modelos añaden dificultades extra, puesto que ahora es necesario conocer de qué manera interactúan los distintos grupos.
-
-La primera dificultad reside en la noción de contacto efectivo. Si bien esta es clara en el contexto de enfermedades de transmisión sexual o enfermedades transmitidas por vectores (como la malaria y el dengue, que son transmitidas por mosquitos), el concepto es mucho más vago al referirnos a enfermedades transmitidas por contacto estrecho, o por microgotas al toser, estornudar o hablar.
+Si bien separar a la población en distintos grupos permite incorporar heterogeneidad en las interacciones, estos modelos añaden dificultades extra, puesto que ahora es necesario conocer de qué manera interactúan los distintos grupos. La primera dificultad reside en la noción de contacto efectivo. Si bien esta es clara en el contexto de enfermedades de transmisión sexual o enfermedades transmitidas por vectores (como la malaria y el dengue, que son transmitidas por mosquitos), el concepto es mucho más vago al referirnos a enfermedades transmitidas por contacto estrecho o por microgotas al toser, estornudar o hablar.
 
 Otra dificultad está en la necesidad de conocer en gran detalles las interacciones entre grupos. En la sección anterior, el modelo euleriano presentado requería una matriz \(C = (c_{ij})_{i,j = 1 \dots n} \) con las tasas de migración entre cualquier par de regiones. El modelo lagrangiano, similarmente, requería las probabilidades \(\nu_{ij}\) de pasar de una región a otra, para cualquier par de regiones. Más aún, necesitaba de una matriz \(\alpha_{ikj}\) que detallara quién estaba en contacto con quién y dónde.
 
-Este tipo de matrices de contacto es conocida como WAIFW (\textit{Who Acquires Infection From Whom} o ¿Quién se infecta de quién?) \cite{Anderson1992}. Este tipo de matrices suelen aproximarse por matrices de ``mezcla social'' o \textit{social mixing}; varios ejemplos para enfermedades transmitidas por contactos estrechos son \cite{Wallinga2006}\cite{Edmunds2006}\cite{Mossong2008}.
+Este tipo de matrices de contacto es conocida como WAIFW (\textit{Who Acquires Infection From Whom} o  ¿Quién adquiere la infección de quién?) \cite{Anderson1992}. Este tipo de matrices suelen aproximarse por matrices de ``mezcla social'' o \textit{social mixing}; varios ejemplos para enfermedades transmitidas por contactos estrechos son \cite{Mossong2008}\cite{Wallinga2006}\cite{Edmunds2006}.
 
-La solución sugerida por \cite{Bichara2015} es utilizar un modelo lagrangiano con tiempos de residencia. De esta forma, el tiempo pasado en cierta región o ambiente sirve como \textit{proxy} de la probabilidad de contagios. Esta forma de abordar el problema fue utilizada también por \cite{Cosner2009} y extendida posteriormente en \cite{Bichara2018}, sirviendo además para combinar clases y dispersión espacial en un mismo modelo. 
+\cite{Bichara2015} sugiere una solución alternativa; utilizar un modelo lagrangiano con tiempos de residencia. De esta forma, el tiempo pasado en cada región y su riesgo sirve como \textit{proxy} de la probabilidad de contagios. \cite{Bichara2015} propone dos variantes de esta idea; en la primera, cada clase pertenece a una región pero pasa un tiempo en las otras regiones. Esta forma de abordar el problema es utilizada también por \cite{Cosner2009}. En la segunda variante, las clases interactúan en ambientes como hospitales, centros comerciales, escuelas, transporte público, lugares de trabajo, etc. Esto permite combinar clases y dispersión espacial en un mismo modelo. Esta variante es extendida posteriormente en \cite{Bichara2018} y es la que se usa en este trabajo.
 
 %\textbf{euleriano} vs \textbf{lagrangeano} [Esto no he logrado entenderlo bien, las explicaciones son muy cortas].
 
-El primer modelo propuesto por \cite{Bichara2015} considera \(n\) clases, cada una de las cuales reside en una región (\textit{patch}). \(N_i(t), i = 1, \dots, n\) denota a la cantidad de personas que residen en la región \(i\) y \(p_{ij} \in [0,1]\) representa la fracción de tiempo que la clase \(i\) pasa en la región \(j\). En este trabajo, sin embargo, usaremos el modelo alternativo propuesto en el mismo artículo y desarrollado más ampliamente en \cite{Bichara2018}. Este modelo separa a la población en \(n\) clases, las cuales interactúan en \(m\) ambientes o áreas de riesgo. Estos ambientes son lugares donde ocurren los contagios, como hospitales, centros comerciales, escuelas, transporte público, lugares de trabajo, etc.
+% El primer modelo propuesto por \cite{Bichara2015} considera \(n\) clases, cada una de las cuales reside en una región (\textit{patch}). \(N_i(t), i = 1, \dots, n\) denota a la cantidad de personas que residen en la región \(i\) y \(p_{ij} \in [0,1]\) representa la fracción de tiempo que la clase \(i\) pasa en la región \(j\). En este trabajo, sin embargo, usaremos el modelo alternativo propuesto en el mismo artículo y desarrollado más ampliamente en \cite{Bichara2018}.
+Se separa a la población en \(n\) clases, las cuales interactúan en \(m\) ambientes o áreas de riesgo. \(N_i(t), i = 1, \dots, n\) corresponde a la población de la clase \(i\). Suponemos que la población de la clase \(i\) pasa una proporción \(p_{ij} \in [0,1]\) de su tiempo en el ambiente \(j\), con \(\sum_{j = 1}^{m} p_{ij} = 1\) para cada \(i\). Para casos extremos, por ejemplo, podría darse que \(p_{ij} = 0\), es decir, la clase \(i\) no gasta nada de su tiempo en el ambiente \(j\), mientras que \(p_{ij} = 1\) significa que la clase \(i\) pasa todo su tiempo en el ambiente \(j\). 
 
-\(N_i(t), i = 1, \dots, n\) corresponde a la población de la clase \(i\). Suponemos que la población de la clase \(i\) pasa una proporción \(p_{ij} \in [0,1]\) de su tiempo en el ambiente \(j\), con \(\sum_{j = 1}^{m} p_{ij} = 1\) para cada \(i\). Para casos extremos, por ejemplo, podría darse que \(p_{ij} = 0\), es decir, la clase \(i\) no gasta nada de su tiempo en el ambiente \(j\), mientras que \(p_{ij} = 1\) significa que la clase \(i\) pasa todo su tiempo en el ambiente \(j\). 
+Para ejemplificar se usan compartimientos SIR, sin embargo, esta metodología puede extenderse a otros compartimientos. Las ecuaciones en este caso están dadas por \ref{eq:virtual-disp}, donde \(\lambda_i\) está dado por \ref{eq:lambda}. Los términos \(b_i\) y \(d_i\) representan las tasas de natalidad y mortalidad de la clase \(i\) respectivamente.
 
-Para ejemplificar usaremos un modelo SIR, sin embargo, esta metodología puede extenderse a otros modelos. Las ecuaciones en este caso son:
-
-\[
+\begin{equation}\label{eq:virtual-disp}
 \begin{aligned}
 %S_i(t)' &= -S_i(t) {\color{Red} \lambda_i(\vec{x}, t) } \\
 S_i(t)' &=  b_i - d_i S_i - {\lambda_i(\vec{x}, t) } \\
 I_i(t)' &= {\lambda_i(\vec{x}, t) } - \gamma_i I_i(t) - d_i I_i\\
 R_i(t)' &= \gamma_i I_i(t)\\ 
 \end{aligned}
-\]
-donde 
-\[\lambda_i(\vec{x}, P) = \sum_{j=1}^m \beta_{j}p_{ij}S_i(t)\frac{\sum_{k=1}^{n} p_{kj} I_k}{\sum_{k=1}^{n} p_{kj}N_k}\]
+\end{equation}
 
-El valor \(\beta_j\) corresponde al riesgo del ambiente \(j\)-ésimo. Algunos comentarios con respecto a los términos: 
+\begin{equation}\label{eq:lambda}
+\lambda_i(\vec{x}, P) = \sum_{j=1}^m \beta_{j}p_{ij}S_i(t)\frac{\sum_{k=1}^{n} p_{kj} I_k}{\sum_{k=1}^{n} p_{kj}N_k}
+\end{equation}
 
-\begin{itemize}
-\item Puesto que \(p_{ij}\) es la proporción del tiempo que la clase \(i\) reside en el ambiente \(j\), entonces la cantidad de personas en promedio en el ambiente \(j\) en algún momento de tiempo \(t\) está dada por \(N_i p_{ij} = S_i p_{ij} + I_i p_{ij} + R_i p_{ij}\). Esto supone que la etapa de la enfermedad no afecta el comportamiento de la población. Una forma más completa de modelarlo es seguir a \cite{Bichara2018} y utilizar distintas matrices de tiempos de residencia para cada compartimiento.
-\item La población total en el ambiente \(j\) es \(\sum_{k = 1}^m N_k p_{ij}\), de la cual \(\sum_{k = 1}^m I_k p_{ij}\) están infectados.
-\item \(\beta_j\) es una medida del riesgo por unidad de tiempo en el ambiente \(j\), dependiente de las condiciones ambientales y sanitarias.
-\end{itemize}
+El valor \(\beta_j\) es una medida de riesgo propio del ambiente \(j\)-ésimo y depende de las condiciones ambientales y sanitarias. Representa la idea de que no es lo mismo pasar el tiempo en un parque que en el transporte público o en un bar.  la distancia que mantienen las personas ahí, la ventilación, entre otras.
 
-De esta forma, el número de infectados de la clase \(i\) en el ambiente \(j\) por unidad de tiempo está dado por:
+Puesto que \(p_{ij}\) es la proporción del tiempo que la clase \(i\) reside en el ambiente \(j\), entonces la cantidad de personas en promedio de la clase \(i\) en el ambiente \(j\), en algún momento de tiempo \(t\), está dada por \(N_i(t) p_{ij} = S_i(t) p_{ij} + I_i(t) p_{ij} + R_i(t) p_{ij}\). La población total en el ambiente \(j\) es \(\sum_{k = 1}^m N_k p_{ij}\), de la cual \(\sum_{k = 1}^m I_k p_{ij}\) están infectados. De esta forma, el número de infectados de la clase \(i\) en el ambiente \(j\) por unidad de tiempo está dado por la ecuación \ref{eq:infectados-explicado}.
 
-\[
-\underbrace{b_j}_{\text{riesgo}} \cdot \underbrace{S_i p_{ij}}_{\text{susceptibles de la clase } i \, \text{en el ambiente } j} \cdot \underbrace{\frac{\sum_{k = 1}^m I_k p_{ij}}{\sum_{k = 1}^m N_k p_{ij}}}_{\text{proporción de infectados en el ambiente }j}
-\]
+\begin{equation}\label{eq:infectados-explicado}
+\underbrace{b_j}_{\text{riesgo}} \cdot \underbrace{S_i p_{ij}}_{\substack{\text{susceptibles}\\\text{de la clase } i\\ \, \text{en el ambiente } j}} \cdot \underbrace{\frac{\sum_{k = 1}^m I_k p_{ij}}{\sum_{k = 1}^m N_k p_{ij}}}_{\substack{\text{proporción}\\\text{de infectados}\\\text{en el ambiente }j}}
+\end{equation}
+
+
+El modelo presentado supone que la etapa de la enfermedad no afecta el comportamiento de la población. Una forma más completa de modelarlo es seguir a \cite{Bichara2018} y utilizar distintas matrices de tiempos de residencia para cada compartimiente, representando la idea de que los infectados se queden en su casa guardando cuarentena, por ejemplo.
 % estado del arte. Uso en Covid 
 %El modelo original ha sido usado por Baltazar Espinoza (\textit{Mobility restrictions for the control of epidemics: When do they work?}) para mostrar la ineficacia de los cordones sanitarios para reducir la cantidad total de infectados, si se usan, por ejemplo, para aislar una población de una región de bajo riesgo (una baja densidad poblacional por ejemplo) y buen acceso a salud de una de alto riesgo y acceso sanitario deficiente. 
 
