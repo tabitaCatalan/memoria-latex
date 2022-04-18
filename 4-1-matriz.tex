@@ -143,7 +143,7 @@ En general los resultados son los esperados para una ciudad con una segregación
 \subsubsection*{Matriz para las simulaciones}\label{res:matrix-normal-simulaciones}
 %\noindent \textbf{Matriz para las simulaciones}
 
-La aplicación del algoritmo tomando en consideración las decisiones tomadas en la sección \ref{subsec:eleccion-clases-ambientes}, específicamente la elección de 5 clases agrupadas por IPS como se detalla en la tabla \ref{table:ips-categ}, y del uso de los ambientes \texttt{hogar} y \texttt{exterior} da lugar a una matriz de tiempos de residencia mucho más sencilla, presentada en la tabla \ref{table:matrix-simulaciones}.
+La aplicación del algoritmo tomando en consideración las decisiones tomadas en la sección \ref{subsec:eleccion-clases-ambientes}, específicamente la elección de 5 clases agrupadas por IPS como se detalla en la tabla \ref{table:ips-categ}, y del uso de los ambientes \texttt{hogar} y \texttt{exterior}. Se obtiene una matriz de tiempos de residencia \(P^0\) mucho más sencilla, presentada en la tabla \ref{table:matrix-simulaciones}.
 
 \begin{table}[h!]
 \centering
@@ -164,28 +164,34 @@ La aplicación del algoritmo tomando en consideración las decisiones tomadas en
 
 \subsection{Santiago a lo largo del tiempo} \label{res:matrix-pandemia}
 
-Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta matriz a fin de obtener \(P(t)\) que refleje el comportamiento de la población en pandemia.. Estas modificaciones se hacen utilizando los datos de movilidad, siguiendo la metodología presentada en \ref{subsec:variaciones}.
+Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta matriz a fin de obtener \(P(t)\) que refleje el comportamiento de la población en pandemia. Estas modificaciones se hacen utilizando los datos de movilidad, siguiendo la metodología presentada en \ref{subsec:variaciones}.
 
-\ref{img:mov-pandemia}
-\ref{img:Pmatrix-pandemia-exterior}
+La figura \ref{img:mov-pandemia} muestra la variación de movilidad con respecto a la línea base calculada para la semana 0. Se observa que la línea para la clase Sin Prioridad, es decir, la más acomodada, se mantiene por debajo de las otras, lo que significa que logró reducir su movilidad mucho más.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.99\textwidth]{img/resultados/mob-reduction.pdf}
-\caption[Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal.]{Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal. Se considera la semana 0 como la correspondiente a 02/mar/2020 - 06/mar/2020.}
+\begin{subfigure}[b]{0.8\textwidth}
+     \centering
+     \includegraphics[width=0.99\textwidth]{img/resultados/mob-reduction.pdf}
+\end{subfigure} 
+\hfill
+\begin{subfigure}[b]{0.99\textwidth}
+ \centering
+\scalebox{0.7}{
+\input{clases-legend.tikz}
+}
+\end{subfigure}
+\caption[Fracción de la movilidad en pandemia por clase, c/r a movilidad normal.]{Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal. Se considera la semana 0 como la correspondiente a 02/mar/2020 - 06/mar/2020.}
 \label{img:mov-pandemia}
 \end{figure}
 
+ Ahora bien, al combinar esos datos con los de \ref{res:matrix-normal-simulaciones} se obtiene la imagen \ref{img:Pmatrix-pandemia-exterior}, que representa el tiempo de residencia estimado en el ambiente \texttt{exterior}. Se puede ver que, para la clases más acomodada, el mayor tiempo que pasan en el exterior compensa su mayor reducción de movilidad, haciendo menos notarias las diferencias.
+
+
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.99\textwidth]{img/resultados/tiempos-exterior.pdf}
-\caption[Tiempo de residencia en \texttt{exterior} para las 5 clases elegidas.]{Tiempo de residencia en \texttt{exterior} para las 5 clases elegidas.}
+\includegraphics[width=0.8\textwidth]{img/resultados/tiempos-exterior.pdf}
+\caption[Tiempo de residencia en \texttt{exterior} para las 5 clases elegidas.]{Tiempo de residencia en \texttt{exterior} para las 5 clases elegidas, desde 02/mar/2020.}
 \label{img:Pmatrix-pandemia-exterior}
 \end{figure}
 
-
-\begin{figure}[!h]
-\centering
-\input{clases-legend.tikz}
-\caption{Clases} \label{fig:clases-legend}
-\end{figure}

@@ -1,19 +1,20 @@
 \section{Estimación de parámetros}\label{sec:estimacion-results}
 
-En primer lugar, la subsección \ref{subsec:sintetico} mostrará la recuperación de valores para un caso sintético. Las subsecciones siguientes se dedican a un estudio de sensibilidad con respecto a los parámetros. En primer lugar, \ref{subsec:sensibeta} muestra la influencia del parámetro de riesgo exterior y de las condiciones iniciales del filtro dadas al factor sanitario. En segundo lugar, en la sección \ref{subsec:sensicov} se exponen los efectos de las matrices de covarianza en los resultados, mostrando varios casos donde los valores no permiten obtener un buen resultado. Finalmente, la subsección \ref{subsec:smoother} muestra la diferencias al aplicar filtraje o suavizado.
+Este apartado presenta los resultados de la estimación del factor sanitario. Esto se hace en dos etapas; en primer se calcula para un caso sintético, donde la solución buscada está disponible. Se estudia además la sensibilidad de los resultados ante distintos parámetros. El conjunto de valores que permite una buena recuperación del factor sanitario se extrapola al caso real, donde se utilizan los datos de casos confirmados obtenidos de Datos-COVID19 presentados en la subsección \ref{sec:datos-minsal}. 
 
-En todos los resultados presentados se utiliza \(\Delta t = 1 \text{día}\). Se probó con valores más pequeños sin alterar el desempeño del método.
+Más específicamente, la subsección \ref{subsec:sintetico} muestra la recuperación de valores para un caso sintético. Las subsecciones siguientes se dedican a un estudio de sensibilidad con respecto a los parámetros. En primer lugar, \ref{subsec:sensibeta} muestra la influencia del parámetro de riesgo exterior y de las condiciones iniciales del filtro dadas al factor sanitario. En segundo lugar, en la subsección \ref{subsec:sensicov} se exponen los efectos de las matrices de covarianza en los resultados, mostrando varios casos donde los valores no permiten obtener un buen resultado. 
+
+Los valores para ajustar el filtro de Kalman en el caso sintético son usados en el modelo que observa datos reales. El factor sanitario estimado para este modelo se encuentran en la subsección \ref{subsec:datosreales}. Se hace también un análisis de sensibilidad con respecto a las tasas de incubación y recuperación, el que se encuentra en , \ref{subsec:sensigamma}. En todos los resultados presentados se utiliza \(\Delta t = 1 [\text{día}]\). Se probó con valores más pequeños sin alterar el desempeño del método.
 
 %\subsection{Modelo con una clase}
 \subsection{Modelo multiclase con datos sintéticos} \label{subsec:sintetico}
 
-Se utilizan los datos de movilidad de dos comunas (San Bernardo y las Condes) para generar las matrices de tiempos de residencia variables en el tiempo. Se fijan valores \(\gamma_E = 1/5.1, \gamma_I = 1/8.2\) y condiciones iniciales... Se fija riesgos \(\beta_{\text{hogar}} = 1\) y \(\beta_{\text{exterior}} = 1.88\). 
+En este apartado se busca recuperar dos factores sanitarios diferentes usados para generar observaciones sintéticas. El hecho de que la solución es conocida permite estudiar más fácilmente los parámetros del modelo y el filtro. El objetivo es obtener valores que puedan extrapolarse al caso real.
 
-Mediante prueba y error se genera dos controles diferentes para cada clase, de forma que el total de casos acumulados tengan órdenes de magnitud similares a los datos reales.
+Se utilizan los datos de movilidad de dos comunas (San Bernardo y las Condes) para generar las matrices de tiempos de residencia variables en el tiempo. Se fijan valores \(\gamma_E = 1/5.1, \gamma_I = 1/8.2\), riesgos \(\beta_{\text{hogar}} = 1\) y \(\beta_{\text{exterior}} = 1.88\). Mediante prueba y error se genera dos controles diferentes para cada clase, de forma que el total de casos acumulados tengan órdenes de magnitud similares a los datos reales.
 
-A partir de la solución de la ecuación diferencial es posible obtener las series \(C_1, C_2\). Las observaciones son obtenidas con \(\Delta t = 1\) [día]. Se utilizan estas observaciones directamente (sin añadir ruido), y el filtro asume que tienen un ruido pequeño (G = diag(10)...). 
+Estos controles permiten permiten resolver una ecuación diferencial ordinaria y obtener las series de casos acumulados \(C_1, C_2\). Las observaciones son obtenidas con \(\Delta t = 1\) [día]. Se utilizan estas observaciones directamente (sin añadir ruido), y el filtro asume que tienen un ruido pequeño (\(G = \text{diag}(10))\).
 
-Se suponen condiciones iniciales diferentes a las utilizadas en la solución (...), y se eligen matrices de covarianza de tal forma de obtener resultados razonables. Un ejemplo de las estimaciones de estado obtenidas puede verse en la figura \ref{synth-all-nohigh}.
 
 
 
@@ -24,20 +25,22 @@ Se suponen condiciones iniciales diferentes a las utilizadas en la solución (..
 \label{synth-all-nohigh}
 \end{figure}
 
-Las matrices de covarianza iniciales son elegidas de modo tal que las soluciones reales quedan a una desviación estándar de la estimación, como se ve en la figura \ref{synth-e-comp-high}.
+Al usar filtro de Kalman se suponen condiciones iniciales y parámetros desconocidos, es decir, no se usan los mismos usados para generar la solución. Los valores de varianza del ruido del proceso son elegidas de modo tal que las soluciones reales quedan a una desviación estándar de la estimación, como se ve en la figura \ref{synth-e-comp-high}. Un ejemplo de las estimaciones de estado obtenidas puede verse en la figura \ref{synth-all-nohigh}.
+
+
 
 
 \begin{figure}[!h]
      \centering
-     \begin{subfigure}[b]{\textwidth}
+     \begin{subfigure}[b]{.47\textwidth}
          \centering
-         \includegraphics[width=.8\textwidth]{img/resultados/synth/kalman_grouped_E_high1\parameterstring}
+         \includegraphics[width=\textwidth]{img/resultados/synth/kalman_grouped_E_high1\parameterstring}
          \caption{Clase \(1\).}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{\textwidth}
+     \begin{subfigure}[b]{.47\textwidth}
          \centering
-         \includegraphics[width=0.8\textwidth]{img/resultados/synth/kalman_grouped_E_high2\parameterstring}
+         \includegraphics[width=\textwidth]{img/resultados/synth/kalman_grouped_E_high2\parameterstring}
          \caption{Clase \(2\).}
      \end{subfigure}
         \caption{Casos Expuestos, comparando resultados obtenidos con solución real, en valores absolutos y normalizados con respecto a la cantidad de personas por clase.}
@@ -45,7 +48,7 @@ Las matrices de covarianza iniciales son elegidas de modo tal que las soluciones
 \end{figure}
 
 
-Como se ve en la figura \ref{synth-alpha-comp-high}, es posible estimar el factor sanitario a partir de los datos, con ciertas consideraciones. En las secciones siguientes  se hablará en más detalle de la sensibilidad de la estimación con respecto a los parámetros del filtro. Más específicamente, se estudia la sensibilidad de la estimación del factor sanitario con respecto al parámetro \(\beta_{\text{exterior}}\) y la condición inicial. Se recuerda que se hizo la simplificación de que los ruidos en la dinámica son independientes, es decir que el ruido está dado por una matriz normal multivariada con matriz de covarianzas diagonal. Nos interesa por tanto, solo la diagonal de la matriz, las varianzas. Se muestra el efecto en la estimación al usar distintos valores para la matriz de varianzas.
+Como se ve en la figura \ref{synth-alpha-comp-high}, es posible estimar el factor sanitario a partir de los datos, con ciertas consideraciones. En las secciones siguientes  se hablará en más detalle de la sensibilidad de la estimación con respecto a los parámetros del filtro. Más específicamente, se estudia la sensibilidad de la estimación del factor sanitario con respecto al parámetro \(\beta_{\text{exterior}}\) y la condición inicial. Se recuerda que se hizo la simplificación de que los ruidos en la dinámica son independientes, es decir que el ruido está dado por una matriz normal multivariada con matriz de covarianzas diagonal. Nos interesa por tanto, solo la diagonal de la matriz, las varianzas. Se muestra el efecto en la estimación al usar distintos valores para ellas.
 
 \begin{figure}[!h]
      \centering
@@ -189,10 +192,6 @@ En el caso en que los parámetros \(\gamma_E\) y \(\gamma_I\) son desconocidos y
 %gamma_e_real = 1/5.1; gamma_i_real = 1/7.2; beta_exterior_real = 1.88; 
 
 %gamma_e = 1/5.8 ; gamma_i = 1/8.2; beta_exterior = 2.
-
-
-
-\subsection{Sensibilidad ante los parámetros \(\gamma_E, \gamma_I\)} \label{subsec:sensigamma}
 
 \subsection{Sensibilidad ante la covarianza} \label{subsec:sensicov}
 % 20. .^ collect(-2:0.4:0)
@@ -455,6 +454,7 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
         \label{alpha-comp-high}
 \end{figure}
 
+\subsection{Sensibilidad ante los parámetros \(\gamma_E, \gamma_I\)} \label{subsec:sensigamma}
 
 El estudio de sensibilidad mostró que los resultados dependen en mayor medida de \(\gamma_I\), y que \(\gamma_E\) solo produce variaciones muy pequeñas en el factor sanitario. Con esto en mente, la figura \ref{sensi-gammai-real} muestra la sensibilidad de los resultados con respecto a la variable \(\gamma_I\). Si bien la relación entre los factores sanitario no se mantiene constante en cada caso, sí se observa claramente que la Clase sin prioridad, o la más acomodada, disminuye considerablemente su riesgo mucho antes que las demás.
 
