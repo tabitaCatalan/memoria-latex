@@ -70,8 +70,8 @@ Y
     \begin{equation}
     \begin{aligned}
     \hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
-    %P_{k,n-1} &= M_k P_{k-1,n-1} M_k' + F_k Q_k F_k'
-    P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{T} + G_k Q_k G_k^T
+    %P_{k,n-1} &= M_k P_{k-1,n-1} M_k^{\top} + F_k Q_k F_k^{\top}
+    P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_k Q_k G_k^T
     \end{aligned}
     \end{equation}
 \item
@@ -98,7 +98,7 @@ Y
 
     \begin{equation}\label{eq:terminos-raros}
     \begin{aligned}
-    K_k &= P_{k,k-1} H'_{k}(H_{k}P_{k,k-1}H_{k}' + R_k)^{-1}\\
+    K_k &= P_{k,k-1} H^{\top}_{k}(H_{k}P_{k,k-1}H_{k}^{\top} + R_k)^{-1}\\
     \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
     P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
     \end{aligned}
@@ -119,7 +119,7 @@ Sean \(X, Y\) vectores aleatorios conjuntamente gaussianos. Sea también \(\hat{
 
 \begin{mdframed}[style=mystyle,frametitle=Filtro de Kalman Lineal Discreto]
 
-Para el caso lineal discreto como el presentado por las ecuaciones \ref{eq:system-ecs}, el filtro de Kalman se define como \ref{eq:kalman-final}, donde \(\hat{x}_{0,-1}:= x_0\) y \(P_{0,-1}:= P_0\). Los valores \(\hat{x}_{k,k}\) son estimadores de mínima varianza de \(x_{n,n}\). 
+Para el caso lineal discreto como el presentado por las ecuaciones \ref{eq:system-ecs}, el filtro de Kalman se define como \ref{eq:kalman-final}, donde \(\hat{x}_{0,-1}:= x_0\) y \(P_{0,-1}:= P_0\). Los valores \(\hat{x}_{k,k}\) son estimadores de mínima varianza de \(x_{k,k}\). 
 
 \begin{equation}\label{eq:system-ecs}
 \begin{aligned}
@@ -132,8 +132,8 @@ y_k &= H_k x_k + v_k
 \begin{equation}\label{eq:kalman-final}
 \begin{aligned}
 \hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
-P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}' + G_{k-1} Q_{k-1} G_{k-1}'\\
-K_k &= P_{k,k-1} H'_{k}(H_{k}P_{k,k-1}H_{k}' + R_k)^{-1}\\
+P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_{k-1} Q_{k-1} G_{k-1}^{\top}\\
+K_k &= P_{k,k-1} H^{\top}_{k}(H_{k}P_{k,k-1}H_{k}^{\top} + R_k)^{-1}\\
 \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
 P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
 \end{aligned}
@@ -160,58 +160,57 @@ P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
 
 % agregar más intro
 
-La idea de esta sección es extender los métodos a sistemas no lineales. Trabajaremos ahora con un modelo de la forma 
+El filtro de Kalman Extendido permite trabajar con sistemas no lineales. Se trabaja ahora con un modelo como el dado por las ecuaciones \ref{eq:nl-model}, donde las funciones \(f_k, g_k, h_k\) son posiblemente no lineales. 
 
-\begin{equation}
+\begin{equation}\label{eq:nl-model}
 \begin{aligned}
-x_{k+1} &= f_k(x_k) + g_k(x_k) w_k \\
-y_{k} &= h(x_k) + v_k
+x_{k+1} &= f_k(x_k, t_k) + g_k(x_k, t_k) w_k \\
+y_{k} &= h(x_k, t_k) + v_k
 \end{aligned}
 \end{equation}
 
-donde las funciones \(f_k, g_k, h_k\) son posiblemente no lineales. 
+Usando la notación de las ecuaciones \ref{eq:taylor-notation}, es posible definir el filtro de Kalman Extendido como en \ref{eq:kalman-extended}. A diferencia del caso lineal, este ya no es óptimo.
 
-Denotaremos 
-\begin{equation}
+\begin{equation}\label{eq:taylor-notation}
 \begin{aligned}
-F_k := \left. \frac{\partial f_k(x)}{\partial x} \right|_{x = \hat{x}_{k,n}} & H_k := \left. \frac{\partial h_k(x)}{\partial x} \right|_{x = \hat{x}_{k,n}} & G_k := g_k(\hat{x}_{k,n})
-\end{aligned}
-\end{equation}
-Usando series de Taylor, podemos expandir 
-
-\[
-\begin{aligned}
-f_k(x_k) &= f_k(\hat{x}_{k,n}) + F_k(x_k - \hat{x}_{k,n}) + \dots \\
-g_k(x_k) &= g_k(\hat{x}_{k,n}) + \dots = G_k + \dots \\
-h_k(x_k) &= f_k(\hat{x}_{k,n}) + H_k(x_k - \hat{x}_{k,n}) + \dots \\
-\end{aligned}
-\]
-
-Despreciando los términos de mayor orden, y suponiendo conocidos \(\hat{x}_{k,n}\) y \(\hat{x}_{k,n-1}\) podemos aproximar el sistema como 
-
-\begin{equation}
-\begin{aligned}
-x_{k+1} &= F_k x_k + G_k w_k + \overbrace{f_k(\hat{x}_{k,n}) - F_k \hat{x}_{k,n}}^{u_k} \\
-y_{k} &= H_k x_k + v_k + \underbrace{h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1}}_{z_k}
+F_k := \left. \frac{\partial f_k(x, t)}{\partial x} \right|_{\substack{x = \hat{x}_{k,k} \\ t = t_k }} & H_k := \left. \frac{\partial h_k(x, t)}{\partial x} \right|_{\substack{x = \hat{x}_{k,k} \\ t = t_k }} & G_k := g_k(\hat{x}_{k,k}, t_k)
 \end{aligned}
 \end{equation}
 
 
-Ahora podemos usar simplemente las ecuaciones del filtro de Kalman lineal, salvo en el paso de \textit{forecast}, donde conservaremos la dinámica no lineal. Definiendo \(\hat{x}_{0,-1}:= \bar{x}_0\) y \(P_{0,-1}:= P_0\), las ecuaciones del EKF son:
+% \begin{equation}\label{eq:decomposition}
+% \begin{aligned}
+% f_k(x_k, t_k) &= f_k(\hat{x}_{k,k}, t_k) + F_k(x_k - \hat{x}_{k,k}) + \dots \\
+% g_k(x_k, t_k) &= g_k(\hat{x}_{k,k}, t_k) + \dots = G_k + \dots \\
+% h_k(x_k, t_k) &= f_k(\hat{x}_{k,k}, t_k) + H_k(x_k - \hat{x}_{k,k}) + \dots \\
+% \end{aligned}
+% \end{equation}
+
+% Despreciando los términos de mayor orden, y suponiendo conocidos \(\hat{x}_{k,k}\) y \(\hat{x}_{k,k-1}\), es posible aproximar el sistema como en las ecuaciones \ref{eq:ekf-aprox}.
+
+% \begin{equation}\label{eq:ekf-aprox}
+% \begin{aligned}
+% x_{k+1} &= F_k x_k + G_k w_k + \overbrace{f_k(\hat{x}_{k,k}) - F_k \hat{x}_{k,k}}^{u_k} \\
+% y_{k} &= H_k x_k + v_k + \underbrace{h_k(\hat{x}_{k,k-1}) - H_k \hat{x}_{k,k-1}}_{z_k}
+% \end{aligned}
+% \end{equation}
+
+
+\begin{mdframed}[style=mystyle,frametitle=Filtro de Kalman Extendido (EKF)]
+
+Para el caso lineal discreto como el presentado por las ecuaciones \ref{eq:nl-model}, el filtro de Kalman Extendido se define como \ref{eq:kalman-extended}, donde \(\hat{x}_{0,-1}:= x_0\) y \(P_{0,-1}:= P_0\). 
 
 \begin{equation}\label{eq:kalman-extended}
 \begin{aligned}
-\hat{x}_{k,n-1} &= f_{k-1}( \hat{x}_{k-1,n-1}) \\
-P_{k,n-1} &= F_{k-1} P_{k-1,n-1} F_{k-1}' + G_k Q_k G_k'\\
-K_k &= P_{k,n-1} H'_{k}(H_{k}P_{k,n-1}H_{k}' + R_k)^{-1}\\
-%z_k &= h_k(\hat{x}_{k,n-1}) - H_k \hat{x}_{k,n-1} \\
-\hat{x}_{k,n} &= \hat{x}_{k, n-1} + K_k(y_k-h_k(\hat{x}_{k,n-1})) \\
-P_{k,n} &= P_{k,n-1}- K_k H_{k}P_{k,n-1} \\
+\hat{x}_{k,k-1} &= f_{k-1}( \hat{x}_{k-1,k-1}, t_{k-1}) \\
+P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_{k-1} Q_{k-1} G_{k-1}^{\top}\\
+K_k &= P_{k,k-1} H^{\top}_{k}(H_{k}P_{k,k-1}H_{k}^{\top} + R_k)^{-1}\\
+%z_k &= h_k(\hat{x}_{k,k-1}) - H_k \hat{x}_{k,k-1} \\
+\hat{x}_{k,k} &= \hat{x}_{k, n-1} + K_k(y_k-h_k(\hat{x}_{k,k-1}, t_k)) \\
+P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
 \end{aligned}
 \end{equation}
-
-
-
+\end{mdframed}
 
 
 % \subsection{Filtro continuo-discreto}\label{filtro-continuo-discreto}
@@ -230,7 +229,7 @@ P_{k,n} &= P_{k,n-1}- K_k H_{k}P_{k,n-1} \\
 % \[
 % \begin{aligned}
 % \frac{d\hat{x}}{dt} &= f(t, \hat{x}) \\ 
-% \frac{dP}{dt} &= \frac{\partial f(t, \hat{x})}{\partial \hat{x}} P + P \left( \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \right)^{T} + g(t)Q(t)g(t)^{T} \\ 
+% \frac{dP}{dt} &= \frac{\partial f(t, \hat{x})}{\partial \hat{x}} P + P \left( \frac{\partial f(t, \hat{x})}{\partial \hat{x}} \right)^{\top} + g(t)Q(t)g(t)^{\top} \\ 
 % \end{aligned}
 % \]
 % la que tendremos que resolver en el intervalo \([t_{k-1}, t_{k}]\) con las condiciones iniciales \(\hat{x}(t_{k-1}) = \hat{x}_{k-1, n-1}, P(t_{k-1}) = P_{k-1, n-1}\), para luego definir \(\hat{x}_{k,n-1} := \hat{x}(t_k), P_{k,n-1} := P(t_k)\). El paso de análisis permanece sin cambios. 
@@ -258,128 +257,115 @@ P_{k,n} &= P_{k,n-1}- K_k H_{k}P_{k,n-1} \\
 % \(\hat{x}^{(i)}_{k+1,n} \sim \mathcal{N}(\mu, \Sigma)\) (COMPLETAR).
 
 \subsection{Estimación de
-parámetros}\label{estimacion-de-parametros}
+parámetros: estado aumentado}\label{estimacion-de-parametros}
 
-Hasta ahora hemos trabajado con el supuesto de que las únicas cantidades desconocidas eran los vectores \(x_k\). Sin embargo, la mayoría de las veces tendremos además parámetros desconocidos \(p\), los cuales también necesitan ser estimados. \\
+Hasta ahora hemos trabajado con el supuesto de que las únicas cantidades desconocidas eran los vectores \(x_k\). Sin embargo, la mayoría de las veces tendremos además parámetros desconocidos \(p\), los cuales también necesitan ser estimados. Este apartado está basado en la sección 13.4 de \cite{Simon2006}.
 
-\noindent\textbf{Estado aumentado}
+Se tiene un sistema donde las matrices dependen de forma no lineal de cierto parámetro desconocido \(p\), como se ve en las ecuaciones \ref{eq:model-p}.
 
-Este apartado está basado en la sección 13.4 de \cite{Simon2006}. Supongamos que tenemos un sistema donde las matrices dependen de forma no lineal de cierto parámetro desconocido \(p\). 
-
-\[
+\begin{equation}\label{eq:model-p}
 \begin{aligned}
-x_{k+1} &= F_k(p)(x_k) + G_k(p)u_k + L_k(p)w_k \\
+x_{k+1} &= F_k(p)(x_k) + G_k(p)w_k \\
 y_{k} &= H_k x_k + v_k \\ 
 \end{aligned}
-\]
+\end{equation}
 
-Por simplicidad agregó dependencia de \(p\) a las mediciones, pero es un caso que puede extenderse de manera sencilla a partir de este. Para estimar \(p\) se define un estado aumentado \(x'\):
+Por simplicidad no se agregó dependencia de \(p\) a las mediciones, pero es un caso que puede extenderse de manera sencilla a partir de este. Para estimar \(p\) se define un estado aumentado \(x'\) como en \ref{eq:estado-aumentado}. Bajo el supuesto de que \(p\) es constante, se usa la dinámica \(p_{k+1} = p_k + w_{pn}\). El ruido \(w_{pn}\) artificial permitirá al filtro cambiar su estimación de \(p_k\). Finalmente, el sistema aumentado está dado por las ecuaciones \ref{eq:sistema-aumentado}.
 
-\[
+\begin{equation}\label{eq:estado-aumentado}
 x'_k = \begin{bmatrix}x_k \\ p_k \end{bmatrix}
-\]
-Supondremos que \(p\) es constante y usaremos la dinámica \(p_{k+1} = p_k + w_{pn}\). El ruido \(w_{pn}\) artificial permitirá al filtro cambiar su estimación de \(p_k\). 
+\end{equation}
 
-Finalmente, nuestro sistema aumentado es 
-
-\[
+\begin{equation}\label{eq:sistema-aumentado}
 \begin{aligned}
-x'_{k+1} &= \begin{bmatrix} F_k(p_k)(x_k) + G_k(p_k)u_k + L_k(p_k)w_k \\ p_k + w_{pn} \end{bmatrix} \\
-&= f(x'_{k}, u_k, w_k, w_{kp}) \\
+x'_{k+1} &= \begin{bmatrix} F_k(p_k)(x_k) + G_k(p_k)w_k \\ p_k + w_{pn} \end{bmatrix} \\
+&= f(x'_{k}, w_k, w_{kp}) \\
 y_{k} &= \begin{bmatrix} H_k & 0 \end{bmatrix} \begin{bmatrix}x_k \\ p_k \end{bmatrix} + v_k \\ 
 \end{aligned}
-\]
+\end{equation}
 
-Notamos que \(f(x'_{k}, u_k, w_k, w_{kp}) \) es una función no lineal en el estado aumentado \(x'_k\), por lo que podemos usar cualquier filtro no lineal para estimar \(x'_k\).\\
+\(f(x'_{k}, w_k, w_{kp}) \) es una función no lineal en el estado aumentado \(x'_k\), por lo que se puede estimar \(x'_k\) a partir de algún filtro no lineal como EKF.
 
 % Mostrar que es posible que el filtro converja a valores erróneos, ver cómo eso depende de los errores que se le dan al filtro.
 
-\subsection{Suavizado o \textit{smoothing} } \label{smoother}
+\subsection{Suavizado: \textit{RTS smoother}} \label{smoother}
 
 % Hay tres variantes de smoothing, pero a mí solo me interesa una. Las otras creo que solo las mencionaré 
 
 % Un recordatorio de la notación 
-Recordamos que \(\hat{x}_{k,m}\) corresponde a la estimación de \(x_k\) utilizando las observaciones hasta tiempo \(m\); \(\left. y \right|_{1:m}\). Hasta ahora sólo no hemos concentrado en el proceso de filtraje y solo hemos calculamos \(\hat{x}_{k,n}\) o \(\hat{x}_{k, n-1}\), es decir, nuestra estimación del estado \(x_k\) usa las observaciones solo hasta el estado \(n\), \(\left. y \right|_{1:k}\), o hasta el estado \(n-1\),   \(\left. y \right|_{1:k-1}\). En ciertas situaciones, sin embargo, es interesante mejorar una estimación usando observaciones obtenidas posteriormente, o de manera más técnica, calcular \(\hat{x}_{k, n+1}, \hat{x}_{k, n+2}, \hat{x}_{k, n+3}, \dots\).El proceso de obtener estas estimaciones usando datos de tiempos posteriores es llamado \textit{smoothing} o suavizado. El nombre se debe a que, al tener más información disponible, es posible generar estimaciones con menos ruido, más ``suaves''.
+Recordamos que \(\hat{x}_{k,l}\) corresponde a la estimación de \(x_k\) utilizando las observaciones hasta tiempo \(l\), que son denotadas \(\left. y \right|_{1:l}\). Hasta ahora sólo se ha abordado el proceso de filtraje, por lo que solo se ha calculado \(\hat{x}_{k,k}\) o \(\hat{x}_{k, k-1}\); la estimación del estado \(x_k\) solo usa las observaciones hasta el estado \(k\), \(\left. y \right|_{1:k}\), o hasta el estado \(k-1\),   \(\left. y \right|_{1:k-1}\). En ciertas situaciones, sin embargo, es interesante mejorar una estimación incorporando observaciones obtenidas posteriormente, o de manera más técnica, calcular \(\hat{x}_{k, k+1}, \hat{x}_{k, k+2}, \hat{x}_{k, k+3}, \dots\). El proceso de obtener estas estimaciones usando datos de tiempos posteriores es llamado \textit{smoothing} o suavizado. El nombre se debe a que, al tener más información disponible, es posible generar estimaciones con menos ruido, más ``suaves''.
 
-Hay tres escenarios comunes donde surge esta necesidad. El primero de ellos es el \textbf{suavizado de punto fijo}, donde nos interesa la estimación de un estado en un tiempo fijo, digamos \(j\), y el número de observaciones disponibles aumenta continuamente. Un ejemplo de esto podría ser ... [insertar ejemplo o paper donde se use]. En este caso estamos intentando estimar \(\hat{x}_{j, j+1}, \hat{x}_{j, j+2}, \hat{x}_{j, j+3}, \dots\). 
+Hay tres escenarios comunes donde surge esta necesidad. El primero de ellos es el suavizado de punto fijo, donde se busca estimar un estado en un tiempo fijo, digamos \(j\), y el número de observaciones disponibles aumenta continuamente. Un ejemplo de esto podría ser. En este caso se intenta estimar \(\hat{x}_{j, j+1}, \hat{x}_{j, j+2}, \hat{x}_{j, j+3}, \dots\). Un segundo escenario es el suavizado con retardo fijo. En este caso, para cada estado \(k\) se tienen \(N\) observaciones posteriores, donde \(N\) es un número fijo. Se intenta estimar \(\hat{x}_{k, k+N}\) para \(k = 1, 2, \dots\). 
 
-Un segundo escenario es el \textbf{suavizado con retardo fijo}. En este caso, para cada estado \(k\) se tienen \(N\) observaciones posteriores, donde \(N\) es un número fijo. Se intenta estimar \(\hat{x}_{k, k+N}\) para \(k = 1, 2, \dots, \). Un ejemplo de esto podría ser... [insertar ejemplo o paper donde se use]. 
-
-El último escenario es \textbf{suavizado con intervalo fijo}. En este caso, tenemos un intervalo de \(M\) mediciones \(\left. y \right|_{1:M}\)y queremos obtener la mejor estimación posible de todos los estados hasta tiempo \(M\). Es decir, buscamos \(\hat{x}_{0,M}, \hat{x}_{1,M}, \hat{x}_{2,M}, \dots, \hat{x}_{M,M}\). Insertar ejemplo.
-
-De estos tres escenarios, el suavizado con intervalo fijo será el de mayor interés para este trabajo. Debido a la extensión de las demostraciones, y a la amplia variedad de versiones disponibles, solo se dejaremos las fórmulas correspondientes a la versión que usaremos. El RTS  para más detalles acerca de cómo deducirlas, o para los otros tipos de suavizado, ver \cite{Simon2006}.  \\ 
-
-\noindent \textbf{Suavizado con intervalo fijo: el RTS \textit{smoother}} 
-
+El último escenario es el que será utilizado en este trabajo, el suavizado con intervalo fijo. En este caso, se cuenta con un intervalo de \(M\) mediciones \(\left. y \right|_{1:M}\), y se busca la mejor estimación posible de todos los estados hasta tiempo \(M\), es decir, se quiere estimar \(\hat{x}_{0,M}, \hat{x}_{1,M}, \hat{x}_{2,M}, \dots, \hat{x}_{M,M}\). 
 
 % Presentar tal vez un poco la idea de forward backward. Al menos creo que tendré que mostrar la notación. 
 
-El suavizado de intervalo fijo suele realizarse en dos pasadas; una ``hacia adelante'' en tiempo, (a esta parte se le llama \textit{forward}) usando el Filtro de Kalman estándar, con el que se obtienen las estimaciones usando los datos pasados. Luego, se suaviza usando ``hacia atrás'' en el tiempo (\textit{backward}).
-
-Se han desarrollado varias formas de suavizado de intervalo fijo. Una de las más comunas es la de Rauch, Tung y Striebel [insertar cita], conocida como \textit{RTS smoother}. Es una forma eficiente ya que 
-
-\textit{The RTS smoother is more computationally efficient than the smoother presented in the previous section because we do not need to directly compute the backward estimate or covariance in order to get the smoothed estimate and covariance. }
+El suavizado de intervalo fijo suele realizarse en dos pasadas: la primera permite obtener estimaciones usando los datos pasados, y la segunda suaviza los resultados. Una de las formas más comunas es la de Rauch, Tung y Striebel \cite{Rauch1965}, conocida como \textit{RTS smoother}. Más detalles en el capítulo 9, \textit{Optimal Smoothing}, de \cite{Simon2006}. Para el sistema dado por \ref{eq:sistema-pre-suavizado}, el \textit{RTS smoother} hace una pasada ``hacia adelante'' o \textit{forward} mediante las ecuaciones\ref{eq:fordward} y luego una ``hacia atrás'' o \textit{backward} usando \ref{eq:backward}.
 % Insertar un cuadrito
-El sistema está dado por 
 
-\[
+
+
+
+\begin{equation}\label{eq:sistema-pre-suavizado}
 \begin{aligned}
-x_k &= F_{k-1}x_{k-1} + G_{k-1}u_{k-1} + w_{k-1} \\ 
+x_k &= F_{k-1}x_{k-1} + w_{k-1} \\ 
 y_k &= H_k x_k + v_k \\ 
 w_k &\sim  \mathcal{N}(0, Q_k)\\
 v_k &\sim  \mathcal{N}(0, R_k)
 \end{aligned}
-\] 
+\end{equation}
 
 \begin{enumerate}
     \item Inicializar el filtro \textit{forward}.
     
-    \[
+    \begin{equation}
     \begin{aligned}
     \hat{x}_{f0} &= \mathbb{E}(x_0) \\
-    P^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{T}\right] 
+    P^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{\top}\right] 
     \end{aligned}
-    \]
+    \end{equation}
     
     \item Para \(k = 1, \dots, N\) (donde \(N\) es el tiempo final), ejecutar el filtro \textit{forward}, que es simplemente el filtro de Kalman estándar. 
     
-    \[
+    \begin{equation}\label{eq:fordward}
     \begin{aligned}
-    P^{-}_{fk} &= F_{k-1}P^{+}_{f,k-1}F_{k-1}^{T} + Q_{k-1} \\ 
-    K_{fk} &= P^{-}_{fk} H_k^{T} (H_k P^{-}_{fk}H_k^{T} + R_k)^{-1}  \\
-    \hat{x}^{-}_{fk} &= F_{k-1}\hat{x}^{+}_{f,k-1} + G_{k-1}u_{k-1} \\
+    P^{-}_{fk} &= F_{k-1}P^{+}_{f,k-1}F_{k-1}^{\top} + Q_{k-1} \\ 
+    K_{fk} &= P^{-}_{fk} H_k^{\top} (H_k P^{-}_{fk}H_k^{\top} + R_k)^{-1}  \\
+    \hat{x}^{-}_{fk} &= F_{k-1}\hat{x}^{+}_{f,k-1}\\
+    %\hat{x}^{-}_{fk} &= F_{k-1}\hat{x}^{+}_{f,k-1} + G_{k-1}u_{k-1} \<\
     \hat{x}^{+}_{fk} &= \hat{x}^{-}_{fk} + K_{fk} \left(y_k - H_k \hat{x}^{-}_{fk} \right)\\ 
-    P^{+}_{fk} &= (I - K_{fk}H_k) P^{-}_{fk} (I-K_{fk}H_k)^{T} + K_{fk}R_{k}K_{fk}^{T} \\
-    &= \left[ (P^{-}_{fk})^{-1} + H_k^{T} R_{k}^{-1}H_k\right]^{-1} \\ 
+    P^{+}_{fk} &= (I - K_{fk}H_k) P^{-}_{fk} (I-K_{fk}H_k)^{\top} + K_{fk}R_{k}K_{fk}^{\top} \\
+    &= \left[ (P^{-}_{fk})^{-1} + H_k^{\top} R_{k}^{-1}H_k\right]^{-1} \\ 
     &= (I - K_{fk}H_k)P^{-}_{fk}
     \end{aligned}
-    \]
+    \end{equation}
     
     \item Inicializar el \textit{RTS smooter} 
-    \[
+    \begin{equation}
     \begin{aligned}
     \hat{x}_{k} &= \hat{x}^{+}_{fN} \\
     P_k &= P^{+}_{fN}
     \end{aligned}
-    \]
+    \end{equation}
+    
     \item Para \(k = N-1, \dots, 1, 0\) ejecutar las ecuaciones del \textit{RTS smoother} 
-    \[
+    
+    \begin{equation}\label{eq:backward}
     \begin{aligned}
     \mathcal{I}^{-}_{f, k+1} &= \left( P^{-}_{f, k+1}\right)^{-1} \\
-    K_k &= P^{+}_{fk} F_{k}^{T} \mathcal{I}^{-}_{f, k+1} \\
-    P_k &= P^{+}_{fN} - K_k (P^{-}_{f, k+1} - P_{k+1})K_k^{T} \\ 
+    K_k &= P^{+}_{fk} F_{k}^{\top} \mathcal{I}^{-}_{f, k+1} \\
+    P_k &= P^{+}_{fN} - K_k (P^{-}_{f, k+1} - P_{k+1})K_k^{\top} \\ 
     \hat{x}_k &= \hat{x}^{+}_{fk} + K_k(\hat{x}_{k+1} - \hat{x}^{-}_{f,k+1})
     \end{aligned}
-    \]
+    \end{equation}
 \end{enumerate}
 
 
 
-\subsection{Observaciones (casi) perfectas} \label{casiperfect}
+\subsection{Restricciones: observaciones (casi) perfectas} \label{casiperfect}
 
-El survey \cite{Simon2010} presenta varias alternativas para tratar con restricciones, y se decide usar la técnica de \textbf{Observaciones (casi) perfectas} para mantener constante el total de la población. Para la positividad de las variables, se decide simplemente aplicar la función \(\max(0, x)\) al estado después de los pasos de \textit{forecasting} y análisis.
-
-La idea de Observaciones (casi) perfectas es la siguiente: en un sistema de la forma \(x_{k+1} = f_k(x_k) + w_k\), observado mediante una ecuación \(y_k = Hx_k + v_k \), se busca imponer una restricción \(|Dx - d| \leq \epsilon\). Esto se consigue ampliando la matriz de observaciones como muestra la ecuación \ref{eq:perfect-obs}. Si se busca una restricción fuerte con \(\epsilon = 0\), la técnica es llamada Observaciones perfectas, y si se busca una restricción suave con \(\epsilon > 0\), recibe el nombre de observaciones casi perfectas.
+El survey \cite{Simon2010} presenta varias alternativas para tratar con restricciones. La idea de la técnica de observaciones (casi) perfectas es la siguiente: en un sistema de la forma \(x_{k+1} = f_k(x_k) + w_k\), observado mediante una ecuación \(y_k = Hx_k + v_k \), se busca imponer una restricción \(|Dx - d| \leq \epsilon\). Esto se consigue ampliando la matriz de observaciones como muestra la ecuación \ref{eq:perfect-obs}. Si se busca una restricción fuerte con \(\epsilon = 0\), la técnica es llamada ``observaciones perfectas'', y si se busca una restricción suave con \(\epsilon > 0\), recibe el nombre de ``observaciones casi perfectas''.
 
 
 \begin{equation}\label{eq:perfect-obs}

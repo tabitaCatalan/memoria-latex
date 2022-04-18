@@ -1,45 +1,33 @@
 \section{Antecedentes: El caso del COVID-19} \label{sec:antecedentes}
 
-El Covid19 es una enfermedad provocada por el virus SARS-CoV-2. Descubierta a finales de 2019, se convirtió en pandemia en 2020 y ha sido un desafío sanitario a nivel mundial; hacia marzo de 2022 ya ha causado más de 6 millones de muertes en todo el mundo según datos de \cite{Mathieu2021}.
+El COVID-19 se transmite por microgotas emitidas al respirar, hablar, toser o estornudar, o por contacto estrecho. Se ha intentado mitigar mediante diferentes medidas, que incluyen varias formas de distanciamiento social como reducciones de movilidad voluntarias, cuarentenas totales o parciales, teletrabajo, distancias mínimas entre personas, etc. Se han fomentado además distintas medidas de higiene como el uso de mascarillas, lavado frecuente de manos, ventilación de espacios, entre otras.
 
-El Covid19 se propaga por las microgotas emitidas al respirar, hablar, toser o estornudar. El contagio ocurre al respirar estas microgotas, o cuando estas llegan a los ojos, nariz o boca mediante salpicaduras y aerosoles (como una tos o un estornudo) o por las manos tras haber tocado una superficie contaminada.
+Con respecto a las medidas farmacéuticas, durante 2020 se estudiaron y desarrollaron varios intentos de vacunas, utilizando conocimientos adquiridos en la lucha contra virus como SARS-CoV y MERS-CoV. En 2021 se comenzó la vacunación masiva y hacia marzo de 2022, más de la mitad de la población mundial ha recibido al menos una dosis, con países como China y Singapur teniendo más de 85\% de su población vacunada según datos publicados en \textit{Our World in Data} \cite{Mathieu2021}.
 
-Las autoridades han aplicado diferentes medidas de mitigación, que incluyen varias formas de distanciamiento social, como reducciones de movilidad, cuarentenas totales o parciales, teletrabajo, cierre de escuelas, distancias mínimas entre personas, prohibición de eventos masivos, imposición de aforos reducidos, etc. También se ha potenciado el uso de medidas de higiene, como el uso de mascarillas, lavado frecuente de manos, ventilación de espacios, etc.
+Con respecto a características particulares de la enfermedad, se conoce de la existencia de casos sin síntomas o con síntomas leves y que también transmiten el virus, especialmente si no son reportados \cite{Li2020c}\cite{Byambasuren2020}\cite{Gao2021}. Su tiempo de incubación ha sido estimado en poco más de 5 días (5.1 días, Intervalo de Confianza del 95\% de 4.5 a 5.8 días según \cite{Lauer2020}; 5.2 días, IC 95\% de 4.1 a 7.0 días según \cite{Li2020d}). 
 
-En 2021 se comenzó la vacunación masiva y ...
+El impacto de la enfermedad ha sido heterogéneo entre la población. Se sabe que la edad es un factor a considerar; la susceptibilidad a la infección y la probabilidad de desarrollar síntomas luego del contagio aumentan con la edad \cite{Davies2020}. Similarmente, tanto el porcentaje de infectados cuya gravedad requiere hospitalización como el porcentaje que termina falleciendo es más alto entre los adultos mayores \cite{Verity2020}. El nivel socioeconómico tampoco puede ser ignorado; el menor acceso a la salud \cite{Wang2020}, sumado al desempleo y la existencia de enfermedades crónicas previas \cite{Ahmed2020} son un agravante que hace más vulnerables a los niveles socioeconómicos más pobres.
 
-El impacto de la enfermedad ha sido heterogéneo entre la población. Se han señalado al factor socioeconómico \cite{Ahmed2020} como un agravante... y son conocidos los efectos de la enfermedad en los adultos mayores.
+Los datos de movilidad han sido utilizados ampliamente para modelar el avance de la enfermedad \cite{Lai2020}\cite{Kraemer2020}\cite{Chinazzi2020}; en la mayoría de los países la movilidad explica una parte importante de la variaciones en la transmisibilidad \cite{Nouvellet2021}. \cite{Chang2021} nota como las diferencias en movilidad explican las diferencias en transmisión en diferentes grupos económicos, notando que además las clases de menor nivel socioeconómico se enfrentan a ambientes más riesgosos.
 
-Los datos de movilidad han sido utilizados ampliamente para modelar el avance de la enfermedad \cite{Lai2020}\cite{Oliver2020}, se correlacionan bien con los contactos \cite{Prem2020} y la transmisibilidad \cite{Nasan2021} (ver bien Nasan). \cite{Chang2021} nota como las diferencias en movilidad explican las diferencias en transmisión en diferentes grupos económicos, notando que además las clases de menor nivel socioeconómico se enfrentan a ambientes más riesgosos.
+% El impacto de la enfermedad ha sido heterogéneo entre la población. Se han señalado al factor socioeconómico \cite{Ahmed2020} como un agravante... y son conocidos los efectos de la enfermedad en los adultos mayores.
 
-\begin{itemize}
-
-\item Casos sintomáticos y asíntomáticos 
-%\item supercontagiadores 
-\item Diferencias de impacto basadas en edad (niños asintomáticos, adultos mayores con tendencia a ser graves).
-
-\end{itemize}
+% Los datos de movilidad han sido utilizados ampliamente para modelar el avance de la enfermedad \cite{Lai2020}\cite{Oliver2020}, se correlacionan bien con los contactos \cite{Prem2020} y la transmisibilidad \cite{Nasan2021} (ver bien Nasan). \cite{Chang2021} nota como las diferencias en movilidad explican las diferencias en transmisión en diferentes grupos económicos, notando que además las clases de menor nivel socioeconómico se enfrentan a ambientes más riesgosos.
 
 
 \subsection{El brote de COVID-19 en Santiago de Chile }
 
-La ciudad de Santiago es la capital de Chile y su centro administrativo. Está formada por [x] comunas, las cuales varían significativamente en términos socioeconómicos. Su población es de [aprox 7] millones de personas, un [aprox 36\%] de la población del país, y sin embargo, ha reportado un [buscar porcentaje] de los casos de COVID-19.
+La Región Metropolitana (RM) contiene a la ciudad de Santiago, la capital de Chile y su centro administrativo. Está formada por 52 comunas, las cuales varían significativamente en términos socioeconómicos. Su población es de unos \(7.3\) millones de personas, un 40\% aproximadamente de la población del país.
 
-El Ministerio de Salud ha liberado varios conjuntos de datos, que incluyen series de tiempo de casos confirmados, UCI, fallecidos, varias de ellas agregadas por edad o comuna. Están disponibles en el GitHub del Minsal \url{https://github.com/MinCiencia/Datos-COVID19}.
+%[\url{https://www.gob.cl/coronavirus/gestionpandemia/}]
+Las primeras medidas tomadas por el Gobierno de Chile para enfrentar la pandemia se centraron en fortalecer la capacidad hospitalaria: aumento en la cantidad de camas UCI, integración de los sistemas de salud público y privado, fortalecimiento de la capacidad de testeo y trazabilidad, preparación de residencias sanitarias, importación de material y equipamiento sanitario.
 
+Se implementaron además medidas de distanciamiento social como la prohibición de eventos de gran concurrencia y el cierre de instituciones educativas. Se llevaron a cabo cuarentenas localizadas, hasta entrar en cuarentena total a mediados de mayo de 2020. En julio, una vez superado el primer \textit{peak} de casos, se comienza a aplicar el Plan Paso a Paso, una estrategia de desconfinamiento  gradual que sigue operando con modificaciones hasta la fecha.
 
+Ya a fines de mayo de 2020, \cite{Olivares2020} había hecho notar "la dificultad de implementar cuarentenas obligatorias en comunas de menores recursos, donde la gente vive al día y genera sus ingresos con su trabajo diario", sugiriendo "que al aplicar las cuarentenas en comunas de menores niveles socioeconómicos, el gobierno las complemente con herramientas que apoyen a sus habitantes y provea de recursos para cubrir necesidades urgentes". Algunas medidas tomadas en esta dirección fueron la entrega de bonos e ingresos suplementarios, beneficios para el pago de servicios básicos, canastas de alimentos, etc.
 
-[\url{https://www.gob.cl/coronavirus/gestionpandemia/}]
-Las primeras medidas para enfrentar la pandemia se centraron en fortalecer la capacidad hospitalaria: aumento en la cantidad de camas UCI, integración de los sistemas de salud público y privado, fortalecimiento de la capacidad de testeo y trazabilidad, preparación de residencias sanitarias, importación de material y equipamiento sanitario.
+Sin embargo, en \cite{Bennett2021} se muestra que, si bien las cuarentenas fueron efectivas en las comunas de mayores ingresos, no parecen tener un efecto significativo en las comunas de menores ingresos. Atribuye esto en parte a las diferencias en el cumplimiento de las medidas en términos de movilidad, así como a las diferentes capacidades de testeo. Estos resultados son similares a los obtenidos en \cite{Gozzi2021}. En \cite{Mena2021} se explora aún más este tópico, encontrando además una fuerte correlación entre el nivel socioeconómico y la mortalidad, que afecta aún más a los menores de 40 años.
 
-Se implementaron además medidas de distanciamiento social como la prohibición de eventos de gran concurrencia y el cierre de instituciones educativas. Se llevaron a cabo cuarentenas localizadas, hasta entrar en cuarentena total a mediados de mayo de 2020. En julio, una vez superado el primer \textit{peak} de casos, se comienza a aplicar el Plan Paso a Paso, una estrategia de desconfinamiento  gradual que sigue operando hasta la fecha.
+El 3 de febrero de 2021 comienza el proceso de vacunación masiva de la población \cite{MINSAL2021}, el cual se realiza en su mayor parte con las vacunas Sinovac, Pfizer-BioNTech y Oxford-AstraZeneca. Hacia marzo de 2022 se está aplicando la cuarta dosis de refuerzo; Chile se encuentra entre los países con mayor porcentaje de personas vacunadas, rondando el 90\% de la población inoculada con dos dosis, similar a países como Canadá y Singapur \cite{Mathieu2021}.
 
-Ya a fines de mayo de 2020, \cite{Olivares2020} había hecho notar "la aprensión sobre la dificultad de implementar cuarentenas obligatorias en comunas de menores recursos, donde la gente vive al día y genera sus ingresos con su trabajo diario", sugiriendo "que al aplicar las cuarentenas en comunas de menores niveles socioeconómicos, el gobierno las complemente con herramientas que apoyen a sus habitantes y provea de recursos para cubrir necesidades urgentes". Algunas medidas tomadas en esta dirección fueron la entrega de bonos e ingresos suplementarios, beneficios para el pago de servicios básicos, canastas de alimentos, etc.
-
-Sin embargo (septiembre 2020), en \cite{Bennett2021} se muestra que, si bien las cuarentenas fueron efectivas en las comunas de mayores ingresos, no parecen tener un efecto significativo en las comunas de menores ingresos. Atribuye esto en parte a las diferencias en el cumplimiento de las medidas en términos de movilidad, así como a las diferentes capacidades de testeo. Estos resultados son similares a los obtenidos en \cite{Gozzi2021}. En \cite{Mena2021} se explora aún más este tópico, encontrando además una fuerte correlación entre el nivel socioeconómico y la mortalidad, que afecta aún más a los menores de 40 años.
-
-El 3 de febrero de 2021 comienza el proceso de vacunación masiva de la población \cite{MINSAL2021}. Se han aplicado 4 dosis... Hacia marzo de 2022, Chile se encuentra entre los países con mayor porcentaje de personas vacunadas, rondando el 90\% de la población inoculada con dos dosis, similar a países como Canadá y Singapur \cite{Mathieu2021}.
-
-%Se trabajaron acuerdos con varios laboratorios, y se comenzó a vacunar a la población. Se comienza a vacunar masivamente a la población a comienzos de febrero de 2021.
-
-%Mediados de febrero; plan de volver a clases.
+El Ministerio de Salud ha liberado varios conjuntos de datos, que incluyen series de tiempo de casos confirmados, UCI, fallecidos, varias de ellas agregadas por edad o comuna. Están disponibles en el GitHub del Ministerio de Ciencia \cite{MINCIENCIA}. 
