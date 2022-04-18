@@ -6,7 +6,7 @@ A continuación se ofrece una discusión con respecto al trabajo realizado. La s
 
 En primer lugar, es necesario recordar los supuestos y simplificaciones hechos a la hora de modelar el caso de estudio. Por un lado, se consideró que la población en la Región Metropolitana se mantenía constante, despreciando efectos como la natalidad, mortalidad debido a causas naturales y efectos migratorios entre ciudades. Por otro lado, algunos factores relevantes a la transmisión del COVID-19 fueron dejados fuera al utilizar un modelo SEIR, como la existencia de casos sin síntomas o con síntomas leves, que pueden o no ser reportados y que también transmiten el virus \cite{Li2020c}\cite{Byambasuren2020}\cite{Gao2021}. El supuesto de que todas las clases socioeconómicas tienen la misma tasa de incubación y recuperación es un factor que debe ser considerado, especialmente al tener en cuenta el estudio de sensibilidad presentado en \ref{subsec:sensigamma}.
 
-La movilidad... los casos no reportados
+%La movilidad... los casos no reportados
 
 El uso del filtro de Kalman tiene, desde luego, limitaciones; teóricamente solo puede justificarse en el caso lineal, y el uso del filtro extendido lleva a errores numéricos que podrían mitigarse usando un filtro más apto para tratar con no linealidades, como el filtro \textit{unscented}. El estudio del caso sintético muestra también que el filtro tiene dificultades para estimar los valores sanitarios al comienzo de la pandemia, cuando hay muy pocos casos, por lo que los resultados en la fase inicial son poco confiables. Los estudios de sensibilidad mostraron además las diferencias en las estimaciones, dependiendo de los valores de varianzas elegidas como parámetros del filtro.
 

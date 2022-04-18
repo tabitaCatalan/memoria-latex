@@ -23,41 +23,49 @@
 % Esto ya lo discutí al inicio 
 
 
+En esta sección se tomarán decisiones específicas concernientes a la aplicación de la metodología al caso de estudio. Esto permite decidir el modelo específico a utilizar, lo que incluye la elección de compartimientos a utilizar (susceptibles, expuestos, infectados, etc), parámetros, además de las clases y ambientes. Todo esto debe considerar las características del COVID-19 y también los datos disponibles. 
 
-Se ha expuesto previamente en \ref{modelo-clases-vs-ambientes} el modelo de dispersión virtual presentado por \cite{Bichara2015}. Ahora se discute las particularidades del modelo a usar en este caso específico. Es necesario definir los compartimientos y parámetros específicos a usar, considerando la enfermedad a modelar, en este caso el COVID-19.
+Ya se ha expuesto previamente en \ref{modelo-clases-vs-ambientes} el modelo de dispersión virtual presentado por \cite{Bichara2015}, el cual permite trabajar simultáneamente con clases y ambientes. Ahora se discute las particularidades del modelo a usar en este caso específico. Es necesario definir los compartimientos y parámetros específicos a usar, considerando la enfermedad a modelar, en este caso el COVID-19.
 %A continuación se expone el modelo de dispersión virtual con ambientes de \cite{Bichara2015}. Está basado en un modelo de tipo SIS (\textbf{S}usceptibles, \textbf{I}nfectados). 
 
 % acerca de los compartimientos a usar 
 
-Dependiendo del aspecto de interés, distintos compartimentos han sido usados para modelar el COVID-19. Los modelos revisados por \cite{Xiang2021} utilizan los clásicos \textbf{S}usceptibles, \textbf{I}nfectados, \textbf{R}ecuperados, en combinación con \textbf{E}xpuestos, \textbf{H}ospitalizados, Fallecidos (\textit{\textbf{D}ead}). La existencia de casos asintomáticos que portan el virus y pueden contagiarlo pero no presentan síntomas (o presentan síntomas muy leves), que contribuye a la existencia de casos no reportados, es considerado en algunos modelos. Algunos consideran compartimientos En Cuarentena (\textit{\textbf{Q}uarantined}), y el desarrollo de vacunas da lugar a modelos con \textbf{V}acunados.
+Dependiendo del aspecto de interés, distintos compartimentos han sido usados para modelar el COVID-19. Los modelos revisados por la revisión \cite{Xiang2021} utilizan los clásicos Susceptibles, Infectados, Recuperados, en combinación con Expuestos, Hospitalizados y/o Fallecidos. La existencia de casos asintomáticos que portan el virus y pueden contagiarlo pero no presentan síntomas (o presentan síntomas muy leves) es considerado en algunos modelos. Algunos consideran compartimientos En Cuarentena y el desarrollo de vacunas da lugar a modelos con compartimientos de Vacunados.
 
-Se decide trabajar con el ampliamente utilizado \cite{} modelo \textbf{SEIR}. Ya ha sido utilizado para estudiar el impacto de las cuarentenas, los cambios de comportamiento y el uso de mascarillas \cite{}, por lo que parece una elección razonable. 
+Como se exponía inicialmente, se buscaba un modelo epidemiológico que considere un riesgo en tres factores: amenaza, exposición y vulnerabilidad. Suponiendo que hay varias clases \(i \in 1 \dots n\) y ambientes \(j \in 1 \dots m\), la idea propuesta de amenaza era de la forma \(\beta_j I_j/N_j\), que incluía la fracción de infectados en un lugar y un factor \(\beta_j\) dependiente de las características del lugar. Se consideraban además valores \(p_{ij}\), que representaban la fracción de tiempo que la clase \(i\) pasaba en el ambiente \(j\), y un factor sanitario \(\alpha_i\) dependiente de la clase \(i\) y relacionado a las medidas de cuidado personal y la susceptibilidad al contagio. Al combinar lo anterior se obtenía la expresión \ref{eq:idea-1}, que da una idea de la tasa de contagios de la clase \(i\) buscada.
 
-Ahora bien, \cite{Mena2021} menciona que al trabajar con niveles socioeconómicos, la cantidad de fallecidos es muchos más confiable que la de casos detectados (debido a problemas de trazabilidad en las comunas de menores recursos), especialmente al inicio de la pandemia. El problema es que la tasa de fallecimiento (o la fracción de fallecidos) es probablemente variable en tiempo, dependiente de las distintas políticas usadas para enfrentar la pandemia. No solo eso, bien podría ser también dependiente del nivel socioeconómico \cite{} (surgiendo la necesidad de estimar \(n\) valores en lugar de \(1\). 
+\begin{equation}\label{eq:idea-1}
+\alpha_i \sum_{j = 1}^m \beta_j p_{ij} \frac{I_j}{N_j}
+\end{equation}
 
-% Hay un estudio que calcula Impact of universal masking. 
+Para hacer de esta idea algo concreto, se vuelve al apartado \ref{modelo-clases-vs-ambientes}, donde se habló del modelo de clases y ambientes propuesto por \cite{Bichara2015}\cite{Bichara2018}. Como antess, se separa a la población en \(n\) clases, las cuales interactúan en \(m\) ambientes o áreas de riesgo. \(N_i(t), i = 1, \dots, n\) corresponde a la población de la clase \(i\). Se supone que la población de la clase \(i\) pasa una proporción \(p_{ij} \in [0,1]\) de su tiempo en el ambiente \(j\), con \(\sum_{j = 1}^{m} p_{ij} = 1\) para cada \(i\). Para casos extremos, por ejemplo, podría darse que \(p_{ij} = 0\), es decir, la clase \(i\) no gasta nada de su tiempo en el ambiente \(j\), mientras que \(p_{ij} = 1\) significa que la clase \(i\) pasa todo su tiempo en el ambiente \(j\). La matriz \(P = \{p_{ij}\}_{i = 1\dots n,j \dots m}\) es llamada matriz de tiempos de residencia. Esta matriz será estimada a partir de los datos disponibles. Más aún, se busca una matriz que sea variable en tiempo, de tal forma que refleje los cambios en el comportamiento de la población a lo largo de la pandemia.
 
 
-Se decidió despreciar los efectos demográficos de los nacimientos y fallecimientos naturales de la población. Eso se traduce en tasas de natalidad y mortalidad \(b_i, d_i\) igualeds a 0. [Justificación]. 
+Se decide trabajar con el ampliamente utilizado modelo SEIR; ya ha sido utilizado para estudiar el impacto de las cuarentenas y reducciones de movilidad y viajes \cite{Lai2020}\cite{Chinazzi2020}, demás del uso de mascarillas \cite{Kai2020}, por lo que parece una elección razonable. Las ecuaciones del modelo elegido son \ref{eq:modelo-final}. Se decidió despreciar los efectos demográficos de los nacimientos y fallecimientos naturales de la población. Eso se traduce en tasas de natalidad y mortalidad \(b_i, d_i\) iguales a 0. Esto debido a que no se trabajará a largo plazo, solo con un intervalo de tiempo de poco más de un año.
 
-Suponemos que la población de la clase \(i\) pasa una proporción \(r_{ij} \in [0,1]\) de su tiempo en el ambiente \(j\), con \(\sum_{j = 1}^{n} r_{ij} = 1\) para cada \(i\). Para casos extremos, por ejemplo, podría darse que \(r_{ij} = 0\), es decir, la clase \(i\) no gasta nada de su tiempo en el ambiente \(j\), mientras que \(r_{ij} = 1\) significa que la clase \(i\) pasa todo su tiempo en el ambiente \(j\). La matriz \(\mathbf{R} = \{r_{ij}\}_{i = 1\dots n,j \dots m}\) es llamada \textbf{matriz de tiempos de residencia}.
-
-Esta matriz será estimada previamente a partir de los datos disponibles. Más aún, se busca una matriz que sea variable en tiempo, de tal forma que refleje los cambios en el comportamiento de la población a lo largo de la pandemia.
-
-Cada ambiente \(j\) tendrá asociado un riesgo \(\beta_j\). Se impone que el riesgo en el ambiente \texttt{hogar} es \(\beta_{\text{hogar}} = 1\). Todos los demás riesgos deben fijarse relativos a ese valor. Se decide incorporar un factor sanitario \(\alpha_i\), dependiente de la clase, el que se interpreta como un indicador del nivel de respeto por las medidas sanitarias (lavado de manos, uso de mascarillas, guardar la distancia, etc) de la clase \(i\)-ésima. Se supone que los efectos de la movilidad están completamente incluídos en la matriz de tiempos de residencia, por lo que este factor solo considera medidas de cuidado. Se supone además que es variable en el tiempo. 
-
-Las ecuaciones del modelo elegido son \ref{eq:modelo-final}. La forma de estimar la matriz de tiempos de residencia se expondrá en la sección \ref{met:matriz}, y la estimación de los parámetros y el factor sanitario en \ref{met:estimacion}.
+La matriz de tiempos de residencia \(P(t) = \{p_{ij}(t)\}_{i,j}\) será una variable en el tiempo, la forma de estimarla se expondrá en la sección \ref{met:matriz}. Esto se hará de antemano, antes de correr el modelo, por lo que se considera conocida. Se usará la información conocida acerca del COVID-19 para los valores \(\gamma_{Ei}, \gamma_{Ii}\) y los riesgos específicos de cada ambiente \(\beta_j\) se elegirán antes usando valores plausibles. La estimación del factor sanitario \(\alpha_i(t)\) se presentará en \ref{met:estimacion}.
 
 \begin{equation}\label{eq:modelo-final}
 \begin{aligned}
 %S_i(t)' &= -S_i(t) {\color{Red} \lambda_i(\vec{x}, t) } \\
-S_i'(t) &= - \lambda_i(\vec{x}, t) S_i(t) \\
-E_i'(t) &= \lambda_i(\vec{x}, t) S_i(t)  - \gamma_E E_i(t) \\ 
-I_i'(t) &= \gamma_E E_i(t)  - \gamma_I I_i(t) \\ 
-R_i'(t) &= \gamma_I I_i(t) \\
-\lambda_i(\vec{x}, t) &= \alpha_i(t)\sum_{j=1}^m \beta_{j}r_{ij}(t)\left(\frac{\sum_{k=1}^{n}r_{kj}(t) I_k}{\sum_{k=1}^{n}r_{kj}(t)N_k}\right)
+S_i'(t) &= - \lambda_i(\vec{x}, t)\\
+E_i'(t) &= \lambda_i(\vec{x}, t) S_i(t)  - \gamma_{Ei} E_i(t) \\ 
+I_i'(t) &= \gamma_{Ei} E_i(t)  - \gamma_{Ii} I_i(t) \\ 
+R_i'(t) &= \gamma_{Ii} I_i(t) \\
+\lambda_i(\vec{x}, t) &= \alpha_i(t)\sum_{j=1}^m \beta_{j}p_{ij}(t) S_i(t) \left(\frac{\sum_{k=1}^{n}p_{kj}(t) I_k}{\sum_{k=1}^{n}p_{kj}(t)N_k}\right)
 \end{aligned}
 \end{equation}
+
+Con respecto a los compartimientos elegidos, se decidió no utilizar uno de Fallecidos. Ahora bien, \cite{Mena2021} menciona que al trabajar con niveles socioeconómicos, la cantidad de fallecidos es muchos más confiable que la de casos infectados detectados debido a problemas de trazabilidad en las comunas de menores recursos, especialmente al inicio de la pandemia. El problema es que la tasa de fallecimiento o la fracción de infectados que fallecen es probablemente variable en tiempo, dependiente de las distintas políticas usadas para enfrentar la pandemia. Se decidió mantener la simplicidad del modelo estimando únicamente el factor sanitario. Por motivos similares, la vacunación no fue considerada, sin embargo, se espera que sus efectos se reflejen directamente en el factor sanitario, al hacer a los vacunados menos vulnerables a una posible infección.
+
+
+% Hay un estudio que calcula Impact of universal masking. 
+
+
+
+
+% Cada ambiente \(j\) tendrá asociado un riesgo \(\beta_j\). Se impone que el riesgo en el ambiente \texttt{hogar} es \(\beta_{\text{hogar}} = 1\). Todos los demás riesgos deben fijarse relativos a ese valor. Se decide incorporar un factor sanitario \(\alpha_i\), dependiente de la clase, el que se interpreta como un indicador del nivel de respeto por las medidas sanitarias (lavado de manos, uso de mascarillas, guardar la distancia, etc) de la clase \(i\)-ésima. Se supone que los efectos de la movilidad están completamente incluídos en la matriz de tiempos de residencia, por lo que este factor solo considera medidas de cuidado. Se supone además que es variable en el tiempo. 
+
 
 % \[
 % \lambda_i(\vec{x}, P) = \alpha \sum_{j=1}^m \beta_{j}p^S_{ij}

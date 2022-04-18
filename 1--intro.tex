@@ -42,7 +42,7 @@ Si bien la noción de contactos efectivos es clara para enfermedades de transmis
 
 Puesto que la movilidad y los tiempos de residencia pueden considerarse conocidos, y que los riesgos \(\beta_j\) pueden ser aproximados, se busca estimar la vulnerabilidad. Esta vulnerabilidad al contagio \(\alpha_i\), que en este modelo está desacoplada de la movilidad, la llamaremos de ahora en adelante ``factor sanitario'', puesto que se relaciona con las distintas medidas de distanciamiento social no relacionadas a la movilidad, como lo son el uso de mascarillas, lavado de manos, cumplimiento de la distancia mínima entre personas, entre otras.
 
-Consideraremos que el factor sanitario es variable en el tiempo. Para estimar parámetros, una técnica común es Mínimos Cuadrados o Mínimos Cuadrados Recursivo (RLS) \cite{Sameni2020}\cite{Piccolomini2020}. Una alternativa que permite incorporar más información de la dinámica del sistema es utilizar Filtro de Kalman, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de COVID-19 \cite{Hasan2020}\cite{Song2021}\cite{Sameni2020}.
+Consideraremos que el factor sanitario es variable en el tiempo. Para estimar parámetros, una técnica común es Mínimos Cuadrados o Mínimos Cuadrados Recursivo (RLS) \cite{Sameni2020}\cite{Piccolomini2020}. Una alternativa que permite incorporar más información de la dinámica del sistema es utilizar Filtro de Kalman \cite{Kalman1960}, una técnica ampliamente utilizada en ingeniería \cite{Auger2013}, y que también se ha usado en algunos modelos de COVID-19 \cite{Hasan2020}\cite{Song2021}\cite{Sameni2020}.
 
 \begin{figure}[h]
 \centering
@@ -107,7 +107,7 @@ Definir la metodología requiere plantear el modelo lagrangiano, haciéndole los
 
 \section*{Metodología}
 
-Para cumplir los objetivos antes expuestos se lleva a cabo la siguiente metodología, la cual se divide en varias etapas. En primer lugar, es necesario explorar las distintas fuentes de datos disponibles, tanto de movilidad y viajes como las series de tiempo epidemiológicas, como cantidad de casos registrados, fallecidos, etc. Esto permite decidir el modelo específico a utilizar, lo que debe considerar las características del COVID-19 para elegir los compartimientos a utilizar (susceptibles, expuestos, infectados, etc), y también los datos disponibles para elegir clases y ambientes.
+Para cumplir los objetivos antes expuestos se lleva a cabo la siguiente metodología, la cual se divide en varias etapas. En primer lugar, es necesario explorar las distintas fuentes de datos disponibles, tanto de movilidad y viajes como las series de tiempo epidemiológicas, como cantidad de casos registrados, fallecidos, etc. Esto permite decidir el modelo específico a utilizar, lo que incluye la elección de compartimientos a utilizar (susceptibles, expuestos, infectados, etc), parámetros, además de las clases y ambientes. Todo esto debe considerar las características del COVID-19 y también los datos disponibles. 
 
 Una vez decididas las clases y ambientes, es necesario estimar una matriz de tiempos de residencia, que diga cuánto tiempo pasa cada clase en cada lugar. Se desea que esta matriz sea variable en el tiempo, de forma que incorpore cambios en la movilidad causados por las medidas de mitigación, como cuarentenas, teletrabajo, etc.
 
