@@ -172,7 +172,7 @@ Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta mat
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.99\textwidth]{img/resultados/mob-reduction.pdf}
-\caption{Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal.}
+\caption[Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal.]{Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal. Se considera la semana 0 como la correspondiente a 02/mar/2020 - 06/mar/2020.}
 \label{img:mov-pandemia}
 \end{figure}
 
@@ -184,9 +184,6 @@ Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta mat
 \end{figure}
 
 
-
-
-% \ctikzfig{sir}
 \begin{figure}[!h]
 \centering
 \begin{tikzpicture}
@@ -196,16 +193,18 @@ Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta mat
 		\node [style=none] (52) at (6, -0.5) {Prioridad Alta};
 		\node [style=none] (53) at (2, 0) {};
 		\node [style=none] (54) at (4, 0) {};
-		\node [style=none] (55) at (3, -0.5) {Prioridad Media Alta};
+		\node [style=none] (55) at (3, -0.5) {Prioridad};
 		\node [style=none] (56) at (-1, 0) {};
 		\node [style=none] (57) at (1, 0) {};
-		\node [style=none] (58) at (0, -0.5) {Prioridad Media Baja};
+		\node [style=none] (58) at (0, -0.5) {Prioridad};
 		\node [style=none] (59) at (-4, 0) {};
 		\node [style=none] (60) at (-2, 0) {};
 		\node [style=none] (61) at (-3, -0.5) {Prioridad Baja};
 		\node [style=none] (62) at (-7, 0) {};
 		\node [style=none] (63) at (-5, 0) {};
 		\node [style=none] (64) at (-6, -0.5) {Sin Prioridad};
+		\node [style=none] (65) at (0, -1) {Media Baja};
+		\node [style=none] (66) at (3, -1) {Media Alta};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw [style=class5] (50.center) to (51.center);
