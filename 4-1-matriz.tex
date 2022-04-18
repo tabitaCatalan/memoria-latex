@@ -1,33 +1,34 @@
 \section{Matriz de tiempos de residencia} \label{res:matriz}
 
-En esta sección se muestra la matriz de tiempos de residencia que se usará en las simulaciones. En primer lugar se mostrarán los resultados obtenidos a partir del algoritmo \ref{alg:timematrix}, los que permitirán tener una idea del comportamiento de las personas de la ciudad de Santiago en condiciones normales.
+En esta sección se muestran las matrices de tiempos de residencia estimadas para la ciudad de Santiago. La estimación se hizo en dos etapas; en primer lugar se calcula una matriz en condiciones normales, antes de la llegada del virus, lo que se presenta en la subsección \ref{res:matrix-normal}. Preliminarmente se calculó una matriz muy granular, la cual es presentada pues es de interés en si misma. La versión a utilizar, sin embarago, es mucho más simple.
 
-Primero se estudiarán los resultados obtenidos con una lista de ambientes extensiva, que incluye prácticamente todos los propósitos listados por la Encuesta Origen Destino. Con respecto a las clases, se utiliza una clasificación por edad, sexo y nivel dde ingresos. Esto entrega una matriz de 18 clases y 13 ambientes que refleja el comportamiento pre-pandeamia de los santiaguinos.
+En la segunda etapa de la estimación, se utilizan datos de movilidad para modificar la matriz de condiciones normales, a fin de que refleje el comportamiento de la población en pandemia. Esto se presenta en la subsección \ref{res:matrix-pandemia}.
 
-Como se discutió en \ref{met:decisiones}, esta matriz es demasiado granular y no hay datos suficientes para actualizarla con el comportamiento durante la pandemia. Por tanto, en segundo lugar se mostrará la matriz definitiva a utilizar en las simulaciones, la cual solo tiene 5 clases y 2 ambientes.
+\subsection{Santiago en condiciones normales}\label{res:matrix-normal}
 
-En segundo lugar, se mostrarán los datos de movilidad para los distintos grupos, y la matriz a tiempo variable. Esto nos dará una idea del comportamiento a lo largo de la pandemia. 
+Originalmente se deseaba trabajar con una mayor cantidad de clases y ambientes. La idea era utilizar una clasificación por sexo, edad e ingresos familiares, e incluir una lista bastante extensa de ambientes; prácticamente todos los propósitos incluidos en la Encuesta Origen-Destino. Es por esto que se calculó una matriz granular de tiempos de residencia en condiciones normales, mediante el algoritmo \ref{alg:timematrix}. Los resultados son presentados en \ref{res:matrix-normal-detallada}.
 
-\subsection{Santiago en condiciones normales}
+Esta matriz, sin embargo, es demasiado detallada. Como se discutió en \ref{subsec:eleccion-clases-ambientes}, no se cuenta con los datos necesarios para actualizarla sin hacer una gran cantidad de supuestos, por lo que solamente se utilizarán \(n = 5\) clases y \(m = 2\) ambientes, hogar y exterior. Los resultados se muestran en \ref{res:matrix-normal-simulaciones}.
 
 % El código para esta sección esta en el github...
-El código para esta sección se encuentra en el repositorio de GitHub \textit{tabitaCatalan/lagrangian-time}, específicamente en el directorio \texttt{src/time\_residence\_matrix/}.\\
+El código en Matlab para esta sección se encuentra disponible en el repositorio de GitHub \url{https://github.com/tabitaCatalan/lagrangian-time}, más específicamente en el directorio \texttt{src/time\_residence\_matrix/}.
 
+\subsubsection*{Matriz detallada}\label{res:matrix-normal-detallada}
+% \noindent \textbf{Matriz detallada}\\
 
-\noindent \textbf{Matriz detallada}\\
 % Elección de clases y ambientes, lista de ambientes disponibles en la EOD, cómo se eligieron las clases, etc. Esto debería estar docuementado en el repo. 
 % \ref{alg:timematrix} 
-Para evaluar los resultados del algoritmo, se aplica a la Encuesta Origen Destino Santiago 2012, ya descrita en \ref{}. Las clases son elegidas combinando los tres criterios de la tabla \ref{table:clases-full}. El nivel socioeconómico es calculado en base a los datos de ingreso de cada persona provistos por la encuesta, agrupando a nivel de hogar y dividiendo por la cantidad de habitantes del hogar. Los ingresos de corte son elegidos de tal forma que cada tramo socioeconómico tiene unas \(20\,000\) personas.
+Se aplica el algoritmo \ref{alg:timematrix} a la Encuesta Origen-Destino Santiago 2012, ya descrita en \ref{sec:eod}. Las clases son elegidas combinando los tres criterios de la tabla \ref{table:clases-full}; tres niveles de edad, sexo y tres niveles socioeconómicos dan lugar a 18 clases. El nivel socioeconómico es calculado en base a los datos de ingreso de cada persona provistos por la encuesta, agrupando a nivel de hogar y dividiendo por la cantidad de habitantes del hogar. Los ingresos de corte son elegidos de tal forma que cada tramo socioeconómico tiene unas \(20\,000\) personas.
 
 \begin{table}[h!]
 \centering
 \begin{tabular}{||r|c||c||r|c||} 
  \hline
- \multicolumn{2}{||c||}{Edad (años)} & Sexo      & \multicolumn{2}{c||}{\begin{tabular}{@{}c@{}}Nivel Socioeconómico \\ (ingreso per cápita)\end{tabular}} \\
+ \multicolumn{2}{||c||}{\textbf{Edad (años)}} & \textbf{Sexo}      & \multicolumn{2}{c||}{\begin{tabular}{@{}c@{}}\textbf{Nivel Socioeconómico} \\ \textbf{(ingreso per cápita)}\end{tabular}} \\
  \hline
- \textbf{Joven} & 0-24   & Hombre    & \textbf{Bajo}&\(\leq\) \$\(111\,666\)\\
- \textbf{Adulto} & 25-64 & Mujer     & \textbf{Medio}& \$ \(111\,667\) - \$ \(199\,999 \)\\
- \textbf{Mayor} & 65 o más &         & \textbf{Alto}&\(\geq\) \$ \(200\,000\)\\
+ Joven & 0-24   & Hombre    & Bajo&\(\leq\) \$\(111\,666\)\\
+ Adulto & 25-64 & Mujer     & Medio& \$ \(111\,667\) - \$ \(199\,999 \)\\
+ Mayor & 65 o más &         & Alto&\(\geq\) \$ \(200\,000\)\\
  \hline
 \end{tabular}
 \caption{Criterios usados para obtener las clases de la matriz detallada a partir de la EOD2012 Santiago.}
@@ -71,7 +72,7 @@ Los ambientes utilizados están basados en la lista de propósitos de viajes y l
 \centering
 \begin{tabular}{||l|c||} 
  \hline
- \multicolumn{2}{||c||}{Propósito de viaje} \\
+ \multicolumn{2}{||c||}{\textbf{Propósito de viaje}} \\
  \hline
 1. Al trabajo               & \texttt{trabajo}      \\
 2. Por trabajo              & \texttt{trabajo}      \\
@@ -97,7 +98,7 @@ Los ambientes utilizados están basados en la lista de propósitos de viajes y l
 \centering
 \begin{tabular}{||l|c||} 
  \hline
- \multicolumn{2}{||c||}{Modo de transporte} \\
+ \multicolumn{2}{||c||}{\textbf{Modo de transporte}} \\
  \hline
  1:Auto                        & \texttt{auto}\\
  2:Bus TS                      & \texttt{transporte público}\\
@@ -123,13 +124,13 @@ Los ambientes utilizados están basados en la lista de propósitos de viajes y l
 \label{table:ambientes-modo-full}
 \end{table}
 
-La matriz obtenida \ref{img:Pmatrix-full} refleja el comportamiento esperado de la población de Santiago. Como era de esperarse, se pasa la mayor parte del tiempo en el hogar (de hecho, se redujo el tiempo en el hogar en 7 horas de tiempo de sueño). 
+La matriz obtenida se presenta en la figura \ref{img:Pmatrix-full}. Como era de esperarse, todas las clases pasan la mayor parte de su tiempo en el hogar, de hecho, se redujo el tiempo en el hogar en 7 horas, asociadas al de tiempo de sueño, y se volvió a normalizar la matriz por filas, de forma que las proporciones de tiempo por clase siguieran sumando 1.
 
-Algunas observaciones: los adultos pasan una cantidad considerable de tiempo en el trabajo, en especial los hombres. Los jóvenes pasan mucho tiempo en el ambiente estudios, especialmente los de clase alta; los jóvenes con menos ingresos pasan más tiempo en el trabajo. Los adultos mayores pasan mucho más tiempo en el hogar, pero los hombres pasan una cantidad importante de tiempo en el trabajo. 
+De esta matriz pueden hacerse algunas observaciones. Los adultos pasan una cantidad considerable de tiempo en el trabajo, en especial los hombres. Los jóvenes pasan mucho tiempo en el ambiente estudios, especialmente los de clase alta; los jóvenes con menos ingresos pasan más tiempo en el trabajo. Los adultos mayores pasan mucho más tiempo en el hogar, pero los hombres pasan una cantidad importante de tiempo en el trabajo. 
 
-El nivel socioeconómico medio pasa menos tiempo de compras y de visita que los demás. El auto es bastante más utilizado por la clase alta y por los adultos hombres de clase media. Los adultos mayores pasan más tiempo en el ambiente salud, especialmente los de clase baja.
+El nivel socioeconómico medio pasa menos tiempo de compras y de visita que los demás. Los adultos mayores son quienes pasan más tiempo en el ambiente salud, especialmente los de clase baja. El auto es bastante más utilizado por la clase alta y por los adultos hombres de clase media, mientras que el transporte público es más predominante en adultos de la clase media y baja.
 
-En general los resultados son los esperados para una ciudad con una segregación importante como lo es Santiago. Es posible que en la última década se hayan reducido las diferencias de género, pero eso queda fuera del alcance de este trabajo.
+En general los resultados son los esperados para una ciudad con una segregación importante como lo es Santiago. Es posible que en la última década se haya reducido la brecha de género, pero eso queda fuera del alcance de este trabajo.
 
 
 \begin{figure}[!h]
@@ -139,8 +140,30 @@ En general los resultados son los esperados para una ciudad con una segregación
 \label{img:Pmatrix-full}
 \end{figure}
 
+\subsubsection*{Matriz para las simulaciones}\label{res:matrix-normal-simulaciones}
+%\noindent \textbf{Matriz para las simulaciones}
 
-\noindent \textbf{Matriz para las simulaciones}
+La aplicación del algoritmo tomando en consideración las decisiones tomadas en la sección \ref{subsec:eleccion-clases-ambientes}, específicamente la elección de 5 clases agrupadas por IPS como se detalla en la tabla \ref{table:ips-categ}, y del uso de los ambientes \texttt{hogar} y \texttt{exterior} da lugar a una matriz de tiempos de residencia mucho más sencilla, presentada en la tabla \ref{table:matrix-simulaciones}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c | c c ||} 
+ \hline
+ \textbf{Clase} & \textbf{Prioridad Social} &  \(P^0_{:,\text{hogar}}\) & \(P^0_{:,\text{exterior}}\)\\[1ex] 
+ \hline
+ 1 & Sin Prioridad  & 0.73  & 0.27 \\ 
+ 2 & Baja           & 0.76  & 0.24 \\
+ 3 & Media Baja     & 0.77  & 0.23 \\
+ 4 & Media Alta     & 0.77  & 0.23 \\
+ 5 & Alta           & 0.77  & 0.23 \\ 
+ \hline
+\end{tabular}
+\caption[Matriz de tiempos de residencia para las simulaciones.]{Matriz de tiempos de residencia para las simulaciones. La clase sin prioridad corresponde a la más acomodada y la clase con prioridad alta a la más vulnerable.}
+\label{table:matrix-simulaciones}
+\end{table}
+
+\subsection{Santiago a lo largo del tiempo} \label{res:matrix-pandemia}
+
+Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta matriz a fin de obtener \(P(t)\) que refleje el comportamiento de la población en pandemia.. Estas modificaciones se hacen utilizando los datos de movilidad, siguiendo la metodología presentada en \ref{subsec:variaciones}.
 
 
-\subsection{Santiago a lo largo del tiempo}
