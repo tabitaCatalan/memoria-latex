@@ -268,13 +268,14 @@ S_{n,k} + E_{n,k} + I_{n,k} + R_{n,k}
 \subsection{Estimación de parámetros fijos}\label{met-subsec:fijos}
 
 
-Hasta ahora se ha supuesto que \(\gamma_E, \gamma_I\) y \(\beta_1, \dots, \beta_m\) son valores fijos y conocidos. Esto, en la práctica, no es así. Puesto que se trabajará solamente con \(m= 2\) (\texttt{hogar} y \texttt{exterior}), y ya se mencionó en la sección \ref{met:decisiones} que se fijaría el valor de \(\beta_{\text{hogar}} = 1\), basta con dar un valor a \(\beta_{\text{exterior}}\). Lo esperado es que estar en el exterior sea más riesgoso que en el hogar, así que tiene sentido considerar \(\beta_{\text{exterior}} > \beta_{\text{hogar}}\). 
+Hasta ahora se ha supuesto que \(\gamma_E, \gamma_I\) y \(\beta_1, \dots, \beta_m\) son valores fijos y conocidos. Los valores \(\gamma_E\) y \(\gamma_I\) pueden ser estimados a partir de la literatura, pero no es tan claro cómo estimar los riesgos específicos por ambiente. Puesto que se trabajará solamente con \(m= 2\) (\texttt{hogar} y \texttt{exterior}), se fijará el valor de \(\beta_{\text{hogar}} = 1\), por lo que basta con dar un valor a \(\beta_{\text{exterior}}\). Lo esperado es que estar en el exterior sea más riesgoso que en el hogar, así que tiene sentido considerar \(\beta_{\text{exterior}} > \beta_{\text{hogar}}\). 
 
 Para darle un valor a este parámetro, se considerará la expresión \ref{eq:contribuciones-j}, que corresponde a la contribución \(j\)-ésima a \(\lambda_i\), dado por la ecuación \ref{eq:full-lambda}. Se buscarán valores en concordancia con \cite{Ferguson2020}\cite{Mossong2008}, quienes afirman que 1/3 de los contagios ocurren en el hogar. La sensibilidad a este parámetro se estudia en \ref{subsec:sensibeta}.
 
 \begin{equation}\label{eq:contribuciones-j}
  p_{ij} \frac{\sum_{k = 1}^n I_{k} p_{kj}}{\sum_{k = 1}^n N_{k} p_{kj}}
 \end{equation}
+
 
 
 
