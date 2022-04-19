@@ -174,20 +174,15 @@ Como se ve en la figura \ref{synth-alpha-comp-high}, es posible estimar el facto
 \caption[Sensibilidad ante riesgo exterior y condición inicial del factor sanitario.]{Sensibilidad ante riesgo exterior y condición inicial del factor sanitario. Cada color representa un condición inicial diferente usada en la estimación, mientras que la opacidad de la solución representa la distancia de \(\beta_{\text{exterior}}\) al valor real; a mayor transparencia, más lejano.} \label{fig:legend-sensi-b}
 \end{figure}
 
-Los riesgos \(\beta \), las tasas \(\gamma_E\) y \(\gamma_I\), así como las condiciones iniciales, serán valores desconocidos en la práctica. Esta sección estudia el efecto de estos valores en la solución estimada. 
+Los riesgos \(\beta \) y las condiciones iniciales serán valores desconocidos en la práctica. Esta sección estudia el efecto de estos valores en la solución estimada. Utilizando el caso sintético ya presentado, se estudia el efecto del valor \(\beta_{\text{exterior}}\) y de las condiciones iniciales para factor sanitario \(\alpha\) en los resultados. Los datos de casos acumulados observados fueron generados con un control conocido (línea verde) y parámetros \(\gamma_E = 1/5.1 [\text{días}]^{-1}\), \(\gamma_I = 1/7.2 [\text{días}]^{-1}\) y \(\beta_{\text{exterior}} = 1.88\).
 
 % gamma_e_real = 1/5.1; gamma_i_real = 1/7.2; beta_exterior_real = 1.88; 
-Utilizando el caso sintético ya presentado, se estudia el efecto del valor \(\beta_{\text{exterior}}\) y de las condiciones iniciales para factor sanitario \(\alpha\) en los resultados. Los datos de casos acumulados observados fueron generados con un control conocido (línea verde) y parámetros \(\gamma_E = 1/5.1 [\text{días}]^{-1}\), \(\gamma_I = 1/7.2 [\text{días}]^{-1}\) y \(\beta_{\text{exterior}} = 1.88\).
 
 Para distintos valores de \(\beta_{\text{exterior}}\) y distintas condiciones iniciales para el factor sanitario, se estima el factor sanitario suavizado a lo largo del tiempo y se compara con el valor de control usado para generar los datos. Los resultados pueden verse en la figura \ref{fig:legend-sensi-b}. Se estudian dos casos; uno con tasas de incubación \(\gamma_E\) y de remoción \(\gamma_I\) son conocidos (figuras \ref{fig:legend-sensi-b-class1-gamma_real} y \ref{fig:legend-sensi-b-class2-gamma_real}) y otro donde se utilizan valores pausibles para ambos parámetros (figuras \ref{fig:legend-sensi-b-class1-gamma_estimado} y \ref{fig:legend-sensi-b-class2-gamma_estimado}).
 
-Se observa que tras una cierta cantidad de tiempo (\(t \geq 50\) la condición inicial es irrelevante y todas las soluciones dadas por un mismo \(\beta_{\text{exterior}}\) siguen la misma trayectoria. Al comenzar en una condición inicial demasiado baja, como \(\alpha_0 = 0.15\), se observa una tendencia a sobrecorregir el error antes de llegar a la trayectoria común. 
+Se observa que tras una cierta cantidad de tiempo (\(t \geq 50\) la condición inicial es irrelevante y todas las soluciones dadas por un mismo \(\beta_{\text{exterior}}\) siguen la misma trayectoria. Al comenzar en una condición inicial demasiado baja, como \(\alpha_0 = 0.15\), se observa una tendencia a sobrecorregir el error antes de llegar a la trayectoria común. Para \(t \geq 200\), la estimación es menos exacta. Esto ya era visible en la figura \ref{synth-alpha-comp-high}, y probablemente se debe al hecho de que en este caso particular, para ese tiempo \(S_i(t) \approx 0\), así que la solución ya no es sensible al parámetro \(\alpha_i\).
 
-Para \(t \geq 200\), la estimación es menos exacta. Esto ya era visible en la figura \ref{synth-alpha-comp-high}, y probablemente se debe al hecho de que en este caso particular, para ese tiempo \(S_i(t) \approx 0\), así que la solución ya no es sensible al parámetro \(\alpha_i\).
-
-Cuando los parámetros \(\gamma_E\) y \(\gamma_I\) son conocidos, la estimación del factor sanitario es más certera al usar un valor \(\beta_{\text{exterior}}\) más cercano al real. Esto se observa en la figuras \ref{fig:legend-sensi-b-class1-gamma_real} y \ref{fig:legend-sensi-b-class2-gamma_real}, donde las estimaciones más oscuras están justo en la línea verde que marca el factor sanitario de control usado para generar los datos.
-
-En el caso en que los parámetros \(\gamma_E\) y \(\gamma_I\) son desconocidos y solo se usan valores pausibles, la estimación es menos exacata; el factor sanitario (para este caso particular) es subestimado al usar \(\beta_{\text{exterior}} = 1.8\), el más cercano al real (\(1.88\)) de entre los utilizados. Esto se observa en la figuras \ref{fig:legend-sensi-b-class1-gamma_estimado} y \ref{fig:legend-sensi-b-class2-gamma_estimado}, donde las estimaciones más oscuras están por debajo de la línea verde del factor sanitario de control.
+Cuando los parámetros \(\gamma_E\) y \(\gamma_I\) son conocidos, la estimación del factor sanitario es más certera al usar un valor \(\beta_{\text{exterior}}\) más cercano al real. Esto se observa en la figuras \ref{fig:legend-sensi-b-class1-gamma_real} y \ref{fig:legend-sensi-b-class2-gamma_real}, donde las estimaciones más oscuras están justo en la línea verde que marca el factor sanitario de control usado para generar los datos. En el caso en que los parámetros \(\gamma_E\) y \(\gamma_I\) son desconocidos y solo se usan valores pausibles, la estimación es menos exacata; el factor sanitario (para este caso particular) es subestimado al usar \(\beta_{\text{exterior}} = 1.8\), el más cercano al real (\(1.88\)) de entre los utilizados. Esto se observa en la figuras \ref{fig:legend-sensi-b-class1-gamma_estimado} y \ref{fig:legend-sensi-b-class2-gamma_estimado}, donde las estimaciones más oscuras están por debajo de la línea verde del factor sanitario de control.
 
 %gamma_e_real = 1/5.1; gamma_i_real = 1/7.2; beta_exterior_real = 1.88; 
 
@@ -247,30 +242,29 @@ En el caso en que los parámetros \(\gamma_E\) y \(\gamma_I\) son desconocidos y
 \hfill
 \begin{subfigure}[b]{0.75\textwidth}
  \centering
-\scalebox{0.7}{
+\scalebox{0.6}{
 \begin{tikzpicture}
 	\begin{pgfonlayer}{nodelayer}
-		\node [style=none] (0) at (-0.5, 1.25) {};
-		\node [style=none] (1) at (1, 1.25) {};
-		\node [style=none] (2) at (-0.5, 0.75) {};
-		\node [style=none] (3) at (1, 0.75) {};
-		\node [style=none] (4) at (-0.5, 0.25) {};
-		\node [style=none] (5) at (1, 0.25) {};
-		\node [style=none] (6) at (-0.5, -0.25) {};
-		\node [style=none] (7) at (1, -0.25) {};
-		\node [style=none] (8) at (1.5, 1.25) {$0.15$};
-		\node [style=none] (9) at (1.5, 0.75) {};
-		\node [style=none] (10) at (1.5, 0.75) {};
-		\node [style=none] (11) at (1.5, 0.75) {$0.25$};
-		\node [style=none] (12) at (1.5, 0.25) {};
-		\node [style=none] (13) at (1.5, 0.25) {$0.35$};
-		\node [style=none] (15) at (1.5, -0.25) {$0.45$};
+		\node [style=none] (0) at (-2.5, 1.25) {};
+		\node [style=none] (1) at (-1, 1.25) {};
+		\node [style=none] (2) at (-2.5, 0.75) {};
+		\node [style=none] (3) at (-1, 0.75) {};
+		\node [style=none] (4) at (1.5, 1.25) {};
+		\node [style=none] (5) at (3, 1.25) {};
+		\node [style=none] (6) at (1.5, 0.75) {};
+		\node [style=none] (7) at (3, 0.75) {};
+		\node [style=none] (8) at (-0.5, 1.25) {$0.15$};
+		\node [style=none] (9) at (-0.5, 0.75) {};
+		\node [style=none] (10) at (-0.5, 0.75) {};
+		\node [style=none] (11) at (-0.5, 0.75) {$0.25$};
+		\node [style=none] (12) at (3.5, 1.25) {};
+		\node [style=none] (13) at (3.5, 1.25) {$0.35$};
+		\node [style=none] (15) at (3.5, 0.75) {$0.45$};
 		\node [style=none] (17) at (0.5, 1.75) {Condición inicial $\alpha_0$};
-		\node [style=none] (21) at (6.5, 1) {};
-		\node [style=none] (22) at (5.5, 0.5) {};
-		\node [style=none] (23) at (7, 0.5) {};
-		\node [style=none] (24) at (7.5, 0.5) {};
-		\node [style=none] (25) at (7.5, 0.5) {Solución real};
+		\node [style=none] (21) at (6.5, 1.5) {$\beta_{\text{ext}}$ solución real};
+		\node [style=none] (22) at (5.5, 1) {};
+		\node [style=none] (23) at (7, 1) {};
+		\node [style=none] (25) at (8, 1) {$1.88$};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw [style={a0_1}] (0.center) to (1.center);
@@ -285,37 +279,15 @@ En el caso en que los parámetros \(\gamma_E\) y \(\gamma_I\) son desconocidos y
 \caption[Sensibilidad ante la varianza y condición inicial del factor sanitario.]{Sensibilidad ante la varianza y condición inicial del factor sanitario. Cada color representa una condición inicial diferente usada en la estimación.} \label{fig:legend-sensi-alphacov}
 \end{figure}
 
-Se recuerda que se hizo la simplificación de que los ruidos en la dinámica son independientes, es decir que el ruido está dado por una matriz normal multivariada con matriz de covarianzas diagonal. Nos interesa por tanto, solo la diagonal de la matriz, las varianzas. Se muestra el efecto en la estimación al usar distintos valores para la matriz de varianzas.
+Se recuerda que se hizo la simplificación de que los ruidos en la dinámica son independientes, es decir que el ruido está dado por una matriz normal multivariada con matriz de covarianzas diagonal. Nos interesa por tanto, solo la diagonal de la matriz, las varianzas. La figura \ref{fig:legend-sensi-alphacov} muestra la estimación del factor sanitario para distintos valores de varianza del ruido en la dinámica. Este valor refleja la certeza que tenemos en la dinámica del estado; si hay mucha, se usa una varianza baja. Si no hay tanta seguridad, se usa una varianza mayor, de tal forma de incorporar la información de los datos.
 
-La figura \ref{fig:legend-sensi-alphacov} muestra la estimación del factor sanitario para distintos valores de varianza del ruido en la dinámica de este. Este valor refleja la certeza que tenemos en la dinámica del estado; si hay mucha, se usa una varianza baja. Si no hay tanta seguridad, se usa una varianza mayor, de tal forma de incorporar la información de los datos. Los gráficos  \ref{fig:legend-sensi-acov-class1--a} y \ref{fig:legend-sensi-acov-class1--b}  muestran lo que ocurre al utilizar una varianza demasiado baja en el estado aumentado; la estimación es muy insensible a los datos, y se queda muy cercana a la condición inicial dada. Tanto en \ref{fig:legend-sensi-acov-class1--c} como en \ref{fig:legend-sensi-acov-class1--d} ya va siendo posible percibir variaciones en el control, pero aún no se ve convergencia desde las distintas condiciones iniciales. Finalmente, los gráficos  \ref{fig:legend-sensi-acov-class1--e} y \ref{fig:legend-sensi-acov-class1--f} tienen suficiente varianza, como se ve en la convergencia de las estimaciones a partir de \(t >=50\) aproximadamente, sin embargo \ref{fig:legend-sensi-acov-class1--f} usa una varianza excesiva, ya que pueden obtenerse resultados similares con una mayor certeza.
+Los gráficos  \ref{fig:legend-sensi-acov-class1--a} y \ref{fig:legend-sensi-acov-class1--b}  muestran lo que ocurre al utilizar una varianza demasiado baja en el estado aumentado; la estimación es muy insensible a los datos, y se queda muy cercana a la condición inicial dada. Tanto en \ref{fig:legend-sensi-acov-class1--c} como en \ref{fig:legend-sensi-acov-class1--d} ya va siendo posible percibir variaciones en el control, pero aún no se ve convergencia desde las distintas condiciones iniciales. Finalmente, los gráficos  \ref{fig:legend-sensi-acov-class1--e} y \ref{fig:legend-sensi-acov-class1--f} tienen suficiente varianza, como se ve en la convergencia de las estimaciones a partir de \(t >=50\) aproximadamente, sin embargo \ref{fig:legend-sensi-acov-class1--f} usa una varianza excesiva, ya que pueden obtenerse resultados similares con una mayor certeza.
 
 
 
 %\subsection{Efecto del \textit{smoother}}\label{subsec:smoother}
 
 \subsection{Modelo con datos reales}\label{subsec:datosreales}
-
-El estudio realizado en las subsecciones anteriores entrega herramientas para trabajar con el caso real.
-
-
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|| m{1cm} m{3cm} m{8cm}||} 
- \hline
- & \textbf{Fecha} & \textbf{Evento} \\
- \hline 
- (1) & 13/may/2020 & Comienzo de la cuarentena total en la RM.\\
- (2) & 28/jul/2020 & Comienza a regir el Plan Paso a Paso.\\
- (3) & 04/ene/2021 & Comienza a funcionar el pase de vacaciones.\\ 
- (4) & 03/feb/2021 & Comienza campaña de vacunación masiva (ver \cite{MINSAL2021}).\\
- (5) & 26/may/2021 &  Un 50\% de la población en la RM tiene la primera dosis de la vacuna. \\
- \hline
-\end{tabular}
-\caption{Algunas fechas relevantes para el desarrollo de la pandemia en Santiago.}
-\label{table:fechas-relevantes}
-\end{table}
-
 
 \begin{figure}[H]
 \centering
@@ -324,7 +296,7 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
 \label{all-nohigh}
 \end{figure}
 
-
+El estudio realizado en las subsecciones anteriores entrega herramientas para trabajar con el caso real. Extrapolando los parámetros del filtro de Kalman utilizados en el caso sintético, es posible obtener estimaciones razonables de los estados a lo largo de la pandemia, como se ve en la figura \ref{all-nohigh}.
 
 \begin{figure}[H]
      \centering
@@ -367,6 +339,9 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
         \label{e-comp-high}
 \end{figure}
 
+Las figuras \ref{e-comp-high} y \ref{s-comp-high} presentan en más detalle las estimaciones para el número de susceptibles e infectados respectivamente. En ambos casos se presentan tanto los valores absolutos como los normalizados con respecto al total de población de la clase. Se observa que la incidencia se encuentra ordenada de acuerdo al nivel socioeconómico; es mayor en las comunas más vulnerables y menor en las más acomodadas.
+
+Se observa que en los meses de invierno de 2021 ocurren dos \textit{peaks} consecutivos. Es interesante notar que la ola de contagios que lleva al segundo \textit{peak} encuentra a la clase 1, la más acomodada, en mucho mejores condiciones que a las demás.
 
 
 \begin{figure}[H]
@@ -410,6 +385,22 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
         \label{s-comp-high}
 \end{figure}
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{|| m{1cm} m{3cm} m{8cm}||} 
+ \hline
+ & \textbf{Fecha} & \textbf{Evento} \\
+ \hline 
+ (1) & 13/may/2020 & Comienzo de la cuarentena total en la RM.\\
+ (2) & 28/jul/2020 & Comienza a regir el Plan Paso a Paso.\\
+ (3) & 04/ene/2021 & Comienza a funcionar el pase de vacaciones.\\ 
+ (4) & 03/feb/2021 & Comienza campaña de vacunación masiva (ver \cite{MINSAL2021}).\\
+ (5) & 26/may/2021 &  Un 50\% de la población en la RM tiene la primera dosis de la vacuna. \\
+ \hline
+\end{tabular}
+\caption{Algunas fechas relevantes para el desarrollo de la pandemia en Santiago.}
+\label{table:fechas-relevantes}
+\end{table}
 
 
 
@@ -454,9 +445,17 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
         \label{alpha-comp-high}
 \end{figure}
 
+
+La tabla \ref{table:fechas-relevantes} muestra una lista de fechas interesantes dentro del desarrollo de la pandemia en Chile. La figura \ref{alpha-comp-high} presenta las estimaciones del factor sanitario para las distintas clases, donde se marcan estas fechas. En general, todas las clases excepto la clase 1, correspondiente a la clase Sin Prioridad o la más acomodada, se comportan de manera muy similar durante todo el período estudiado.
+
+El factor sanitario de la clase alta, sin embargo, se mantiene consistentemente por debajo de los demás. Esta diferencia es marcada en los primeros meses de pandemia, durante el período de cuarentena, pero va desapareciendo durante los primeros meses del Plan Paso a Paso, que corresponde a la vuelva a la normalidad progresiva. La diferencia es prácticamente inexistente durante el período de vacaciones de verano de inicios de 2021. En esas fechas da inicio a la campaña de vacunación masiva, y unos meses después se observa un brusca reducción en el factor sanitario de la clase alta, que es especialmente notoria a finales de mayo, cuando el 50\% de la población de la RM ha recibido una dosis de la vacuna. Hacia finales de julio, las otras clases también experimentan una reducción importante, pero que al menos en el período estudiado no alcanza a la de la clase alta.
+
+
 \subsection{Sensibilidad ante los parámetros \(\gamma_E, \gamma_I\)} \label{subsec:sensigamma}
 
-El estudio de sensibilidad mostró que los resultados dependen en mayor medida de \(\gamma_I\), y que \(\gamma_E\) solo produce variaciones muy pequeñas en el factor sanitario. Con esto en mente, la figura \ref{sensi-gammai-real} muestra la sensibilidad de los resultados con respecto a la variable \(\gamma_I\). Si bien la relación entre los factores sanitario no se mantiene constante en cada caso, sí se observa claramente que la Clase sin prioridad, o la más acomodada, disminuye considerablemente su riesgo mucho antes que las demás.
+El estudio de sensibilidad mostró que los resultados dependen en mayor medida de \(\gamma_I\), y que \(\gamma_E\) solo produce variaciones muy pequeñas en el factor sanitario. Con esto en mente, la figura \ref{sensi-gammai-real} muestra la sensibilidad de los resultados con respecto a la variable \(\gamma_I\). Si bien la relación entre los factores sanitario no se mantiene constante en cada caso, sí se observa claramente la brusca reducción en el factor sanitario de la clase Sin Prioridad, o la más acomodada, hacia \(t = 400\), de forma mucho más marcada que las demás clases.
+
+Si \(\gamma_I\) no es igual para todas las clases, entonces ya no se puede esperar que el orden entre los factores se mantenga, no tienen por qué ``expandirse'' o ``contraerse'' de la misma forma. Se observa que períodos de recuperación más largos tienden a contraer el factor sanitario y viceversa.
 
 \begin{figure}[H]
      \centering
@@ -490,8 +489,15 @@ El estudio de sensibilidad mostró que los resultados dependen en mayor medida d
          \caption{\(1/\gamma_I = 14.5 [\text{días}]\)}
      \end{subfigure}
      \hfill
+     \begin{subfigure}[b]{0.99\textwidth}
+    \centering
+    \scalebox{0.7}{
+    \input{clases-legend.tikz}
+    }
+    \end{subfigure}
     \caption[Sensibilidad factor sanitario estimado para los datos reales, ante distintos \(\gamma_I\).]{}
     \label{sensi-gammai-real}
 \end{figure}
+
 
 
