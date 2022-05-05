@@ -28,7 +28,7 @@ R_i(t)' &= \gamma_i I_i(t)\\
 \lambda_i(\vec{x}, P) = \sum_{j=1}^m \beta_{j}p_{ij}S_i(t)\frac{\sum_{k=1}^{n} p_{kj} I_k}{\sum_{k=1}^{n} p_{kj}N_k}
 \end{equation}
 
-El valor \(\beta_j\) es una medida de riesgo propio del ambiente \(j\)-ésimo y depende de las condiciones ambientales y sanitarias. Representa la idea de que no es lo mismo pasar el tiempo en un parque que en el transporte público o en un bar.  la distancia que mantienen las personas ahí, la ventilación, entre otras.
+El valor \(\beta_j\) es una medida de riesgo propio del ambiente \(j\)-ésimo y depende de las condiciones ambientales y sanitarias. Representa la idea de que no es lo mismo pasar el tiempo en un parque que en el transporte público o en un bar. Esto debido a factores como la distancia que mantienen las personas en esos ambientes, la ventilación y sanitización a la que son sometidos, entre otros.
 
 Puesto que \(p_{ij}\) es la proporción del tiempo que la clase \(i\) reside en el ambiente \(j\), entonces la cantidad de personas en promedio de la clase \(i\) en el ambiente \(j\), en algún momento de tiempo \(t\), está dada por \(N_i(t) p_{ij} = S_i(t) p_{ij} + I_i(t) p_{ij} + R_i(t) p_{ij}\). La población total en el ambiente \(j\) es \(\sum_{k = 1}^m N_k p_{ij}\), de la cual \(\sum_{k = 1}^m I_k p_{ij}\) están infectados. De esta forma, el número de infectados de la clase \(i\) en el ambiente \(j\) por unidad de tiempo está dado por la ecuación \ref{eq:infectados-explicado}.
 
@@ -37,7 +37,7 @@ Puesto que \(p_{ij}\) es la proporción del tiempo que la clase \(i\) reside en 
 \end{equation}
 
 
-El modelo presentado supone que la etapa de la enfermedad no afecta el comportamiento de la población. Una forma más completa de modelarlo es seguir a \cite{Bichara2018} y utilizar distintas matrices de tiempos de residencia para cada compartimiente, representando la idea de que los infectados se queden en su casa guardando cuarentena, por ejemplo.
+El modelo presentado supone que la etapa de la enfermedad no afecta el comportamiento de la población. Una forma más completa de modelarlo es seguir a \cite{Bichara2018} y utilizar distintas matrices de tiempos de residencia para cada compartimiento, representando ideas como que los infectados se queden en su casa guardando cuarentena por ejemplo.
 % estado del arte. Uso en Covid 
 %El modelo original ha sido usado por Baltazar Espinoza (\textit{Mobility restrictions for the control of epidemics: When do they work?}) para mostrar la ineficacia de los cordones sanitarios para reducir la cantidad total de infectados, si se usan, por ejemplo, para aislar una población de una región de bajo riesgo (una baja densidad poblacional por ejemplo) y buen acceso a salud de una de alto riesgo y acceso sanitario deficiente. 
 
