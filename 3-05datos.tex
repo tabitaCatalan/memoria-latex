@@ -1,10 +1,10 @@
 \section{Datos disponibles}\label{sec:datos-disp}
 
-Esta sección describe las distintas fuentes de datos consideradas en el estudio. Los datos de interés pueden ser clasificados en tres categorías. En primer lugar, se busca caracterizar a la población de la Región Metropolitana, en términos etarios y socioeconómicos. Esto se logra mediante el Censo 2017 \ref{sec:censo} y el Índice de Prioridad Social 2019 \ref{sec:ips}.
+Esta sección describe las distintas fuentes de datos consideradas en el estudio. Los datos de interés pueden ser clasificados en tres categorías. En primer lugar, se busca caracterizar a la población de la Región Metropolitana, en términos etarios y socioeconómicos. Esto se logra mediante el Censo 2017 y el Índice de Prioridad Social 2019, en las subsecciones \ref{sec:censo} y \ref{sec:ips} respectivamente.
 
-En segundo lugar, se quiere conocer el comportamiento de la población, específicamente su uso del tiempo. La relación entre viajes y tiempos de actividad es utilizada en varios modelos \cite{Kitamura1988}\cite{Axhausen1992} y aprovechada para obtener información de encuestas de viajes como la Origen-Destino \cite{Munizaga2011}. En esa dirección, se considera la Encuesta Origen Destino Santiago 2012, descrita en la sección \ref{sec:eod}, ya que es una fuente bastante rica; provee información muy granular de personas, viajes y sus propósitos. Datos más actualizados que capturan las variaciones debido a la pandemia son los Informes de Movilidad Local sobre COVID-19, presentados en la sección \ref{sec:google}, y el Uso de infraestructura de telecomunicaciones, en la sección \ref{data:isci}.
+En segundo lugar, se quiere conocer el comportamiento de la población, específicamente su uso del tiempo. Para esto se hace uso de la relación entre viajes y tiempos de actividad; existen modelos \cite{Kitamura1988}\cite{Axhausen1992} de predicción de demanda de viajes que utilizan un enfoque basado en actividades, y \cite{Munizaga2011} obtiene tiempos de actividad a partir del registro de viajes de Encuestas Origen-Destino. En esa dirección, se considera la Encuesta Origen Destino Santiago 2012, descrita en la subsección \ref{sec:eod}, ya que es una fuente bastante rica; provee información muy granular de personas, viajes y sus propósitos. Datos más actualizados que capturan las variaciones debido a la pandemia son los Informes de Movilidad Local sobre COVID-19, presentados en la subsección \ref{sec:google}, y el Uso de infraestructura de telecomunicaciones, en la subsección \ref{data:isci}.
 
-Finalmente, se requieren datos para entender el avance de la pandemia en la Región Metropolitana. Datos-COVID19, un repositorio \cite{MINCIENCIA} mantenido por la Mesa de Datos del Ministerio de Ciencia, Tecnología, Conocimiento e Innovación, contiene distintas series de tiempo de casos confirmados, hospitalizados, fallecidos, vacunados en el país, con distintos niveles de agregación. Se comenta en más detalle en la sección \ref{sec:datos-minsal}.
+Finalmente, se requieren datos para entender el avance de la pandemia en la Región Metropolitana. Datos-COVID19, un repositorio \cite{MINCIENCIA} mantenido por la Mesa de Datos del Ministerio de Ciencia, Tecnología, Conocimiento e Innovación, contiene distintas series de tiempo de casos confirmados, hospitalizados, fallecidos, vacunados en el país, con distintos niveles de agregación. Se comenta en más detalle en la subsección \ref{sec:datos-minsal}.
 
 % Para cada base de datos: 
 % - Institución que la recopila 
@@ -44,10 +44,11 @@ Cada comuna de la Región Metropolitana tiene un IPS asociado, el cual toma valo
 \subsection{Encuesta Origen-Destino Santiago 2012}\label{sec:eod}
 
 Las Encuestas de Movilidad constituyen la principal fuente de información utilizada en todo proceso de planificación de los sistemas de transporte. Éstas entregan antecedentes relevantes sobre los patrones de movilidad de una determinada ciudad y proporcionan los datos requeridos para la calibración de los modelos de análisis de transporte.  %http://www.sectra.gob.cl/encuestas_movilidad/encuestas_movilidad.htm 
-Estas encuestas son realizadas por el Programa de Vialidad y Transporte Urbano SECTRA, de la Subsecretaría de Transportes del Ministerio de Transportes y Telecomunicaciones (MTT) [link]. Se realizan cada diez años en las ciudades más grandes del país.
+Estas encuestas son realizadas por el Programa de Vialidad y Transporte Urbano SECTRA, de la Subsecretaría de Transportes del Ministerio de Transportes y Telecomunicaciones (MTT) y se realizan cada diez años en las ciudades más grandes del país.
 %http://www.sectra.gob.cl/quienes_somos/que_es_sectra.htm]
+La encuesta más reciente de la ciudad de Santiago disponible al momento de realizar el trabajo es la Encuesta Origen-Destino (EOD) Santiago 2012 \cite{SECTRA2014}; en enero de 2021 se discutía \cite{TransporTeinforma} una metodología basada en \textit{Big Data} para la nueva versión de la EOD, pero los resultados no han sido publicados aún. Los datos, por tanto, pueden estar desactualizados.
 
-En la Encuesta Origen-Destino 2012 \cite{SECTRA2014} se recopiló información de los residentes de 18.000 hogares de Santiago, seleccionados aleatoriamente, durante el periodo comprendido entre julio de 2012 y noviembre de 2013. Su objetivo fue conocer las características de los viajes que se realizan en la ciudad y de quienes los efectúan. La encuesta se realizó mediante entrevista personal y los datos fueron recolectados en días hábiles y fines de semana, tanto en temporada normal como estival. En total se encuestaron alrededor de 60.000 personas.
+La EOD Santiago 2012 recopiló información de los residentes de 18.000 hogares de Santiago, seleccionados aleatoriamente, durante el periodo comprendido entre julio de 2012 y noviembre de 2013. Su objetivo fue conocer las características de los viajes que se realizan en la ciudad y de quienes los efectúan. La encuesta se realizó mediante entrevista personal y los datos fueron recolectados en días hábiles y fines de semana, tanto en temporada normal como estival. En total se encuestaron alrededor de 60.000 personas.
 
 % Qué información contiene la encuesta 
 
@@ -90,7 +91,7 @@ La versión completa de estos datos, que contiene información tanto del origen 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{img/metodologia/datos/ISCI-movilidad-RM.png}
-\caption{Variación en la movilidad de cinco comunas de la Región Metropolitana. Fuente: ISCI Covid Analytics.}
+\caption{Variación en la movilidad de seis comunas de la Región Metropolitana. Fuente: ISCI Covid Analytics.}
 \label{img:ISCI-movilidad-RM}
 \end{figure}
 
