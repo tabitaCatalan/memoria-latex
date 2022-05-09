@@ -25,7 +25,7 @@ Tratar con la no linealidad del sistema puede hacerse de varias formas. La más 
 
 Las distintas variantes del Filtro de Kalman se han usado previamente en epidemiología para estimación de parámetros, tanto fijos como cambiantes en el tiempo, trabajando con datos relacionados a SIDA \cite{Cazelles1997}, ébola \cite{Ndanguza2017}, dengue \cite{Torres-Signes2021}, tuberculosis \cite{Narula2016}, entre otros. % Creo que puedo dar más detalles
 
-Con respecto al uso en COVID-19, se han usado distintas variantes del filtro con distintos propósitos. \cite{Yang2020} y \cite{Nkwayep2020} usan EnKF para hacer predicción. Se han propuesto varios métodos que usan distintas variantes del filtro para estimar el número reproductivo efectivo como \cite{Hasan2020}\cite{Arroyo-Marioli2021}\cite{Gomez-Exposito2021}. En \cite{Rajaei2021} se usa EKF para desarrollar un control robusto basado en distanciamiento social, hospitalización y tratamiento, y vacunación. En \cite{Bansal2021} se usa \textit{Fractional Order Calculus}, un técnica de filtraje de la que EKF puede verse como un caso particular, para estimar transmisibilidad. \cite{Song2021} propone un método basado en EKF para estimar parámetros variables en el tiempo, usando descenso de gradiente con una función de costo dada por una medida de verosimilitud. Usa el método para estimar un parámetro de transmisibilidad y el número reproductivo efectivo.
+Con respecto al uso en COVID-19, se han usado distintas variantes del filtro con distintos propósitos. Los artículos \cite{Yang2020} y \cite{Nkwayep2020} usan EnKF para hacer predicción. Se han propuesto varios métodos que usan distintas variantes del filtro para estimar el número reproductivo efectivo como \cite{Hasan2020}\cite{Arroyo-Marioli2021}\cite{Gomez-Exposito2021}. En \cite{Rajaei2021} se usa EKF para desarrollar un control robusto basado en distanciamiento social, hospitalización y tratamiento, y vacunación. En \cite{Bansal2021} se usa \textit{Fractional Order Calculus}, un técnica de filtraje de la que EKF puede verse como un caso particular, para estimar transmisibilidad. La referencia \cite{Song2021} propone un método basado en EKF para estimar parámetros variables en el tiempo, usando descenso de gradiente con una función de costo dada por una medida de verosimilitud. Usa el método para estimar un parámetro de transmisibilidad y el número reproductivo efectivo.
 
 Algunos artículos que utilizan técnicas más similares a la metodología propuesta son \cite{Hasan2021} y \cite{Sameni2020}, que estiman un estado aumentado por la tasa de transmisión (y algunos parámetros extra) mediante EKF discreto-discreto. Por simplicidad de la implementación y a la hora de chequear observabilidad local, también se decidió utilizar EKF en su versión discreta-discreta. Muchos sin embargo usan discretización de Euler; se decidió usar un esquema de Runge-Kutta por estabilidad numérica.
 
@@ -75,13 +75,13 @@ Para fijar ideas, se trabaja con el modelo SEIR clásico de una sola clase, inco
 S'(t) &= -\alpha(t) S(t)I(t) + g_1 w_1(t)\\
 E'(t) &= \alpha(t) S(t)I(t) - \gamma_E E(t) + g_2 w_2(t)\\
 I'(t) &= \gamma_E E(t) - \gamma_{I} I(t) + g_3 w_3(t)\\
-R'(t) &= \gamma_{I} I(t) + g_4 w_4(t)\\
+R'(t) &= \gamma_{I} I(t) + g_4 w_4(t).\\
 \end{aligned}
 \end{equation}
 
 
 \begin{equation}\label{eq:acumulados-1-clase}
-C(t) = \int_{t_0}^t \gamma_E E(s) ds
+C(t) = \int_{t_0}^t \gamma_E E(s) ds.
 \end{equation}
 
 
@@ -90,7 +90,7 @@ Se supondrá que \(\gamma_E\) y \(\gamma_I\) son conocidos, y se busca estimar \
 \begin{subequations}\label{eq:simple-augmented-eqs}
 \begin{align}
 C'(t)       &= \gamma_E E(t) \label{eq:simple-c} \\ 
-\alpha'(t)  &= 0    \label{eq:simple-alpha}
+\alpha'(t)  &= 0.    \label{eq:simple-alpha}
 \end{align}
 \end{subequations}
 
@@ -113,22 +113,22 @@ C\\
 \gamma_{I} I(t) \\
 \gamma_E E(t) \\
 0
-\end{pmatrix} + \mathbf{G} w(t)= f_p(\mathbf{x}, t) + \mathbf{G} \mathbf{w}(t)
+\end{pmatrix} + \mathbf{G} w(t)= f_p(\mathbf{x}, t) + \mathbf{G} \mathbf{w}(t).
 \end{equation}
 
 Para utilizar el filtro discreto-discreto, se requiere discretizar la dinámica \(f_p\), para lo que se usa un esquema de Runge Kutta de orden 4. Para un instante de tiempo \(t_k\), un intervalo de tiempo \(\Delta t\) y un estado \(\mathbf{x}_k\), y definiendo \(\mathbf{x}_1, \dots, \mathbf{x}_4\) como en \ref{eq:rk4}, \ref{eq:simple-rk4} permite obtener una estimación \ref{eq:simple-estado-discreto} para \(\mathbf{x}_{k+1}\). Esto corresponde a la ecuación de estado discretizada, la cual es no lineal. Notamos que \(\mathbf{w}_{k} \sim \mathcal{N}(\mathbf{0}, \mathbf{Q}_k)\) y \(\mathbf{Q}_k = \frac{\text{\textbf{Id}}}{\sqrt{\Delta t}}\). Una explicación de esto puede encontrarse en el capítulo 8 de \cite{Simon2006}.
 
 \begin{equation} \label{eq:simple-rk4}
-\mathbf{x}_{k} + \frac{1}{6}\Big( \Delta \mathbf{x}_1  +  2\Delta \mathbf{x}_2 + 2\Delta \mathbf{x}_3 +\Delta \mathbf{x}_4\Big) =: \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k)
+\mathbf{x}_{k} + \frac{1}{6}\Big( \Delta \mathbf{x}_1  +  2\Delta \mathbf{x}_2 + 2\Delta \mathbf{x}_3 +\Delta \mathbf{x}_4\Big) =: \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k).
 \end{equation}
 
 
 \begin{equation} \label{eq:simple-estado-discreto}
-\mathbf{x}_{k+1} = \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k) +  \mathbf{G}\mathbf{w}_{k} 
+\mathbf{x}_{k+1} = \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k) +  \mathbf{G}\mathbf{w}_{k}.
 \end{equation}
 
 
-Ahora es necesario trabajar con la no linealidad, lo que se hará mediante el Filtro de Kalman Extendido, expuesto en la sección \ref{filtro-extendido}. Para eso, es necesario calcular el jacobiano de la función \(\mathcal{F}_{p, \Delta t}\). Múltiples usos de la regla de la cadena más la definición del esquema de RK4 dada por \ref{eq:rk4} permiten obtener las ecuaciones \ref{eq:simple-jacobian}.
+Ahora es necesario trabajar con la no linealidad, lo que se hará mediante el Filtro de Kalman Extendido, expuesto en la sección \ref{filtro-extendido}. Para eso, es necesario calcular el jacobiano de la función \(\mathcal{F}_{p, \Delta t}\). Múltiples usos de la regla de la cadena más la definición del esquema de RK4 permiten obtener las ecuaciones \ref{eq:simple-jacobian}.
 
 \begin{equation}\label{eq:simple-jacobian}
 \begin{aligned}
@@ -141,7 +141,7 @@ D_x h_2 &= \Delta t D_x f(x_k + h_1, t_k) (I + D_x h_1)  \\
 h_3 &= \Delta t f(x_k + h_2, t_{k + 1/2}) \\
 D_x h_3 &= \Delta t D_x f(x_k + h_2, t)(I + D_x h_2) \\
 h_4 &= \Delta t f(x_k + h_3, t_{k + 1}) \\
-D_x h_4 &= \Delta t D_x f(x_k + h_3, t)(I + D_x h_3) \\
+D_x h_4 &= \Delta t D_x f(x_k + h_3, t)(I + D_x h_3). \\
 \end{aligned}
 \end{equation}
 
@@ -154,7 +154,7 @@ La ecuación de observación \ref{eq:simple-obs} consiste, en primera instancia,
 
 \begin{equation} \label{eq:simple-obs}
 \mathbf{y}_{k} = 
-\begin{bmatrix}0 & 0 & 0 & 0 & 1 & 0\end{bmatrix} \mathbf{x}_{k} + \mathbf{v}_k
+\begin{bmatrix}0 & 0 & 0 & 0 & 1 & 0\end{bmatrix} \mathbf{x}_{k} + \mathbf{v}_k.
 \end{equation}
 
 Debe mencionarse que el sistema no lineal tiene restricciones; por una parte, las variables de estado deben ser positivas para que tengan sentido. Esto se consigue aplicando la función \(x \mapsto \max(x, 0)\) (por coordenada). Por otra parte, al elegir \(b_i = d_i = 0\) se impone que el total de la población debe mantenerse constante. Para conseguir esto se utiliza la técnica de observaciones casi perfectas, explicada en la subsección \ref{casiperfect}. Se elige usar una restricción suave para imponer \(S(t) + E(t) + I(t) + R(t) \approx N\), con lo que se obtiene la ecuación de observación \ref{eq:simple-obs-perfect} definitiva.
@@ -181,7 +181,7 @@ S_k + E_k + I_k + R_k
 \begin{bmatrix}
 \mathbf{v}_k \\
 \epsilon
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 Finalmente, a modo de resumen; se utiliza el Filtro de Kalman Extendido sobre el sistema dado por \ref{eq:simple-estado-discreto}. Este sistema fue obtenido extendiendo un modelo SEIR con la variable \(C\) de casos acumulados, y con un factor \(\alpha\) de la tasa de contagio, y discretizado mediante el esquema RK4. El sistema es no lineal en el estado, y lineal en el ruido. La linearización se obtiene a partir del jacobiano calculado en \ref{eq:simple-jacobian}. Para asegurar la positividad de las variables se aplica la función \(\max(x, 0)\) después de cada paso de \textit{forecast} y análisis. Para imponer que la población se mantenga constante, se usa la técnica de observaciones casi perfectas de \cite{Simon2010}. La ecuación de observación final es \ref{eq:simple-obs-perfect}, la cual es lineal.
 
@@ -201,7 +201,7 @@ S_i'(t) &= -\lambda_i(\mathbf{x}, t) S_i(t) + g^S_i w^S_i(t)\\
 E_i'(t) &= \lambda_i(\mathbf{x}, t) S_i(t) - \gamma_E E_i(t) + g^E_i w^S_i(t) \nonumber\\
 I_i'(t) &= \gamma_E E_i(t) - \gamma_{I} I_i(t) + g^I_i w^S_i(t)\nonumber \\
 R_i'(t) &= \gamma_{I} I_i(t) + g^R_i w^S_i(t) \nonumber \\
-\lambda_i(\mathbf{x}, t) &= \alpha_i(t)\sum_{j=1}^m \beta_{j}p_{ij}(t)\left(\frac{\sum_{k=1}^{n}p_{kj}(t) I_k}{\sum_{k=1}^{n}p_{kj}(t)N_k}\right) \label{eq:full-lambda}
+\lambda_i(\mathbf{x}, t) &= \alpha_i(t)\sum_{j=1}^m \beta_{j}p_{ij}(t)\left(\frac{\sum_{k=1}^{n}p_{kj}(t) I_k}{\sum_{k=1}^{n}p_{kj}(t)N_k}\right). \label{eq:full-lambda}
 \end{align}
 \end{subequations}
 
@@ -209,13 +209,13 @@ R_i'(t) &= \gamma_{I} I_i(t) + g^R_i w^S_i(t) \nonumber \\
 Al igual que en el caso con una clase, se agregan las ecuaciones \ref{eq:nclass-augmented}, correspondientes a las dinámicas de los casos acumulados \ref{eq:nclass-c}, calculados según \ref{eq:acumulados-n-clases}, y de los factores sanitarios \(\alpha_i(t)\) \ref{eq:nclass-alpha}. 
 
 \begin{equation}\label{eq:acumulados-n-clases}
-C_i(t) = \int_{t_0}^t \gamma_E E_i(s) ds    
+C_i(t) = \int_{t_0}^t \gamma_E E_i(s) ds,  
 \end{equation}
 
 \begin{subequations}\label{eq:nclass-augmented}
 \begin{align}
 C'_i(t) &= \gamma_E E_i(t) \label{eq:nclass-c}\\
-\alpha_i'(t) &= 0 \label{eq:nclass-alpha}
+\alpha_i'(t) &= 0. \label{eq:nclass-alpha}
 \end{align}
 \end{subequations}
 
@@ -223,14 +223,14 @@ C'_i(t) &= \gamma_E E_i(t) \label{eq:nclass-c}\\
 Como antes, discretizando con un esquema de Runge Kutta podemos obtener un sistema de la forma \ref{eq:full-estado-discreto}. Para tratar con la no linealidad basta con usar las mismas ecuaciones \ref{eq:simple-jacobian} calculadas previamente para el jacobiano.
 
 \begin{equation} \label{eq:full-estado-discreto}
-\mathbf{x}_{k+1} = \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k) +  \mathbf{G}\mathbf{w}_{k} 
+\mathbf{x}_{k+1} = \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k) +  \mathbf{G}\mathbf{w}_{k}.
 \end{equation}
 
 La ecuación de observaciones en este caso es similar a \ref{eq:simple-obs}. Definiendo \(\mathbf{0}_n\) y \(\text{\textbf{Id}}_n\) como la matriz de 0's y la matriz identidad de tamaño \(n \times n\), entonces la ecuación de observaciones está dada por \ref{eq:full-obs}.
 
 \begin{equation} \label{eq:full-obs}
 \mathbf{y}_{k} = 
-\begin{bmatrix}\mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \text{\textbf{Id}}_n & \mathbf{0}_n \end{bmatrix} \mathbf{x}_{k} + \mathbf{v}_k
+\begin{bmatrix}\mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \mathbf{0}_n & \text{\textbf{Id}}_n & \mathbf{0}_n \end{bmatrix} \mathbf{x}_{k} + \mathbf{v}_k.
 \end{equation}
 
 Denotando \(\mathbf{N} := (N_1, \dots, N_n)^{\top}\) y \(\pmb{\epsilon} := (\epsilon, \dots, \epsilon)^{\top}\), las ecuaciones de observación que imponen además que \(S_i(t) + E_i(t) + I_i(t) + R_i(t) \approx N_i\) están en \ref{eq:full-obs-perfect}. \(S_{i, k}\) denota la aproximación de susceptibles del sistema discreto, para la clase \(i\)-ésima, a tiempo \(t_k\), y lo mismo para \(C_{i,k}\).
@@ -261,7 +261,7 @@ S_{n,k} + E_{n,k} + I_{n,k} + R_{n,k}
 \begin{bmatrix}
 \mathbf{v}_k \\
 \pmb{\epsilon}
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 
 
@@ -273,7 +273,7 @@ Hasta ahora se ha supuesto que \(\gamma_E, \gamma_I\) y \(\beta_1, \dots, \beta_
 Para darle un valor a este parámetro, se considerará la expresión \ref{eq:contribuciones-j}, que corresponde a la contribución \(j\)-ésima a \(\lambda_i\), dado por la ecuación \ref{eq:full-lambda}. Se buscarán valores en concordancia con \cite{Ferguson2020}\cite{Mossong2008}, quienes afirman que 1/3 de los contagios ocurren en el hogar. La sensibilidad a este parámetro se estudia en \ref{subsec:sensibeta}.
 
 \begin{equation}\label{eq:contribuciones-j}
- p_{ij} \frac{\sum_{k = 1}^n I_{k} p_{kj}}{\sum_{k = 1}^n N_{k} p_{kj}}
+ p_{ij} \frac{\sum_{k = 1}^n I_{k} p_{kj}}{\sum_{k = 1}^n N_{k} p_{kj}}.
 \end{equation}
 
 
@@ -419,6 +419,6 @@ En segundo lugar, la sintaxis en Julia es similar a la de lenguajes de alto nive
 
 En tercer lugar, Julia cuenta con dos librerías que ofrecen características de interés para este trabajo. La primera, DiffentialEquations.jl \cite{Rackauckas2017}, permite acceder a una amplia variedad de \textit{solvers} para distintos tipos de ecuaciones diferenciales, a través de una única interfaz. La segunda, ModelingToolkit.jl \cite{Ma2021}, que aún no ha alcanzado su versión \texttt{v1.0}, provee de un sistema simbólico de modelado basado en ecuaciones, que está integrado con DifferentialEquations.jl y que optimiza el código para obtener mayor rendimiento. Esto facilita el cálculo de jacobianos y la resolución de ecuaciones diferenciales a partir de una conjunto de ecuaciones simbólicas.
 
-A diferencia de \cite{Hasan2020} y \cite{Sameni2020}, se decidió escribir código que pudiera ser reutilizado y extendido con mayor facilidad, y que contara con interfaces comunes que permitieran utilizar diferentes tipos de filtros de Kalman con cambios mínimos para el usuario final. Estas directrices guiaron la construcción de KalmanFilter.jl, disponible en GitHub \url{https://github.com/tabitaCatalan/kalman}. El código específico para la estimación de parámetros se encuentra también disponible en GitHub \url{https://github.com/tabitaCatalan/CovidMTK}.
+A diferencia de \cite{Hasan2020} y \cite{Sameni2020}, se decidió escribir código que pudiera ser reutilizado y extendido con mayor facilidad, y que contara con interfaces comunes que permitieran utilizar diferentes tipos de filtros de Kalman con cambios mínimos para el usuario final. Estas directrices guiaron la construcción de KalmanFilter.jl, que se encuentra disponible en el repositorio en GitHub \url{https://github.com/tabitaCatalan/kalman}. El código específico para la estimación de parámetros se encuentra también disponible en el repositorio \url{https://github.com/tabitaCatalan/CovidMTK}.
 
 % Extensiones y trabajo futuro. El uso de Julia, y Modelling Toolkit es una herramienta muy muy interesante. Se vieron algunos desafíos en el diseño de una herramienta para filtro de kalman, tiene muchísimas variables, y se extiende de formas raras. Una librería sería muy util, sobre todo si usara MTK.

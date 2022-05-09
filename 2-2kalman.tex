@@ -17,13 +17,13 @@ Finalmente se exponen algunas técnicas que serán de utilidad. La subsección \
 Para comenzar a explicar el filtro de Kalman, se decide utilizar un caso sencillo. Se tiene un sistema como el de la ecuación \ref{eq:kalman-lineal-discreto}, donde \(x_k \in \mathbb{R}^{n}\) y \(F_k, G_k \in \mathbb{R}^{n \times n}\) y \(w_k \sim \mathcal{N}(0,Q_k)\) es un vector aleatorio que representa un ruido gaussiano en la dinámica del sistema. 
 
 \begin{equation}\label{eq:kalman-lineal-discreto}
-x_{k+1} = F_k x_k + G_k w_k
+x_{k+1} = F_k x_k + G_k w_k.
 \end{equation}
 
 Los estados \(x_k\) del sistema son desconocidos, y solo es posible conocer observaciones \(y_k\) de ellos, dadas por la ecuación \ref{eq:kalman-lineal-discreto-obs}, donde \(y_k \in \mathbb{R}^{m}, H_k \in \mathbb{R}^{m \times n}\) y \( v_k \sim \mathcal{N}(0, R_k)\) representa un ruido gaussiano en las observaciones.
 
 \begin{equation}\label{eq:kalman-lineal-discreto-obs}
-y_k = H_k x_k  + v_k
+y_k = H_k x_k  + v_k.
 \end{equation}
 
 
@@ -54,11 +54,11 @@ Y
 \Sigma_{xx} & \Sigma_{xy} \\
 \Sigma_{yx} & \Sigma_{yy}
 \end{pmatrix}
-\right)
+\right).
 \] Entonces \[
 (X|Y=y) \sim \mathcal{N} \left( \bar{x} + \Sigma_{xy}\Sigma_{yy}^{-1}(y-\bar{y}),
 \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}
- \right)
+ \right).
 \]
 \end{prop}
 
@@ -71,7 +71,7 @@ Y
     \begin{aligned}
     \hat{x}_{k,k-1} &= F_{k-1} \hat{x}_{k-1,k-1} \\
     %P_{k,n-1} &= M_k P_{k-1,n-1} M_k^{\top} + F_k Q_k F_k^{\top}
-    P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_k Q_k G_k^T
+    P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_k Q_k G_k^T.
     \end{aligned}
     \end{equation}
 \item
@@ -93,14 +93,14 @@ Y
     P_{k,k-1} & P_{k,k-1} H^T_{k}\\
     H_{k}P_{k,k-1}  & H_{k}P_{k,k-1}H_{k}^T + R_k
     \end{pmatrix}  
-    \right)
+    \right),
     \end{equation}
 
     \begin{equation}\label{eq:terminos-raros}
     \begin{aligned}
     K_k &= P_{k,k-1} H^{\top}_{k}(H_{k}P_{k,k-1}H_{k}^{\top} + R_k)^{-1}\\
     \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
-    P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
+    P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1}. \\
     \end{aligned}
     \end{equation}
 \end{enumerate}
@@ -124,7 +124,7 @@ Para el caso lineal discreto como el presentado por las ecuaciones \ref{eq:syste
 \begin{equation}\label{eq:system-ecs}
 \begin{aligned}
 x_{k+1} &= M_k x_k + F_k w_k \\ 
-y_k &= H_k x_k + v_k
+y_k &= H_k x_k + v_k.
 \end{aligned}
 \end{equation}
 
@@ -135,7 +135,7 @@ y_k &= H_k x_k + v_k
 P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_{k-1} Q_{k-1} G_{k-1}^{\top}\\
 K_k &= P_{k,k-1} H^{\top}_{k}(H_{k}P_{k,k-1}H_{k}^{\top} + R_k)^{-1}\\
 \hat{x}_{k,k} &= \hat{x}_{k, k-1} + K_k(y_k-H_k \hat{x}_{k,k-1}) \\
-P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
+P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1}. \\
 \end{aligned}
 \end{equation}
 
@@ -165,7 +165,7 @@ El filtro de Kalman Extendido permite trabajar con sistemas no lineales. Se trab
 \begin{equation}\label{eq:nl-model}
 \begin{aligned}
 x_{k+1} &= f_k(x_k, t_k) + g_k(x_k, t_k) w_k \\
-y_{k} &= h(x_k, t_k) + v_k
+y_{k} &= h(x_k, t_k) + v_k.
 \end{aligned}
 \end{equation}
 
@@ -173,7 +173,7 @@ Usando la notación de las ecuaciones \ref{eq:taylor-notation}, es posible defin
 
 \begin{equation}\label{eq:taylor-notation}
 \begin{aligned}
-F_k := \left. \frac{\partial f_k(x, t)}{\partial x} \right|_{\substack{x = \hat{x}_{k,k} \\ t = t_k }} & H_k := \left. \frac{\partial h_k(x, t)}{\partial x} \right|_{\substack{x = \hat{x}_{k,k} \\ t = t_k }} & G_k := g_k(\hat{x}_{k,k}, t_k)
+F_k := \left. \frac{\partial f_k(x, t)}{\partial x} \right|_{\substack{x = \hat{x}_{k,k} \\ t = t_k }} & H_k := \left. \frac{\partial h_k(x, t)}{\partial x} \right|_{\substack{x = \hat{x}_{k,k} \\ t = t_k }} & G_k := g_k(\hat{x}_{k,k}, t_k).
 \end{aligned}
 \end{equation}
 
@@ -207,7 +207,7 @@ P_{k,k-1} &= F_{k-1} P_{k-1,k-1} F_{k-1}^{\top} + G_{k-1} Q_{k-1} G_{k-1}^{\top}
 K_k &= P_{k,k-1} H^{\top}_{k}(H_{k}P_{k,k-1}H_{k}^{\top} + R_k)^{-1}\\
 %z_k &= h_k(\hat{x}_{k,k-1}) - H_k \hat{x}_{k,k-1} \\
 \hat{x}_{k,k} &= \hat{x}_{k, n-1} + K_k(y_k-h_k(\hat{x}_{k,k-1}, t_k)) \\
-P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1} \\
+P_{k,k} &= P_{k,k-1}- K_k H_{k}P_{k,k-1}. \\
 \end{aligned}
 \end{equation}
 \end{mdframed}
@@ -266,21 +266,21 @@ Se tiene un sistema donde las matrices dependen de forma no lineal de cierto par
 \begin{equation}\label{eq:model-p}
 \begin{aligned}
 x_{k+1} &= F_k(p)(x_k) + G_k(p)w_k \\
-y_{k} &= H_k x_k + v_k \\ 
+y_{k} &= H_k x_k + v_k. \\ 
 \end{aligned}
 \end{equation}
 
 Por simplicidad no se agregó dependencia de \(p\) a las mediciones, pero es un caso que puede extenderse de manera sencilla a partir de este. Para estimar \(p\) se define un estado aumentado \(x'\) como en \ref{eq:estado-aumentado}. Bajo el supuesto de que \(p\) es constante, se usa la dinámica \(p_{k+1} = p_k + w_{pn}\). El ruido \(w_{pn}\) artificial permitirá al filtro cambiar su estimación de \(p_k\). Finalmente, el sistema aumentado está dado por las ecuaciones \ref{eq:sistema-aumentado}.
 
 \begin{equation}\label{eq:estado-aumentado}
-x'_k = \begin{bmatrix}x_k \\ p_k \end{bmatrix}
+x'_k = \begin{bmatrix}x_k \\ p_k \end{bmatrix}.
 \end{equation}
 
 \begin{equation}\label{eq:sistema-aumentado}
 \begin{aligned}
 x'_{k+1} &= \begin{bmatrix} F_k(p_k)(x_k) + G_k(p_k)w_k \\ p_k + w_{pn} \end{bmatrix} \\
 &= f(x'_{k}, w_k, w_{kp}) \\
-y_{k} &= \begin{bmatrix} H_k & 0 \end{bmatrix} \begin{bmatrix}x_k \\ p_k \end{bmatrix} + v_k \\ 
+y_{k} &= \begin{bmatrix} H_k & 0 \end{bmatrix} \begin{bmatrix}x_k \\ p_k \end{bmatrix} + v_k. \\ 
 \end{aligned}
 \end{equation}
 
@@ -312,7 +312,7 @@ El suavizado de intervalo fijo suele realizarse en dos pasadas: la primera permi
 x_k &= F_{k-1}x_{k-1} + w_{k-1} \\ 
 y_k &= H_k x_k + v_k \\ 
 w_k &\sim  \mathcal{N}(0, Q_k)\\
-v_k &\sim  \mathcal{N}(0, R_k)
+v_k &\sim  \mathcal{N}(0, R_k).
 \end{aligned}
 \end{equation}
 
@@ -322,7 +322,7 @@ v_k &\sim  \mathcal{N}(0, R_k)
     \begin{equation}
     \begin{aligned}
     \hat{x}_{f0} &= \mathbb{E}(x_0) \\
-    P^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{\top}\right] 
+    P^{+}_{f0} &= \mathbb{E}\left[(x_0 - \hat{x}_{f0})(x_0 - \hat{x}_{f0})^{\top}\right]. 
     \end{aligned}
     \end{equation}
     
@@ -337,7 +337,7 @@ v_k &\sim  \mathcal{N}(0, R_k)
     \hat{x}^{+}_{fk} &= \hat{x}^{-}_{fk} + K_{fk} \left(y_k - H_k \hat{x}^{-}_{fk} \right)\\ 
     P^{+}_{fk} &= (I - K_{fk}H_k) P^{-}_{fk} (I-K_{fk}H_k)^{\top} + K_{fk}R_{k}K_{fk}^{\top} \\
     &= \left[ (P^{-}_{fk})^{-1} + H_k^{\top} R_{k}^{-1}H_k\right]^{-1} \\ 
-    &= (I - K_{fk}H_k)P^{-}_{fk}
+    &= (I - K_{fk}H_k)P^{-}_{fk}.
     \end{aligned}
     \end{equation}
     
@@ -345,7 +345,7 @@ v_k &\sim  \mathcal{N}(0, R_k)
     \begin{equation}
     \begin{aligned}
     \hat{x}_{k} &= \hat{x}^{+}_{fN} \\
-    P_k &= P^{+}_{fN}
+    P_k &= P^{+}_{fN}.
     \end{aligned}
     \end{equation}
     
@@ -356,7 +356,7 @@ v_k &\sim  \mathcal{N}(0, R_k)
     \mathcal{I}^{-}_{f, k+1} &= \left( P^{-}_{f, k+1}\right)^{-1} \\
     K_k &= P^{+}_{fk} F_{k}^{\top} \mathcal{I}^{-}_{f, k+1} \\
     P_k &= P^{+}_{fN} - K_k (P^{-}_{f, k+1} - P_{k+1})K_k^{\top} \\ 
-    \hat{x}_k &= \hat{x}^{+}_{fk} + K_k(\hat{x}_{k+1} - \hat{x}^{-}_{f,k+1})
+    \hat{x}_k &= \hat{x}^{+}_{fk} + K_k(\hat{x}_{k+1} - \hat{x}^{-}_{f,k+1}).
     \end{aligned}
     \end{equation}
 \end{enumerate}
@@ -381,7 +381,7 @@ D
 \begin{bmatrix}
 v_k \\
 \epsilon  
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 
 

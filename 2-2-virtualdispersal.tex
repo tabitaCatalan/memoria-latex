@@ -6,7 +6,7 @@ Otra dificultad está en la necesidad de conocer en gran detalles las interaccio
 
 Este tipo de matrices de contacto es conocida como WAIFW (\textit{Who Acquires Infection From Whom} o  ¿Quién adquiere la infección de quién?) \cite{Anderson1992}. Este tipo de matrices suelen aproximarse por matrices de ``mezcla social'' o \textit{social mixing}; varios ejemplos para enfermedades transmitidas por contactos estrechos son \cite{Mossong2008}\cite{Wallinga2006}\cite{Edmunds2006}.
 
-\cite{Bichara2015} sugiere una solución alternativa; utilizar un modelo lagrangiano con tiempos de residencia. De esta forma, el tiempo pasado en cada región y su riesgo sirve como \textit{proxy} de la probabilidad de contagios. \cite{Bichara2015} propone dos variantes de esta idea; en la primera, cada clase pertenece a una región pero pasa un tiempo en las otras regiones. Esta forma de abordar el problema es utilizada también por \cite{Cosner2009}. En la segunda variante, las clases interactúan en ambientes como hospitales, centros comerciales, escuelas, transporte público, lugares de trabajo, etc. Esto permite combinar clases y dispersión espacial en un mismo modelo. Esta variante es extendida posteriormente en \cite{Bichara2018} y es la que se usa en este trabajo.
+\cite{Bichara2015} sugiere una solución alternativa; utilizar un modelo lagrangiano con tiempos de residencia. De esta forma, el tiempo pasado en cada región y su riesgo sirve como \textit{proxy} de la probabilidad de contagios. La referencia \cite{Bichara2015} propone dos variantes de esta idea; en la primera, cada clase pertenece a una región pero pasa un tiempo en las otras regiones. Esta forma de abordar el problema es utilizada también por \cite{Cosner2009}. En la segunda variante, las clases interactúan en ambientes como hospitales, centros comerciales, escuelas, transporte público, lugares de trabajo, etc. Esto permite combinar clases y dispersión espacial en un mismo modelo. Esta variante es extendida posteriormente en \cite{Bichara2018} y es la que se usa en este trabajo.
 
 %\textbf{euleriano} vs \textbf{lagrangeano} [Esto no he logrado entenderlo bien, las explicaciones son muy cortas].
 
@@ -20,12 +20,12 @@ Para ejemplificar se usan compartimientos SIR, sin embargo, esta metodología pu
 %S_i(t)' &= -S_i(t) {\color{Red} \lambda_i(\vec{x}, t) } \\
 S_i(t)' &=  b_i - d_i S_i - {\lambda_i(\vec{x}, t) } \\
 I_i(t)' &= {\lambda_i(\vec{x}, t) } - \gamma_i I_i(t) - d_i I_i\\
-R_i(t)' &= \gamma_i I_i(t)\\ 
+R_i(t)' &= \gamma_i I_i(t).\\ 
 \end{aligned}
 \end{equation}
 
 \begin{equation}\label{eq:lambda}
-\lambda_i(\vec{x}, P) = \sum_{j=1}^m \beta_{j}p_{ij}S_i(t)\frac{\sum_{k=1}^{n} p_{kj} I_k}{\sum_{k=1}^{n} p_{kj}N_k}
+\lambda_i(\vec{x}, P) = \sum_{j=1}^m \beta_{j}p_{ij}S_i(t)\frac{\sum_{k=1}^{n} p_{kj} I_k}{\sum_{k=1}^{n} p_{kj}N_k}.
 \end{equation}
 
 El valor \(\beta_j\) es una medida de riesgo propio del ambiente \(j\)-ésimo y depende de las condiciones ambientales y sanitarias. Representa la idea de que no es lo mismo pasar el tiempo en un parque que en el transporte público o en un bar. Esto debido a factores como la distancia que mantienen las personas en esos ambientes, la ventilación y sanitización a la que son sometidos, entre otros.
