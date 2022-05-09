@@ -9,17 +9,17 @@ Se comienza eligiendo las clases y ambientes a utilizar, en la subsección \ref{
 
 \subsection{Elección de clases y ambientes}\label{subsec:eleccion-clases-ambientes}
 
-El impacto de la enfermedad ha sido heterogéneo entre la población. Se sabe que la edad es un factor a considerar; la susceptibilidad a la infección y la probabilidad de desarrollar síntomas luego del contagio aumentan con la edad \cite{Davies2020}. Similarmente, tanto el porcentaje de infectados cuya gravedad requiere hospitalización como el porcentaje que termina falleciendo es más alto entre los adultos mayores \cite{Verity2020}. El nivel socioeconómico tampoco puede ser ignorado; el menor acceso a la salud \cite{Wang2020}, sumado al desempleo y la existencia de enfermedades crónicas previas \cite{Ahmed2020} son un agravante que hace más vulnerables a los niveles socioeconómicos más pobres.
+El impacto de la enfermedad ha sido heterogéneo entre la población. Se sabe que la edad es un factor a considerar; la susceptibilidad a la infección y la probabilidad de desarrollar síntomas luego del contagio aumentan con la edad \cite{Davies2020}. Similarmente, tanto el porcentaje de infectados cuya gravedad requiere hospitalización como el porcentaje que termina falleciendo es más alto entre los adultos mayores \cite{Verity2020}. El nivel socioeconómico tampoco puede ser ignorado; el menor acceso a la salud \cite{Wang2020}, sumado al desempleo y la mayor presencia de enfermedades crónicas previas \cite{Ahmed2020} son un agravante que hace más vulnerables a los niveles socioeconómicos más pobres.
 
-Hay varios criterios a considerar a la hora de elegir las clases y los ambientes. En primer lugar, es ampliamente conocido \cite{Davies2020}\cite{Verity2020} que la edad es un factor importante en el efecto de la enfermedad en una persona; el COVID-19 afecta con más intensidad a los adultos mayores. Varios estudios \cite{Wang2020}\cite{Ahmed2020}\cite{Chang2021}\cite{Mena2021}\cite{Bennett2021} han mostrado que la pandemia ha afectado más fuertemente a los niveles socioeconómicos o comunas más pobres y lo asocian, entre otras cosas, a la dificultad de ellos de acatar las cuarentenas, junto con menor trazabilidad y peor acceso a la salud. Puesto que la Encuesta Origen Destino muestra diferencias en el uso del tiempo entre hombres y mujeres \cite{Jara-Diaz2013}, el sexo podría ser una variable a considerar también.
+Hay varios criterios a considerar a la hora de elegir las clases y los ambientes. En primer lugar, es ampliamente conocido \cite{Davies2020}\cite{Verity2020} que la edad es un factor importante en el efecto de la enfermedad en una persona; el COVID-19 afecta con más intensidad a los adultos mayores. Varios estudios \cite{Wang2020}\cite{Ahmed2020}\cite{Chang2021}\cite{Mena2021}\cite{Bennett2021} han mostrado que la pandemia ha afectado más fuertemente a los niveles socioeconómicos o comunas más pobres y lo asocian, entre otras cosas, a la dificultad de ellos de acatar las cuarentenas, junto con menor trazabilidad y peor acceso a cuidados de la salud. Puesto que la Encuesta Origen Destino muestra diferencias en el uso del tiempo entre hombres y mujeres \cite{Jara-Diaz2013}, el sexo podría ser una variable a considerar también.
 
 Los datos disponibles considerados en \ref{sec:datos-disp} han de ser considerados también. La Encuesta Origen Destino, por un lado, posee datos muy granulares; es posible conocer para cada individuo su sexo, zona censal y comuna donde reside, edad e ingreso familiar. Más aún, los distintos propósitos de los viajes realizados (regreso al hogar, al trabajo, escuela, compras, transporte público, bicicleta, entre otros) entregan varios ambientes donde ese individuo pasa su tiempo. 
 
-Por otro lado, las demás fuentes de datos no poseen tanta información. El Uso de infraestructura de telecomunicaciones permite conocer cómo ha cambiado la movilidad de entrada o salida a cada zona censal/comuna, pero no distingue entre las actividades que realizan las personas mientras se mueven por la ciudad. Los Informes de Movilidad Local sobre COVID-19 de Google permiten distinguir distintas actividades, pero no permiten separar por comuna. Las series de tiempos de Datos-COVID19 presentan dificultades similares. Están desagregadas por edad, sexo o comuna, pero no por los tres criterios simultáneamente.
+Por otro lado, las demás fuentes de datos no poseen tanta información. El Uso de infraestructura de telecomunicaciones permite conocer cómo ha cambiado la movilidad de entrada o salida a cada zona censal/comuna, pero no distingue entre las actividades que realizan las personas mientras se mueven por la ciudad. Los Informes de Movilidad Local sobre COVID-19 de Google permiten distinguir distintas actividades, pero no permiten separar por comuna. Las series de tiempos de Datos-COVID19 presentan dificultades similares. Están desagregadas por edad, sexo o comuna, pero no por los tres criterios simultáneamente. 
 
-Puesto que se desea considerar el efecto de las cuarentenas en el uso del tiempo de las personas a lo largo de la pandemia, sabiendo la importancia que juega en las diferencias entre las distintas comunas, se decide usar los datos de Uso de infraestructura de telecomunicaciones. Esto lleva a la decisión de desechar la información de los distintos ambientes; se sabe que hay más o menos movilidad fuera del hogar, pero no se sabe exactamente en qué actividad. El trabajo realizado considera, por tanto, solo \(m = 2\) ambientes: \texttt{hogar} y \texttt{exterior}. Es interesante mencionar que el modelo del \textit{Imperial College} \cite{Ferguson2020} considera que del total de contagios, aproximadamente 1/3 ocurren en el hogar, 1/3 en el trabajo y/o entidades educativas, y el último 1/3 en otras actividades como compras o recreación, en concordancia con matrices de mezcla social como \cite{Mossong2008}.
+Puesto que se desea considerar el efecto de las cuarentenas en el uso del tiempo de las personas a lo largo de la pandemia, sabiendo la importancia que juega en las diferencias entre las distintas comunas, se decide usar los datos de movilidad vistos en la sección \ref{data:isci}. Se decide desechar la información de los distintos ambientes; solo se sabe que hay más o menos movilidad fuera del hogar, pero no se sabe exactamente en qué actividad. El trabajo realizado considera, por tanto, solo \(m = 2\) ambientes: \texttt{hogar} y \texttt{exterior}. Es interesante mencionar que el modelo del \textit{Imperial College} \cite{Ferguson2020} considera que del total de contagios, aproximadamente 1/3 ocurren en el hogar, 1/3 en el trabajo y/o entidades educativas, y el último 1/3 en otras actividades como compras o recreación, en concordancia con matrices de mezcla social como \cite{Mossong2008}.
 
-Los datos elegidos permiten utilizar la información a nivel de zona censal, pero los datos epidemiológicos no son tan granulares, por lo que es más factible distinguir por comuna. Los datos epidemiológicos están disponibles a este nivel también, por lo que es una buena posibilidad. Eso, sin embargo, plantearía un sistema con unas 50 clases, lo que para 4 compartimientos da unas 200 variables. Es posible, aunque agrega más carga computacional y dificulta el análisis posterior. Se decide, por simplicidad, reducir el análisis a \(n = 5\) categorías socioeconómicos, las mismas propuestas por \cite{SEREMIRM2019}, que surgen tras ordenar las comunas por IPS, como describe la sección \ref{sec:ips}. Pueden verse en la Tabla \ref{table:ips-categ}. Ante la falta de la información adecuadamente desagregada para edad y sexo, se decide abandonar estos criterios.
+Los datos elegidos permiten utilizar la información a nivel de zona censal, pero los datos epidemiológicos no son tan granulares, por lo que es más factible distinguir por comuna. Los datos epidemiológicos están disponibles a este nivel también, por lo que es una buena posibilidad. Eso, sin embargo, plantearía un sistema con unas 50 clases, lo que para 4 compartimientos da unas 200 variables; es posible, aunque agrega más carga computacional y dificulta el análisis posterior. Se decide, por simplicidad, reducir el análisis a \(n = 5\) categorías socioeconómicas, las mismas propuestas por \cite{SEREMIRM2019}, que surgen tras ordenar las comunas por IPS, como describe la sección \ref{sec:ips}. La tabla \ref{table:ips-categ} muestra un resumen de las categorías elegidas, la versión completa se encuentra en la tabla \ref{table:ipsfull}. 
 
 % Agregar población según CENSO 
 \begin{table}[h!]
@@ -35,9 +35,11 @@ Los datos elegidos permiten utilizar la información a nivel de zona censal, per
  Sin Prioridad & 6.26 & 37.36 & Las Condes, Lo Barnechea\\ [1ex] 
  \hline
 \end{tabular}
-\caption{Categorías socioeconómicas de IPS dadas por \cite{SEREMIRM2019}.}
+\caption{Resumen de las categorías socioeconómicas por IPS, dadas por \cite{SEREMIRM2019}.}
 \label{table:ips-categ}
 \end{table}
+
+
 
 \subsection{Matriz de Santiago en condiciones normales} \label{subsec:santiago-normal-eod}
 
@@ -57,7 +59,7 @@ Los datos elegidos permiten utilizar la información a nivel de zona censal, per
 % Trámites
 % Recreación
 % Otra actividad 
-En \cite{Munizaga2011} se propone un método para obtener información acerca del uso del tiempo de una persona a partir de los tiempos de inicio y fin de sus viajes y el propósito declarado de este, datos contenidos en la Encuesta Origen-Destino. Para esto supone que el primer viaje comienza desde el hogar (esto puede verificarse revisando que calcen la zona de origen del viaje con la del hogar). Luego, a cada período de tiempo entre dos viajes consecutivos es asignado a la actividad declarada como propósito en el viaje anterior. La Figura \ref{img:ciclo-viajes} es un diagrama de este proceso. El Algoritmo \ref{alg:timematrix} explica el proceso en detalle de manera general, agregando además ambientes para los distintos modos de transporte. La matriz obtenida usando este algoritmo se denota \(P^0\). La matriz variable en el tiempo será construida a partir de esta en la siguiente subsección.
+En \cite{Munizaga2011} se propone un método para obtener información acerca del uso del tiempo de una persona a partir de los tiempos de inicio y fin de sus viajes y el propósito declarado de este, datos contenidos en la Encuesta Origen-Destino. Para esto supone que el primer viaje comienza desde el hogar y luego cada período de tiempo entre dos viajes consecutivos es asignado a la actividad declarada como propósito en el viaje anterior. La Figura \ref{img:ciclo-viajes} es un diagrama de este proceso. 
 % Insertar el algoritmo para esto, traducir 
 
 \begin{algorithm}[H]
@@ -124,6 +126,7 @@ Calcular \(R\) a partir de \(C\) normalizando cada fila. \(r_{ij} \gets c_{ij} /
 \label{img:ciclo-viajes}
 \end{figure}
 
+El algoritmo \ref{alg:timematrix} explica el proceso en detalle de manera general. Cabe mencionar que este algoritmo fue desarrollado de manera independiente y con importantes variantes antes de conocer \cite{Munizaga2011}. Este algoritmo es aplicado para construir una matriz detallada de tiempos de residencia, intentando aprovechar la mayor información posible de los propósitos de viajes. También es usado para construir la matriz de tiempos de residencia con únicamente dos ambientes, pero en ese caso las funciones \(\mathcal{J}_{\mathtt{p}}\), \(\mathcal{J}_{\mathtt{m}}\) son considerablemente más sencillas; solo el propósito asociado con ir al hogar se asocia al ambiente \texttt{hogar} y todos los demás se asocian a \texttt{exterior}. La matriz obtenida usando este algoritmo se denota \(P^0\). La matriz variable en el tiempo será construida a partir de esta en la siguiente subsección. 
 % Creo que sería bueno agregar el pseudo código de la cuestión. Estoy segura de que yo tenía una versión bonita de esto.
 % Para que sea replicable tengo que incluir todas las pequeñas decisiones... los casos usados y los no usados, todo eso. 
 
@@ -145,29 +148,29 @@ Los datos se encuentran en dos archivos en formato \texttt{.csv}, correspondient
 Se utiliza la información de estimaciones de la variación de movilidad (despreciando las cotas inferiores y superiores). Si llamamos \(m_i^0\) a la movilidad de referencia inicial para la comuna \(i\)-ésima (la cual es desconocida), y \(m_i^k\) a la movilidad de la comuna \(i\)-ésima en la semana \(k\)-ésima posterior a esa semana de referencia, entonces son reportados los valores \(p_i^k\) que satisfacen la ecuación \ref{eq:mov-1}.
 
 \begin{equation}\label{eq:mov-1}
-m_i^k = p_i^k m_i^0
+m_i^k = p_i^k m_i^0.
 \end{equation}
 
 Un detalle a considerar es que es necesario calcular la variación de movilidad para los distintos grupos socioeconómicos, puesto que solo se tiene para las comunas. Si la población de la comuna \(i\)-ésima es \(N_i\), e \(I\) es un conjunto de comunas, se estima la movilidad grupal con las ecuaciones \ref{eq:mov-2}. Se busca un parámetro \(p_I^k\) tal que \ref{eq:mov-3}. Bajo el supuesto \(m_i^0 := m^0\) para cada \(i\), entonces es fácil ver que se cumple \ref{eq:mov-4}.
 
 \begin{equation}\label{eq:mov-2}
-m^k_I = \sum_{i \in I}m^k_i N_i
+m^k_I = \sum_{i \in I}m^k_i N_i,
 \end{equation}
 
 
 \begin{equation}\label{eq:mov-3}
-m_I^k = p_I^k m_I^0
+m_I^k = p_I^k m_I^0,
 \end{equation}
 
 
 \begin{equation}\label{eq:mov-4}
-p_I^k = \sum_{i \in I} p_i^k N_i
+p_I^k = \sum_{i \in I} p_i^k N_i.
 \end{equation}
 
 Se supondrá que la movilidad es constante a lo largo de la semana, incluyendo fines de semana, aunque no se considerarán estos datos. Se define una función \(\mathtt{semana}(t)\) que a un tiempo \(t\) le asocia la correspondiente semana. Suponemos además que el tiempo que cada clase pasa en el ambiente \texttt{exterior} varió de manera proporcional a la movilidad. Eso permite calcular la columna \texttt{exterior} de la matriz de tiempos de residencia para cada grupo socioeconómico \(I\) con las ecuaciones \ref{eq:mov-5}. Finalmente, el tiempo que no se ocupa en el ambiente \texttt{exterior} se pasa en el ambiente \texttt{hogar}, por lo que se cumple \ref{eq:mov-6}.
 
 \begin{equation}\label{eq:mov-5}
-r_{I, \text{exterior}}(t) = p_I^{\mathtt{semana}(t)} r_{I,\text{exterior}}^0
+r_{I, \text{exterior}}(t) = p_I^{\mathtt{semana}(t)} r_{I,\text{exterior}}^0,
 \end{equation}
 
 %% Definir una variable para el nombre del ambiente fuera del hogar o exterior 
@@ -178,5 +181,5 @@ r_{I, \text{exterior}}(t) = p_I^{\mathtt{semana}(t)} r_{I,\text{exterior}}^0
 
 
 \begin{equation}\label{eq:mov-6}
-r_{I, \text{hogar}}(t) = 1 - r_{I,\text{exterior}}(t)
+r_{I, \text{hogar}}(t) = 1 - r_{I,\text{exterior}}(t).
 \end{equation}

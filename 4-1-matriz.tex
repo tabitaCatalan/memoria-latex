@@ -90,7 +90,7 @@ Los ambientes utilizados están basados en la lista de propósitos de viajes y l
 14.Otra actividad           & \texttt{otros}        \\
  \hline
 \end{tabular}
-\caption{Propósitos de viaje de la EOD2012 y sus ambientes asociados.}
+\caption[Propósitos de viaje de la EOD2012 y sus ambientes asociados.]{Propósitos de viaje de la EOD2012 y sus ambientes asociados, lo que permite definir \(\mathcal{J}_{\mathtt{p}}\).}
 \label{table:ambientes-prop-full}
 \end{table}
 
@@ -120,7 +120,7 @@ Los ambientes utilizados están basados en la lista de propósitos de viajes y l
  18:Bicicleta                  & \texttt{bicicleta}\\
  \hline
 \end{tabular}
-\caption{Modos de transporte de la EOD2012 y sus ambientes asociados.}
+\caption[Modos de transporte de la EOD2012 y sus ambientes asociados.]{Modos de transporte de la EOD2012 y sus ambientes asociados, lo que permite definir \(\mathcal{J}_{\mathtt{m}}\).}
 \label{table:ambientes-modo-full}
 \end{table}
 
@@ -164,9 +164,9 @@ La aplicación del algoritmo tomando en consideración las decisiones tomadas en
 
 \subsection{Santiago a lo largo del tiempo} \label{res:matrix-pandemia}
 
-Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta matriz a fin de obtener \(P(t)\) que refleje el comportamiento de la población en pandemia. Estas modificaciones se hacen utilizando los datos de movilidad, siguiendo la metodología presentada en \ref{subsec:variaciones}.
+Una vez que una matriz \(P^0\) ha sido calculada, se requiere modificar esta matriz a fin de obtener \(P(t)\) que refleje el comportamiento de la población en pandemia. Estas modificaciones se hacen utilizando los datos de movilidad, siguiendo la metodología presentada en \ref{subsec:variaciones}; los datos de movilidad comunal son agregados ponderando por la población de la comuna, y suponiendo que la movilidad inicial era la misma en cada grupo.
 
-La figura \ref{img:mov-pandemia} muestra la variación de movilidad con respecto a la línea base calculada para la semana 0. Se observa que la línea para la clase Sin Prioridad, es decir, la más acomodada, se mantiene por debajo de las otras, lo que significa que logró reducir su movilidad mucho más.
+La figura \ref{img:mov-pandemia} muestra la variación de movilidad para los distintos grupos socioeconómicos con respecto a la movilidad de la semana base. Se observa que la línea para la clase Sin Prioridad, es decir, la más acomodada, se mantiene por debajo de las otras, lo que significa que logró reducir su movilidad mucho más.
 
 \begin{figure}[H]
 \centering
@@ -181,7 +181,7 @@ La figura \ref{img:mov-pandemia} muestra la variación de movilidad con respecto
 \input{clases-legend.tikz}
 }
 \end{subfigure}
-\caption[Fracción de la movilidad en pandemia por clase, c/r a movilidad normal.]{Fracción de la movilidad en pandemia por grupos, c/r a movilidad normal. Se considera la semana 0 como la correspondiente a 02/mar/2020 - 06/mar/2020.}
+\caption[Fracción de la movilidad en pandemia por clase, c/r a movilidad normal.]{Fracción de la movilidad en pandemia por grupos, con respecto a la movilidad normal. Se considera la semana base como la correspondiente a 02/mar/2020 - 06/mar/2020.}
 \label{img:mov-pandemia}
 \end{figure}
 

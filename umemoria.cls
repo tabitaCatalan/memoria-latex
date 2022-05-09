@@ -40,7 +40,7 @@
 \RequirePackage[top=2cm, left=3cm, bottom=2cm, right=2cm, paper=letterpaper]{geometry} % Margenes
 \RequirePackage{amsmath, amssymb, amsthm, graphicx} % Varios
 \RequirePackage[spanish, es-nolists, es-lcroman]{babel} % Lenguaje
-\RequirePackage[pdfpagelabels]{hyperref} % Links y numeracion del PDF
+\RequirePackage[pdfpagelabels, hidelinks]{hyperref} % Links y numeracion del PDF
 \RequirePackage{listings} % Codigo Fuente
 \RequirePackage{pgffor} % foreach
 
@@ -75,7 +75,8 @@
 
 \newenvironment{dedicatoria}{\cleardoublepage\null\vspace{\stretch{1}}\begin{flushright}\itshape}{\end{flushright}\vspace{\stretch{2}}\null}
 \let\thanks\undefined
-\newenvironment{thanks}{\cleardoublepage\chapter*{Agradecimientos}}{\vfill\null}
+%\newenvironment{thanks}{\cleardoublepage\chapter
+\newenvironment{thanks}{\chapter*{Agradecimientos}}{\vfill\null}
 \newenvironment{intro}{
   \chapter*{Introducción}
   \addcontentsline{toc}{chapter}{\protect\numberline{}Introducción}
