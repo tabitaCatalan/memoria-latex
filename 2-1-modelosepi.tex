@@ -15,7 +15,7 @@ Un modelo muy sencillo es el \textbf{SIR}, que separa a la población en \textbf
 \begin{aligned}
 S'(t) &=  -\alpha \frac{S(t)I(t)}{N} \\
 I'(t) &= \alpha \frac{S(t)I(t)}{N}- \gamma_I I(t) \\
-R'(t) &= \gamma_I I(t)
+R'(t) &= \gamma_I I(t).
 \end{aligned}
 \end{equation}
 
@@ -57,7 +57,7 @@ Es posible complejizar este modelo añadiendo compartimientos extras. El compart
 S' &=  -\alpha \frac{SI}{N} \\
 E' &= \alpha \frac{SI}{N} - \gamma_E E \\
 I' &= \gamma_E E - \gamma_I I \\
-R' &= \gamma_I I
+R' &= \gamma_I I.
 \end{aligned}
 \end{equation}
 
@@ -110,13 +110,13 @@ Se presenta ahora un ejemplo más específico, tomado de una simplificación del
 Similar a \cite{Cosner2009}, si \(N_i(t)\) corresponde a la población presente en la región \(i\) a tiempo \(t\), entonces se puede formar un modelo migratorio considerando las personas que salen y las que entran, con las ecuaciones \ref{eq:migration}.
 
 \begin{equation}\label{eq:migration}
-N_i' = \sum_{j = 1}^n c_{ji} N_j - \sum_{j = 1}^n c_{ij} N_i
+N_i' = \sum_{j = 1}^n c_{ji} N_j - \sum_{j = 1}^n c_{ij} N_i.
 \end{equation}
 
 Luego, es posible considerar la propagación de la enfermedad dentro de cada región. Si \(S_{i}(t), I_i(t)\) corresponden al número de susceptibles e infectados en la región \(i\) a tiempo \(t\), y \(\alpha_{i}\) es el número promedio de contactos efectivos que hace un individuo en la región \(i\). La dinámica de los susceptibles en este ejemplo puede verse en la ecuación \ref{eq:migration-transmis}.
 
 \begin{equation}\label{eq:migration-transmis}
-S'_i = - \alpha_i\frac{S_iI_i}{N_i}
+S'_i = - \alpha_i\frac{S_iI_i}{N_i}.
 \end{equation}
 
 %\noindent \textbf{Enfoque lagrangiano}
@@ -129,10 +129,10 @@ Los nuevos contagios se calculan a partir del número de infectados y susceptibl
 Un ejemplo de modelo lagrangiano se encuentra en \cite{Ruan2006}. Este define \(S_{ij}(t), I_{ij}(t), R_{ij}(t)\) como los suceptibles, infectados y recuperados de la clase \(i\) que se encuentran en la clase \(j\) a tiempo \(t\).  Esto permite calcular, definiendo \(N_{ij} = S_{ij} + I_{ij} + R_{ij}\), el total de residentes de la región \(i\) como \(N^r_i := \sum_{j = 1}^n N_{ij}\) y el total de personas presentes en la región \(i\) como \(N^p_i := \sum_{j = 1}^n N_{ji}\). La tasa de infección de la población de la región \(i\) debido a los contagios producidos en la región \(k\) se calcula simplemente como la suma de todos los contactos efectivos entre susceptibles de la clase \(i\) con algún infectado de cualquier clase, como se ve en la ecuación \ref{eq:lagran-trans}. \(\alpha_{ikj}\) corresponde a la cantidad de contactos efectivos entre la clase \(i\) y la clase \(j\) que ocurren en la región \(k\).
 
 \begin{equation}\label{eq:lagran-trans}
-S'_{ik} = -\sum_{j = 1}^n \alpha_{ikj} \frac{S_{ik}I_{jk}}{N^p_j}
+S'_{ik} = -\sum_{j = 1}^n \alpha_{ikj} \frac{S_{ik}I_{jk}}{N^p_j}.
 \end{equation}
 
-Este modelo, guardando similitud con el modelo euleriano expuesto antes, supone que los residentes susceptibles de la región \(i\) viajan a otras regiones a una tasa constante \(\sigma_i\). Desde la región \(i\) van a la región \(j\) con probabilidad \(\nu_{ij}\), y vuelven a su región con tasa \(\rho_{ij}\). Esta, sin embargo, no es la única forma de trabajar con la movilidad de la población. \cite{Cosner2009} y \cite{Bichara2015} utilizan matrices \(P = (p_{ij})_{i, j = 1 \dots n}\) de tiempos de residencia, donde \(p_{ij}\) corresponde a la fracción de su tiempo que los residentes de la clase \(i\) pasan en la región \(j\). Desde luego se cumple \(\sum_{j = 1}^n p_{ij} = 1\) para cada \(i\). Esta forma de abordar la movilidad será la más interesante para este trabajo, y se verá en más detalle en la siguiente sección.
+Este modelo, guardando similitud con el modelo euleriano expuesto antes, supone que los residentes susceptibles de la región \(i\) viajan a otras regiones a una tasa constante \(\sigma_i\). Desde la región \(i\) van a la región \(j\) con probabilidad \(\nu_{ij}\), y vuelven a su región con tasa \(\rho_{ij}\). Esta, sin embargo, no es la única forma de trabajar con la movilidad de la población. Los artículos \cite{Cosner2009} y \cite{Bichara2015} utilizan matrices \(P = (p_{ij})_{i, j = 1 \dots n}\) de tiempos de residencia, donde \(p_{ij}\) corresponde a la fracción de su tiempo que los residentes de la clase \(i\) pasan en la región \(j\). Desde luego se cumple \(\sum_{j = 1}^n p_{ij} = 1\) para cada \(i\). Esta forma de abordar la movilidad será la más interesante para este trabajo, y se verá en más detalle en la siguiente sección.
 
 
 

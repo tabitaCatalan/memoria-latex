@@ -34,16 +34,16 @@ Al usar filtro de Kalman se suponen condiciones iniciales y parámetros desconoc
      \centering
      \begin{subfigure}[b]{.47\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{img/resultados/synth/kalman_grouped_E_high1\parameterstring}
+         \includegraphics[width=\textwidth]{img/resultados/synth/kalman_grouped_I_high1\parameterstring}
          \caption{Clase \(1\).}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{img/resultados/synth/kalman_grouped_E_high2\parameterstring}
+         \includegraphics[width=\textwidth]{img/resultados/synth/kalman_grouped_I_high2\parameterstring}
          \caption{Clase \(2\).}
      \end{subfigure}
-        \caption{Casos Expuestos, comparando resultados obtenidos con solución real, en valores absolutos y normalizados con respecto a la cantidad de personas por clase.}
+        \caption{Número de Infectados, comparando los resultados obtenidos con la solución real, en valores absolutos y normalizados con respecto a la cantidad de personas por clase.}
         \label{synth-e-comp-high}
 \end{figure}
 
@@ -303,31 +303,31 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
      \begin{subfigure}[b]{0.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_I_high1\parameterstring}
-         \caption{Clase \(1\).}
+         \caption{Clase \(1\), Sin Prioridad.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_I_high2\parameterstring}
-         \caption{Clase \(2\).}
+         \caption{Clase \(2\), Prioridad Baja.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_I_high3\parameterstring}
-         \caption{Clase \(3\).}
+         \caption{Clase \(3\), Prioridad Media Baja.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_I_high4\parameterstring}
-         \caption{Clase \(4\).}
+         \caption{Clase \(4\), Prioridad Media Alta.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_I_high5\parameterstring}
-         \caption{Clase \(5\).}
+         \caption{Clase \(5\), Prioridad Alta.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
@@ -341,7 +341,7 @@ El estudio realizado en las subsecciones anteriores entrega herramientas para tr
 
 Las figuras \ref{e-comp-high} y \ref{s-comp-high} presentan en más detalle las estimaciones para el número de susceptibles e infectados respectivamente. En ambos casos se presentan tanto los valores absolutos como los normalizados con respecto al total de población de la clase. Se observa que la incidencia se encuentra ordenada de acuerdo al nivel socioeconómico; es mayor en las comunas más vulnerables y menor en las más acomodadas.
 
-Se observa que en los meses de invierno de 2021 ocurren dos \textit{peaks} consecutivos. Es interesante notar que la ola de contagios que lleva al segundo \textit{peak} encuentra a la clase 1, la más acomodada, en mucho mejores condiciones que a las demás.
+Se observa que en los meses de invierno de 2021 ocurren dos \textit{peaks} consecutivos. Es interesante notar que cuando comienza la ola de contagios que lleva al segundo \textit{peak}, la clase 1, la más acomodada, está en mucho mejores condiciones que a las demás; proporcionalmente alcanzó un primer \textit{peak} más bajo, del que se recuperó con más rapidez.
 
 
 \begin{figure}[H]
@@ -349,31 +349,31 @@ Se observa que en los meses de invierno de 2021 ocurren dos \textit{peaks} conse
      \begin{subfigure}[b]{0.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_S_high1\parameterstring}
-         \caption{Clase \(1\).}
+         \caption{Clase \(1\), Sin Prioridad.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_S_high2\parameterstring}
-         \caption{Clase \(2\).}
+         \caption{Clase \(2\), Prioridad Baja.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_S_high3\parameterstring}
-         \caption{Clase \(3\).}
+         \caption{Clase \(3\), Prioridad Media Baja.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_S_high4\parameterstring}
-         \caption{Clase \(4\).}
+         \caption{Clase \(4\), Prioridad Media Alta.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
          \centering
          \includegraphics[width=\textwidth]{img/resultados/kalman_grouped_S_high5\parameterstring}
-         \caption{Clase \(5\).}
+         \caption{Clase \(5\), Prioridad Alta.}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{.47\textwidth}
