@@ -116,7 +116,17 @@ C\\
 \end{pmatrix} + \mathbf{G} w(t)= f_p(\mathbf{x}, t) + \mathbf{G} \mathbf{w}(t).
 \end{equation}
 
-Para utilizar el filtro discreto-discreto, se requiere discretizar la dinámica \(f_p\), para lo que se usa un esquema de Runge Kutta de orden 4. Para un instante de tiempo \(t_k\), un intervalo de tiempo \(\Delta t\) y un estado \(\mathbf{x}_k\), y definiendo \(\mathbf{x}_1, \dots, \mathbf{x}_4\) como en \ref{eq:rk4}, \ref{eq:simple-rk4} permite obtener una estimación \ref{eq:simple-estado-discreto} para \(\mathbf{x}_{k+1}\). Esto corresponde a la ecuación de estado discretizada, la cual es no lineal. Notamos que \(\mathbf{w}_{k} \sim \mathcal{N}(\mathbf{0}, \mathbf{Q}_k)\) y \(\mathbf{Q}_k = \frac{\text{\textbf{Id}}}{\sqrt{\Delta t}}\). Una explicación de esto puede encontrarse en el capítulo 8 de \cite{Simon2006}.
+Para utilizar el filtro discreto-discreto, se requiere discretizar la dinámica \(f_p\), para lo que se usa un esquema de Runge Kutta de orden 4. Para un instante de tiempo \(t_k\), un intervalo de tiempo \(\Delta t\) y un estado \(\mathbf{x}_k\), y definiendo \(\Delta\mathbf{x}_1, \dots, \Delta\mathbf{x}_4\) como en \ref{eq:rk4}, \ref{eq:simple-rk4} permite obtener una estimación \ref{eq:simple-estado-discreto} para \(\mathbf{x}_{k+1}\). Esto corresponde a la ecuación de estado discretizada, la cual es no lineal. Notamos que \(\mathbf{w}_{k} \sim \mathcal{N}(\mathbf{0}, \mathbf{Q}_k)\) y \(\mathbf{Q}_k = \frac{\text{\textbf{Id}}}{\sqrt{\Delta t}}\). Una explicación de esto puede encontrarse en el capítulo 8 de \cite{Simon2006}.
+
+\begin{equation}\label{eq:rk4}
+\begin{aligned}
+t_{n + 1/2} &:= t_n + \Delta t / 2\\
+\Delta x_1 &= f(x(t_n), t_n) \\
+\Delta x_2 &= \Delta t f(x(t_n) + \Delta x_1, t_{n + 1/2}) \\
+\Delta x_3 &= \Delta t f(x(t_n) + \Delta x_2, t_{n + 1/2}) \\
+\Delta x_4 &= \Delta t f(x(t_n) + \Delta x_3, t_{n + 1}) \\
+\end{aligned}
+\end{equation}
 
 \begin{equation} \label{eq:simple-rk4}
 \mathbf{x}_{k} + \frac{1}{6}\Big( \Delta \mathbf{x}_1  +  2\Delta \mathbf{x}_2 + 2\Delta \mathbf{x}_3 +\Delta \mathbf{x}_4\Big) =: \mathcal{F}_{p, \Delta t}(\mathbf{x}_k, t_k).

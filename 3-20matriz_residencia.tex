@@ -138,7 +138,7 @@ El algoritmo \ref{alg:timematrix} explica el proceso en detalle de manera genera
 \subsection{Variaciones de la matriz a lo largo del tiempo} \label{subsec:variaciones}
 
 % Explicar los datos disponibles
-Se usan los datos de movilidad obtenidos del Uso de infraestructura de telecomunicaciones, descritos en \ref{data:isci}. Los datos se obtienen del repositorio de Datos-COVID19, descrito en \label{sec:datos-minsal}, del Producto 82 específicamente. 
+Se usan los datos de movilidad obtenidos del Uso de infraestructura de telecomunicaciones, descritos en \ref{data:isci}. Los datos se obtienen del repositorio de Datos-COVID19, descrito en \ref{sec:datos-minsal}, del Producto 82 específicamente. 
 % Nos estoy segura de qué tanto detalle tengo que dar aquí, puedo ser muy específica y describir hasta las columnas involucradas. Tal vez como un anexo... 
 
 % Los datos se encuentran en dos archivos en formato \texttt{.csv}, correspondientes a la movilidad durante días laborables de la semana \texttt{ISCI\_weeks.csv} y a la movilidad de los fines de semana \texttt{ISCI\_weekends.csv}. Se usa solo el primero de estos. Los atributos incluyen la comuna de la Región Metropolitana con nombre, \texttt{nom\_comuna} y código único territorial \texttt{comuna} a la que corresponde la medición, semana epidemiológica \texttt{semana} de la medición con fecha de inicio \texttt{fecha\_inicio} y fin \texttt{fecha\_termino}, y estimaciones de la variación de movilidad \texttt{var\_salidas}, que es un promedio entre \texttt{var\_salidas\_cota\_superior} y \texttt{var\_salidas\_cota\_inferior}. 
